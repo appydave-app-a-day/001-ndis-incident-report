@@ -17,7 +17,6 @@
 - **API & Integration Architecture** - API design standards and patterns, integration strategy across systems, event streaming vs RESTful patterns, service contracts
 - **Enterprise Integration Architecture** - B2B integrations, external system connectivity, partner API strategies, legacy system integration patterns
 
-
 ### Strategic Architecture (70-90% confidence)
 
 - **Data Architecture & Strategy** - Data modeling and storage strategy, data pipeline architecture (high-level), CQRS, event sourcing decisions, data governance
@@ -50,16 +49,19 @@
 ## Domain Boundaries with DevOps/Platform Engineering
 
 ### Clear Architect Ownership
+
 - **What & Why**: Defines architectural patterns, selects technologies, sets standards
 - **Strategic Decisions**: High-level system design, technology selection, architectural patterns
 - **Cross-System Concerns**: Integration strategies, data architecture, security models
 
-### Clear DevOps/Platform Engineering Ownership  
+### Clear DevOps/Platform Engineering Ownership
+
 - **How & When**: Implements, operates, and maintains systems
 - **Operational Concerns**: Day-to-day infrastructure, CI/CD implementation, monitoring
 - **Tactical Execution**: Performance optimization, security tooling, incident response
 
 ### Collaborative Areas
+
 - **Performance**: Architect defines performance requirements and scalability patterns; DevOps/Platform implements testing and optimization
 - **Security**: Architect designs security architecture and compliance strategy; DevOps/Platform implements security controls and tooling
 - **Integration**: Architect defines integration patterns and API standards; DevOps/Platform implements service communication and monitoring

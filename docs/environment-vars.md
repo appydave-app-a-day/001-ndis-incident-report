@@ -5,6 +5,7 @@ This document outlines the environment variables required to run the application
 A `.env` file should be created in the root of the project for local development, following the format of the example below.
 
 ### `.env.example`
+
 ```
 # The full webhook URL for the N8N workflow that provides clarification questions.
 VITE_N8N_CLARIFICATION_WEBHOOK_URL=""

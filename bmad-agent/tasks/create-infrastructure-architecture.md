@@ -33,6 +33,7 @@ To design a comprehensive infrastructure architecture that defines all aspects o
 ### 3. Design Infrastructure Architecture Strategy
 
 - **If "Incremental Mode" was selected:**
+
   - For each major infrastructure domain:
     - **a. Present Domain Purpose:** Explain what this infrastructure domain provides and its strategic importance
     - **b. Present Strategic Options:** Provide 2-3 viable approaches with architectural pros and cons

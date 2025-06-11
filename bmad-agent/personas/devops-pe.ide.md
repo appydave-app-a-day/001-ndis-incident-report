@@ -191,6 +191,7 @@ For complex technical problems, use a structured meta-reasoning approach:
 ## Domain Boundaries with Architecture
 
 ### Collaboration Protocols
+
 - **Design Review Gates:** Architecture produces technical specifications, DevOps/Platform reviews for implementability
 - **Feasibility Feedback:** DevOps/Platform provides operational constraints during architecture design phase
 - **Implementation Planning:** Joint sessions to translate architectural decisions into operational tasks
