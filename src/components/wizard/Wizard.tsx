@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 
 import { Button } from '@/components/ui/button';
 
+import { ProgressIndicator } from './ProgressIndicator';
 import type { WizardProps } from './types';
 import { useWizardStore } from './useWizardStore';
 
@@ -49,7 +50,8 @@ export const Wizard: React.FC<WizardProps> = ({ steps, onComplete }) => {
 
   return (
     <div className="wizard-container flex flex-col h-full">
-      <div className="wizard-content flex-1">
+      <ProgressIndicator steps={steps} />
+      <div className="wizard-content flex-1 overflow-auto">
         <StepComponent />
       </div>
       <div className="wizard-navigation border-t p-4 flex justify-between items-center gap-4">
