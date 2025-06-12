@@ -6,10 +6,11 @@ This file serves as a central directory for all key documentation related to the
 
 - **[Epic 1: Project Foundation & Initial Setup](https://www.google.com/search?q=./epic-1.md)** - Outlines the stories for initial project scaffolding, dependency installation, and code quality setup.
 - **[Epic 2: Core Wizard & Navigation Framework](https://www.google.com/search?q=./epic-2.md)** - Details the stories for building the reusable wizard component and main application navigation.
-- **[Epic 3: Guided Incident Capture Workflow](https://www.google.com/search?q=./epic-3.md)** - Details the stories for the frontline worker's complete data capture and clarification workflow.
-- **[Epic 4: AI-Assisted Report Analysis Workflow](https://www.google.com/search?q=./epic-4.md)** - Details the stories for the Team Lead's AI-assisted analysis and classification workflow.
-- **[Epic 5: Mocking & Demo Data Framework](https://www.google.com/search?q=./epic-5.md)** - Outlines the stories for implementing the mock/live mode, mock data, and associated services.
-- **[Epic 6: Presentation Layer & Demo Polish](https://www.google.com/search?q=./epic-6.md)** - Details the stories for creating the special UI effects for the video demonstration.
+- **[Epic 3: Wizard Styling & Visual Polish](https://www.google.com/search?q=./epic-3.md)** - Focuses on preliminary styling and visual enhancements for the wizard component.
+- **[Epic 4: Guided Incident Capture Workflow](https://www.google.com/search?q=./epic-4.md)** - Details the stories for the frontline worker's complete data capture and clarification workflow.
+- **[Epic 5: AI-Assisted Report Analysis Workflow](https://www.google.com/search?q=./epic-5.md)** - Details the stories for the Team Lead's AI-assisted analysis and classification workflow.
+- **[Epic 6: Mocking & Demo Data Framework](https://www.google.com/search?q=./epic-6.md)** - Outlines the stories for implementing the mock/live mode, mock data, and associated services.
+- **[Epic 7: Presentation Layer & Demo Polish](https://www.google.com/search?q=./epic-7.md)** - Details the stories for creating the special UI effects for the video demonstration.
 
 ### Core Architecture
 

@@ -1,46 +1,57 @@
-### Epic 6: Presentation Layer & Demo Polish
+### Epic 6: Mocking & Demo Data Framework
 
-- **Goal:** To implement specialized, demo-optimized UI features to create a highly polished presentation. This includes a "pre-fill" button on input screens to auto-populate fields with data from the selected mock scenario, and other animated visual feedback (e.g., pulsating circles, typing animations) to enhance the demo experience.
+- **Goal:** To implement a configurable "Mock Mode," including the on-screen switch to toggle between live and mock backends, and the ability to select from multiple pre-defined data scenarios. This includes simulating realistic API delays and providing clear loading feedback.
 
 #### Stories:
 
-- **Story 6.1: Implement Title Labels as Pre-fill Triggers**
+- **Story 6.1: Implement Mock/Live Mode Switch**
 
-  - **User Story:** As a presenter, I want the text labels of pre-fillable form fields to act as clickable hotspots so that I can trigger the pre-fill action without needing a separate, visible button.
+  - **User Story:** As a presenter, I want a clear on-screen switch to toggle the application between "Live Mode" (for real API calls) and "Mock Mode" (for using local data) so I can control the demo environment.
   - **Acceptance Criteria:**
-    1.  The text label component associated with each designated form field is made into a clickable element.
-    2.  This clickable behavior is only active when the application is in "Mock Mode".
-    3.  When the mouse pointer hovers over a clickable label, the cursor changes to a "pointer" (hand icon).
-    4.  The visual appearance of the label text itself does not change on hover (beyond the cursor change).
-    5.  The click event on the label is successfully captured (the full action will be implemented in a later story).
-    6.  The updated logic is committed to version control.
+    1.  A UI switch or toggle component is implemented in a persistent location of the application's UI (e.g., in a settings menu or header).
+    2.  The switch clearly displays the currently active mode ("Live" or "Mock").
+    3.  Toggling the switch updates a global state variable that holds the current mode.
+    4.  The application defaults to "Mock Mode" when it first loads.
+    5.  The new UI component and its associated state logic are committed to version control.
 
-- **Story 6.2: Create "Pulse" Click Animation**
+- **Story 6.2: Create Mock Data Scenarios**
 
-  - **User Story:** As a presenter, I want a "pulsating circle" animation to trigger at the location of my click on a hotspot so that there is clear visual feedback for my action in the video recording.
+  - **User Story:** As a developer, I want to create the local data files (e.g., JSON) for at least three distinct, pre-scripted incident scenarios so that we have a reliable and varied data set for demonstrations.
   - **Acceptance Criteria:**
-    1.  A new, reusable animation component is created.
-    2.  When triggered, the component renders an animation of a circle that expands outwards from a central point and fades out as it grows.
-    3.  The animation is smooth and lasts for a short, non-disruptive duration (e.g., ~0.5 seconds).
-    4.  The component can be programmatically triggered to play at specific coordinates on the screen (i.e., the location of the click).
-    5.  The new animation component is committed to version control and is viewable in a Storybook or a simple test page.
+    1.  A new directory (e.g., `src/lib/mock-data`) is created to store the mock data files.
+    2.  At least three separate JSON files are created, each representing a unique incident scenario.
+    3.  Each scenario file contains a complete data set for a single incident, including mock content for: incident metadata, the four narrative sections, the lists of clarifying questions for each narrative section, and the pre-populated AI analysis (Contributing Conditions and Incident Type Classification).
+    4.  The content of the scenarios is sufficiently varied to demonstrate different use cases.
+    5.  The new mock data files are committed to version control.
 
-- **Story 6.3: Create "Typing Effect" for Field Population**
+- **Story 6.3: Implement Mock Scenario Selector**
 
-  - **User Story:** As a developer, I want to create a function that populates a text field with a given string using a character-by-character "typing effect" so that data entry appears simulated and dynamic.
+  - **User Story:** As a presenter, when in "Mock Mode," I want a simple UI element (e.g., a dropdown) to select which of the pre-defined incident scenarios I want to use for my demo.
   - **Acceptance Criteria:**
-    1.  A new, reusable function or React hook is created to manage the typing animation.
-    2.  The function/hook accepts a string of text to be typed and a reference to the target form field.
-    3.  When executed, it populates the target field one character at a time with a short, realistic delay between each character, simulating human typing.
-    4.  The typing speed is configurable.
-    5.  The new function/hook is committed to version control and is viewable in a Storybook or a simple test page.
+    1.  A UI component (e.g., a dropdown menu) is implemented in a persistent location of the application's UI.
+    2.  This scenario selector component is only visible when the application's global state is set to "Mock Mode".
+    3.  The selector is populated with the list of available mock scenarios created in the previous story.
+    4.  Selecting a scenario from the list updates a global state variable to hold the identifier of the currently active mock scenario.
+    5.  The application defaults to the first available mock scenario upon entering "Mock Mode".
+    6.  The new UI component and its associated state logic are committed to version control.
 
-- **Story 6.4: Integrate Hotspots with Mock Data and Effects**
-  - **User Story:** As a presenter, when I click a field's title label, I want the system to trigger the pulse animation and populate the corresponding field with the correct data from the selected mock scenario, using the typing effect.
+- **Story 6.4: Implement Mock Data Service**
+
+  - **User Story:** As a developer, I want to create a mock data service that, when triggered in "Mock Mode," introduces an artificial 1.5-second delay and then returns the data from the selected mock scenario, perfectly simulating a real API call.
   - **Acceptance Criteria:**
-    1.  When a clickable title label is clicked in "Mock Mode," the "pulse" animation is triggered at the click's location.
-    2.  Simultaneously, the system identifies the currently active mock scenario.
-    3.  The system retrieves the correct data value for the field associated with the clicked label from the active mock scenario's data file.
-    4.  The "typing effect" function is then called to populate the field with the retrieved data.
-    5.  This entire sequence (click -> animation -> data fetch -> typing) works together seamlessly for all designated pre-fillable fields.
-    6.  The final integrated logic is committed to version control.
+    1.  A data-fetching service/function is created that encapsulates the logic for retrieving clarification questions and analysis data.
+    2.  This service checks the application's global state to determine if it is in "Live Mode" or "Mock Mode".
+    3.  When in "Mock Mode," the service reads the currently selected scenario data from the local JSON files.
+    4.  When in "Mock Mode," the service waits for an artificial delay of 1.5 seconds before returning the data.
+    5.  The service returns the mock data in the same structure that the live N8N API is expected to provide.
+    6.  The new mock data service logic is committed to version control.
+
+- **Story 6.5: Implement Global Loading Indicator**
+  - **User Story:** As a user, I want to see a clear loading indicator or spinner whenever the application is waiting for data (either from a live API call or a mock data service) so I know the system is working.
+  - **Acceptance Criteria:**
+    1.  A reusable loading indicator/spinner component is created.
+    2.  A global state (e.g., `isLoading`) is established to track the data-fetching status of the application.
+    3.  The data-fetching service sets the `isLoading` state to `true` immediately before initiating a data request (both mock and live).
+    4.  The loading indicator is displayed prominently on the screen whenever the `isLoading` state is `true`.
+    5.  The data-fetching service sets the `isLoading` state to `false` after the request is completed (either successfully or with an error).
+    6.  The new loading indicator component and its associated state logic are committed to version control.
