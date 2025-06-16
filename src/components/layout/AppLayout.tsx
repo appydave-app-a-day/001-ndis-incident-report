@@ -28,7 +28,7 @@ export const AppLayout: React.FC = () => {
   const isHome = location.pathname === '/';
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-app-background">
       {/* Mobile sidebar backdrop */}
       {sidebarOpen && (
         <button
