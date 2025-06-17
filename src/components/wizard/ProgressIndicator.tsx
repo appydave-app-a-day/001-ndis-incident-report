@@ -1,7 +1,5 @@
 import React from 'react';
 
-import { cn } from '@/lib/utils';
-
 import type { WizardStep } from './types';
 import { useWizardStore } from './useWizardStore';
 
@@ -10,19 +8,7 @@ interface ProgressIndicatorProps {
 }
 
 export const ProgressIndicator: React.FC<ProgressIndicatorProps> = ({ steps }) => {
-  const { currentStepIndex, visitedSteps, setCurrentStepIndex } = useWizardStore();
-
-  const handleStepClick = (index: number) => {
-    if (visitedSteps.has(index)) {
-      setCurrentStepIndex(index);
-    }
-  };
-
-  const getStepState = (index: number) => {
-    if (index === currentStepIndex) return 'current';
-    if (visitedSteps.has(index)) return 'visited';
-    return 'unvisited';
-  };
+  const { currentStepIndex } = useWizardStore();
 
   return (
     <div className="w-full h-2 bg-gray-200 relative">

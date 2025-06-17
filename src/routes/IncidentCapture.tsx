@@ -1,35 +1,11 @@
 import { Wizard } from '@/components/wizard';
 import { StepHeader } from '@/components/wizard/StepHeader';
+import { MetadataInputStep } from '@/components/MetadataInputStep';
+import { useIncidentStore } from '@/store/useIncidentStore';
 import type { WizardStep } from '@/components/wizard';
-import { Calendar, Users, FileText, Shield, CheckCircle } from 'lucide-react';
+import { Users, FileText, Shield, CheckCircle } from 'lucide-react';
 
-const Step1 = () => (
-  <div>
-    <StepHeader
-      stepNumber={1}
-      title="Step 1: Basic Information"
-      subtitle="Collect basic information about the incident."
-      icon={<Calendar className="w-7 h-7 text-white" />}
-      onViewContent={() => console.log('View content clicked')}
-    />
-    <div className="px-6 py-6">
-      <div className="space-y-6">
-        <div className="bg-white border border-gray-200 rounded-lg p-6 hover:border-gray-300 hover:shadow-sm transition-all duration-200">
-          <label className="text-sm font-semibold text-gray-900 block mb-3">
-            Date & Time
-          </label>
-          <p className="text-base text-gray-700 font-medium">December 6, 2024 - 10:30 AM</p>
-        </div>
-        <div className="bg-white border border-gray-200 rounded-lg p-6 hover:border-gray-300 hover:shadow-sm transition-all duration-200">
-          <label className="text-sm font-semibold text-gray-900 block mb-3">
-            Location
-          </label>
-          <p className="text-base text-gray-700 font-medium">Community Center - Main Hall</p>
-        </div>
-      </div>
-    </div>
-  </div>
-);
+const Step1 = () => <MetadataInputStep />;
 
 const Step2 = () => (
   <div>
@@ -130,8 +106,15 @@ const Step5 = () => (
 );
 
 export default function IncidentCapture() {
+  const { isMetadataComplete } = useIncidentStore();
+
   const steps: WizardStep[] = [
-    { id: 'basic-info', title: 'Basic Info', component: Step1 },
+    { 
+      id: 'basic-info', 
+      title: 'Basic Info', 
+      component: Step1,
+      isValid: isMetadataComplete
+    },
     { id: 'people', title: 'People', component: Step2 },
     { id: 'details', title: 'Details', component: Step3 },
     { id: 'actions', title: 'Actions', component: Step4 },
@@ -144,10 +127,10 @@ export default function IncidentCapture() {
   };
 
   return (
-    <div className='p-6'>
-      <div className='max-w-5xl mx-auto'>
-        <h1 className='text-3xl font-bold text-gray-900 mb-6'>Incident Capture Workflow</h1>
-        <div className='bg-white rounded-xl shadow-lg border border-gray-200 min-h-[600px] flex flex-col'>
+    <div className='p-8'>
+      <div className='max-w-4xl mx-auto'>
+        <h1 className='wizard-main-title'>Incident Capture Workflow</h1>
+        <div className='wizard-container min-h-[600px] flex flex-col'>
           <Wizard steps={steps} onComplete={handleComplete} />
         </div>
       </div>

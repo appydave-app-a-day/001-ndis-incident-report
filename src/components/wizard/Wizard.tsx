@@ -44,29 +44,35 @@ export const Wizard: React.FC<WizardProps> = ({ steps, onComplete }) => {
     }
   };
 
+  const canProceedNext = () => {
+    const currentStepDef = steps[currentStepIndex];
+    if (currentStepDef?.isValid) {
+      return currentStepDef.isValid() && canGoNext();
+    }
+    return canGoNext();
+  };
+
   const handleBack = () => {
     goToPreviousStep();
   };
 
   return (
-    <div className="w-full max-w-4xl mx-auto bg-white shadow-xl rounded-xl overflow-hidden">
+    <div className="w-full bg-white rounded-xl overflow-hidden h-full flex flex-col">
       <ProgressIndicator steps={steps} />
-      <div className="wizard-content min-h-[500px]">
+      <div className="wizard-content flex-1 min-h-[500px]">
         <StepComponent />
       </div>
       <div className="border-t border-gray-200 bg-gray-50 px-8 py-6 flex justify-between items-center">
         <Button
-          variant="outline"
+          variant="ghost"
           onClick={handleBack}
           disabled={!canGoBack()}
-          className="min-w-[120px]"
         >
           Back
         </Button>
         <Button
           onClick={handleNext}
-          disabled={!isLastStep() && !canGoNext()}
-          className="min-w-[120px]"
+          disabled={!isLastStep() && !canProceedNext()}
         >
           {isLastStep() ? 'Finish' : 'Next'}
         </Button>

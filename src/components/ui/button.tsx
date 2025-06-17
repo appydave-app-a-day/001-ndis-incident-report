@@ -35,7 +35,7 @@ const buttonVariants = cva(
 
 function Button({
   className,
-  variant,
+  variant = 'default',
   size,
   asChild = false,
   ...props
@@ -45,10 +45,23 @@ function Button({
   }) {
   const Comp = asChild ? Slot : 'button';
 
+  const getButtonClasses = () => {
+    const baseClass = 'custom-button';
+    
+    switch (variant) {
+      case 'outline':
+        return `${baseClass} custom-button-secondary`;
+      case 'ghost':
+        return `${baseClass} custom-button-ghost`;
+      default:
+        return `${baseClass} custom-button-primary`;
+    }
+  };
+
   return (
     <Comp
       data-slot='button'
-      className={cn(buttonVariants({ variant, size, className }))}
+      className={cn(getButtonClasses(), className)}
       {...props}
     />
   );

@@ -4,6 +4,7 @@ export interface WizardStep {
   id: string;
   title: string;
   component: ComponentType;
+  isValid?: () => boolean;
 }
 
 export interface WizardProps {
