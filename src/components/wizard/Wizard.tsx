@@ -49,14 +49,14 @@ export const Wizard: React.FC<WizardProps> = ({ steps, onComplete }) => {
   };
 
   return (
-    <div className="w-[900px] mx-auto min-h-screen bg-card-background shadow-2xl shadow-black/10">
+    <div className="w-full max-w-4xl mx-auto bg-white shadow-xl rounded-xl overflow-hidden">
       <ProgressIndicator steps={steps} />
       <div className="wizard-content min-h-[500px]">
         <StepComponent />
       </div>
-      <div className="border-t border-border-light bg-card-background px-xxxl py-xl flex justify-between items-center">
+      <div className="border-t border-gray-200 bg-gray-50 px-8 py-6 flex justify-between items-center">
         <Button
-          variant="secondary"
+          variant="outline"
           onClick={handleBack}
           disabled={!canGoBack()}
           className="min-w-[120px]"

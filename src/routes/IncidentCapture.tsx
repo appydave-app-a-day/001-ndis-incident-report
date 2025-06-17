@@ -12,19 +12,19 @@ const Step1 = () => (
       icon={<Calendar className="w-7 h-7 text-white" />}
       onViewContent={() => console.log('View content clicked')}
     />
-    <div className="px-xxxl py-xxl">
+    <div className="px-6 py-6">
       <div className="space-y-6">
-        <div className="bg-card-background border-2 border-border-light rounded-md p-6 hover:border-border-medium transition-colors duration-200">
-          <label className="text-label text-primary-text font-semibold block mb-4">
+        <div className="bg-white border border-gray-200 rounded-lg p-6 hover:border-gray-300 hover:shadow-sm transition-all duration-200">
+          <label className="text-sm font-semibold text-gray-900 block mb-3">
             Date & Time
           </label>
-          <p className="text-body text-primary-text font-medium">December 6, 2024 - 10:30 AM</p>
+          <p className="text-base text-gray-700 font-medium">December 6, 2024 - 10:30 AM</p>
         </div>
-        <div className="bg-card-background border-2 border-border-light rounded-md p-6 hover:border-border-medium transition-colors duration-200">
-          <label className="text-label text-primary-text font-semibold block mb-4">
+        <div className="bg-white border border-gray-200 rounded-lg p-6 hover:border-gray-300 hover:shadow-sm transition-all duration-200">
+          <label className="text-sm font-semibold text-gray-900 block mb-3">
             Location
           </label>
-          <p className="text-body text-primary-text font-medium">Community Center - Main Hall</p>
+          <p className="text-base text-gray-700 font-medium">Community Center - Main Hall</p>
         </div>
       </div>
     </div>
@@ -40,19 +40,19 @@ const Step2 = () => (
       icon={<Users className="w-7 h-7 text-white" />}
       onViewContent={() => console.log('View content clicked')}
     />
-    <div className="px-xxxl py-xxl">
+    <div className="px-6 py-6">
       <div className="space-y-6">
-        <div className="bg-card-background border-2 border-border-light rounded-md p-6 hover:border-border-medium transition-colors duration-200">
-          <label className="text-label text-primary-text font-semibold block mb-4">
+        <div className="bg-white border border-gray-200 rounded-lg p-6 hover:border-gray-300 hover:shadow-sm transition-all duration-200">
+          <label className="text-sm font-semibold text-gray-900 block mb-3">
             Participant
           </label>
-          <p className="text-body text-primary-text font-medium">John Doe</p>
+          <p className="text-base text-gray-700 font-medium">John Doe</p>
         </div>
-        <div className="bg-card-background border-2 border-border-light rounded-md p-6 hover:border-border-medium transition-colors duration-200">
-          <label className="text-label text-primary-text font-semibold block mb-4">
+        <div className="bg-white border border-gray-200 rounded-lg p-6 hover:border-gray-300 hover:shadow-sm transition-all duration-200">
+          <label className="text-sm font-semibold text-gray-900 block mb-3">
             Staff Member
           </label>
-          <p className="text-body text-primary-text font-medium">Jane Smith</p>
+          <p className="text-base text-gray-700 font-medium">Jane Smith</p>
         </div>
       </div>
     </div>
@@ -68,12 +68,12 @@ const Step3 = () => (
       icon={<FileText className="w-7 h-7 text-white" />}
       onViewContent={() => console.log('View content clicked')}
     />
-    <div className="px-xxxl py-xxl">
-      <div className="bg-card-background border-2 border-border-light rounded-md p-6 hover:border-border-medium transition-colors duration-200">
-        <label className="text-label text-primary-text font-semibold block mb-4">
+    <div className="px-6 py-6">
+      <div className="bg-white border border-gray-200 rounded-lg p-6 hover:border-gray-300 hover:shadow-sm transition-all duration-200">
+        <label className="text-sm font-semibold text-gray-900 block mb-3">
           Description
         </label>
-        <p className="text-body text-primary-text leading-relaxed">
+        <p className="text-base text-gray-700 leading-relaxed">
           The participant experienced difficulty with mobility during the morning activity session...
         </p>
       </div>
@@ -90,19 +90,19 @@ const Step4 = () => (
       icon={<Shield className="w-7 h-7 text-white" />}
       onViewContent={() => console.log('View content clicked')}
     />
-    <div className="px-xxxl py-xxl">
+    <div className="px-6 py-6">
       <div className="space-y-6">
-        <div className="bg-card-background border-2 border-border-light rounded-md p-6 hover:border-border-medium transition-colors duration-200">
-          <label className="text-label text-primary-text font-semibold block mb-4">
+        <div className="bg-white border border-gray-200 rounded-lg p-6 hover:border-gray-300 hover:shadow-sm transition-all duration-200">
+          <label className="text-sm font-semibold text-gray-900 block mb-3">
             Immediate Response
           </label>
-          <p className="text-body text-primary-text leading-relaxed">Staff provided assistance and ensured participant safety</p>
+          <p className="text-base text-gray-700 leading-relaxed">Staff provided assistance and ensured participant safety</p>
         </div>
-        <div className="bg-card-background border-2 border-border-light rounded-md p-6 hover:border-border-medium transition-colors duration-200">
-          <label className="text-label text-primary-text font-semibold block mb-4">
+        <div className="bg-white border border-gray-200 rounded-lg p-6 hover:border-gray-300 hover:shadow-sm transition-all duration-200">
+          <label className="text-sm font-semibold text-gray-900 block mb-3">
             Medical Attention
           </label>
-          <p className="text-body text-primary-text leading-relaxed">First aid administered, no further medical attention required</p>
+          <p className="text-base text-gray-700 leading-relaxed">First aid administered, no further medical attention required</p>
         </div>
       </div>
     </div>
@@ -118,10 +118,10 @@ const Step5 = () => (
       icon={<CheckCircle className="w-7 h-7 text-white" />}
       onViewContent={() => console.log('View content clicked')}
     />
-    <div className="px-xxxl py-xxl">
-      <div className="bg-light-blue border-2 border-primary-blue/20 rounded-md p-6">
-        <p className="text-label text-deep-navy font-semibold mb-2">Ready to Submit</p>
-        <p className="text-body text-primary-text leading-relaxed">
+    <div className="px-6 py-6">
+      <div className="bg-blue-50 border border-blue-200 rounded-lg p-6">
+        <p className="text-sm font-semibold text-blue-900 mb-2">Ready to Submit</p>
+        <p className="text-base text-gray-700 leading-relaxed">
           All required information has been collected. Click Finish to submit the incident report.
         </p>
       </div>
@@ -144,10 +144,10 @@ export default function IncidentCapture() {
   };
 
   return (
-    <div className='p-4 md:p-8'>
+    <div className='p-6'>
       <div className='max-w-5xl mx-auto'>
-        <h1 className='text-2xl md:text-3xl font-bold mb-4 md:mb-6'>Incident Capture Workflow</h1>
-        <div className='bg-white rounded-lg shadow-sm border min-h-[500px] flex flex-col'>
+        <h1 className='text-3xl font-bold text-gray-900 mb-6'>Incident Capture Workflow</h1>
+        <div className='bg-white rounded-xl shadow-lg border border-gray-200 min-h-[600px] flex flex-col'>
           <Wizard steps={steps} onComplete={handleComplete} />
         </div>
       </div>

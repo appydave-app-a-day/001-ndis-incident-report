@@ -5,32 +5,30 @@ import * as React from 'react';
 import { cn } from '@/lib/utils';
 
 const buttonVariants = cva(
-  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-sm text-body font-semibold transition-all duration-200 disabled:pointer-events-none disabled:opacity-60 disabled:cursor-not-allowed [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none",
+  "inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50",
   {
     variants: {
       variant: {
-        default:
-          'bg-deep-navy text-white hover:bg-primary hover:transform hover:-translate-y-px focus-visible:ring-4 focus-visible:ring-primary-blue/10 focus-visible:border-primary-blue',
+        default: "bg-primary text-primary-foreground hover:bg-primary/90",
         destructive:
-          'bg-error-red text-white hover:bg-error-red/90 hover:transform hover:-translate-y-px focus-visible:ring-4 focus-visible:ring-error-red/10',
+          "bg-destructive text-destructive-foreground hover:bg-destructive/90",
         outline:
-          'border-2 border-border-light bg-transparent text-secondary-text hover:bg-light-background hover:border-border-medium focus-visible:ring-4 focus-visible:ring-primary-blue/10 focus-visible:border-primary-blue',
+          "border border-input bg-background hover:bg-accent hover:text-accent-foreground",
         secondary:
-          'bg-transparent text-secondary-text border-2 border-border-light hover:bg-light-background hover:border-border-medium focus-visible:ring-4 focus-visible:ring-primary-blue/10',
-        ghost:
-          'hover:bg-light-background hover:text-primary-text',
-        link: 'text-primary-blue underline-offset-4 hover:underline hover:text-primary-blue/80',
+          "bg-secondary text-secondary-foreground hover:bg-secondary/80",
+        ghost: "hover:bg-accent hover:text-accent-foreground",
+        link: "text-primary underline-offset-4 hover:underline",
       },
       size: {
-        default: 'px-6 py-3 has-[>svg]:px-5',
-        sm: 'px-4 py-2 text-caption has-[>svg]:px-3',
-        lg: 'px-8 py-4 text-lg has-[>svg]:px-6',
-        icon: 'size-12 p-3',
+        default: "h-10 px-4 py-2",
+        sm: "h-9 rounded-md px-3",
+        lg: "h-11 rounded-md px-8",
+        icon: "h-10 w-10",
       },
     },
     defaultVariants: {
-      variant: 'default',
-      size: 'default',
+      variant: "default",
+      size: "default",
     },
   }
 );

@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Desktop Single-App Framework Shell</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        primary: {
+                            50: '#eff6ff',
+                            500: '#3b82f6',
+                            600: '#2563eb',
+                            700: '#1d4ed8',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-50 dark:bg-gray-900 font-sans transition-colors duration-200">
+    <!-- Main Container -->
+    <div class="flex h-screen">
+        <!-- Sidebar -->
+        <div class="w-64 bg-white dark:bg-gray-800 shadow-lg border-r border-gray-200 dark:border-gray-700 flex flex-col">
+            <!-- Logo/Header -->
+            <div class="p-6 border-b border-gray-200 dark:border-gray-700">
+                <h1 class="text-xl font-semibold text-gray-800 dark:text-white">App Framework</h1>
+            </div>
+            
+            <!-- Navigation Menu -->
+            <nav class="flex-1 p-4">
+                <ul class="space-y-2">
+                    <li>
+                        <button onclick="navigateTo('dashboard')" 
+                                class="nav-item w-full flex items-center px-4 py-3 text-left rounded-lg transition-colors duration-200 hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 active" 
+                                data-section="dashboard">
+                            <i class="fas fa-chart-line mr-3 w-5"></i>
+                            Dashboard
+                        </button>
+                    </li>
+                    <li>
+                        <button onclick="navigateTo('wizard')" 
+                                class="nav-item w-full flex items-center px-4 py-3 text-left rounded-lg transition-colors duration-200 hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300" 
+                                data-section="wizard">
+                            <i class="fas fa-magic mr-3 w-5"></i>
+                            Wizard
+                        </button>
+                    </li>
+                    <li>
+                        <button onclick="navigateTo('form')" 
+                                class="nav-item w-full flex items-center px-4 py-3 text-left rounded-lg transition-colors duration-200 hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300" 
+                                data-section="form">
+                            <i class="fas fa-edit mr-3 w-5"></i>
+                            Form
+                        </button>
+                    </li>
+                    <li>
+                        <button onclick="navigateTo('analytics')" 
+                                class="nav-item w-full flex items-center px-4 py-3 text-left rounded-lg transition-colors duration-200 hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300" 
+                                data-section="analytics">
+                            <i class="fas fa-chart-bar mr-3 w-5"></i>
+                            Analytics
+                        </button>
+                    </li>
+                </ul>
+            </nav>
+            
+            <!-- Settings Button -->
+            <div class="p-4 border-t border-gray-200 dark:border-gray-700">
+                <button onclick="toggleSettings()" 
+                        class="w-full flex items-center px-4 py-3 text-left rounded-lg transition-colors duration-200 hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300">
+                    <i class="fas fa-cog mr-3 w-5"></i>
+                    Settings
+                </button>
+            </div>
+        </div>
+        
+        <!-- Main Content Area -->
+        <div class="flex-1 flex flex-col">
+            <!-- Top Bar -->
+            <header class="bg-white dark:bg-gray-800 shadow-sm border-b border-gray-200 dark:border-gray-700 px-6 py-4">
+                <div class="flex items-center justify-between">
+                    <h2 id="page-title" class="text-2xl font-semibold text-gray-800 dark:text-white">Dashboard</h2>
+                    <div class="flex items-center space-x-4">
+                        <kbd class="px-2 py-1 text-xs bg-gray-100 dark:bg-gray-700 rounded text-gray-600 dark:text-gray-400">⌘K</kbd>
+                        <span class="text-sm text-gray-500 dark:text-gray-400">Quick Search</span>
+                    </div>
+                </div>
+            </header>
+            
+            <!-- Main Panel -->
+            <main class="flex-1 p-6 overflow-auto">
+                <!-- Dashboard Content -->
+                <div id="dashboard-content" class="content-panel">
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+                        <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <p class="text-sm text-gray-600 dark:text-gray-400">Total Users</p>
+                                    <p class="text-3xl font-bold text-gray-800 dark:text-white">2,547</p>
+                                </div>
+                                <div class="bg-blue-100 dark:bg-blue-900 p-3 rounded-full">
+                                    <i class="fas fa-users text-blue-600 dark:text-blue-400"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <p class="text-sm text-gray-600 dark:text-gray-400">Revenue</p>
+                                    <p class="text-3xl font-bold text-gray-800 dark:text-white">$24,780</p>
+                                </div>
+                                <div class="bg-green-100 dark:bg-green-900 p-3 rounded-full">
+                                    <i class="fas fa-dollar-sign text-green-600 dark:text-green-400"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <p class="text-sm text-gray-600 dark:text-gray-400">Active Projects</p>
+                                    <p class="text-3xl font-bold text-gray-800 dark:text-white">12</p>
+                                </div>
+                                <div class="bg-purple-100 dark:bg-purple-900 p-3 rounded-full">
+                                    <i class="fas fa-project-diagram text-purple-600 dark:text-purple-400"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6">
+                        <h3 class="text-lg font-semibold text-gray-800 dark:text-white mb-4">Recent Activity</h3>
+                        <div class="space-y-4">
+                            <div class="flex items-center space-x-3">
+                                <div class="w-2 h-2 bg-blue-500 rounded-full"></div>
+                                <span class="text-gray-700 dark:text-gray-300">New user registration</span>
+                                <span class="text-sm text-gray-500 dark:text-gray-500">2 hours ago</span>
+                            </div>
+                            <div class="flex items-center space-x-3">
+                                <div class="w-2 h-2 bg-green-500 rounded-full"></div>
+                                <span class="text-gray-700 dark:text-gray-300">Payment processed</span>
+                                <span class="text-sm text-gray-500 dark:text-gray-500">4 hours ago</span>
+                            </div>
+                            <div class="flex items-center space-x-3">
+                                <div class="w-2 h-2 bg-yellow-500 rounded-full"></div>
+                                <span class="text-gray-700 dark:text-gray-300">System update completed</span>
+                                <span class="text-sm text-gray-500 dark:text-gray-500">6 hours ago</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Wizard Content -->
+                <div id="wizard-content" class="content-panel hidden">
+                    <div class="max-w-2xl mx-auto">
+                        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-8">
+                            <div class="text-center mb-8">
+                                <div class="w-16 h-16 bg-blue-100 dark:bg-blue-900 rounded-full flex items-center justify-center mx-auto mb-4">
+                                    <i class="fas fa-magic text-2xl text-blue-600 dark:text-blue-400"></i>
+                                </div>
+                                <h3 class="text-2xl font-semibold text-gray-800 dark:text-white mb-2">Setup Wizard</h3>
+                                <p class="text-gray-600 dark:text-gray-400">Let's get you started with a quick setup process</p>
+                            </div>
+                            
+                            <div class="space-y-6">
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Project Name</label>
+                                    <input type="text" class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white" placeholder="Enter your project name">
+                                </div>
+                                
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Project Type</label>
+                                    <select class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white">
+                                        <option>Web Application</option>
+                                        <option>Mobile App</option>
+                                        <option>Desktop Software</option>
+                                        <option>API Service</option>
+                                    </select>
+                                </div>
+                                
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Description</label>
+                                    <textarea rows="4" class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white" placeholder="Describe your project..."></textarea>
+                                </div>
+                                
+                                <div class="flex justify-between pt-4">
+                                    <button class="px-4 py-2 text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-white">Skip</button>
+                                    <button class="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors duration-200">Continue</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Form Content -->
+                <div id="form-content" class="content-panel hidden">
+                    <div class="max-w-4xl mx-auto">
+                        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-8">
+                            <h3 class="text-2xl font-semibold text-gray-800 dark:text-white mb-6">Data Input Form</h3>
+                            
+                            <form class="space-y-6">
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">First Name</label>
+                                        <input type="text" class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white">
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Last Name</label>
+                                        <input type="text" class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white">
+                                    </div>
+                                </div>
+                                
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Email Address</label>
+                                    <input type="email" class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white">
+                                </div>
+                                
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Company</label>
+                                    <input type="text" class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white">
+                                </div>
+                                
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Role</label>
+                                    <select class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white">
+                                        <option>Developer</option>
+                                        <option>Designer</option>
+                                        <option>Product Manager</option>
+                                        <option>Marketing</option>
+                                        <option>Other</option>
+                                    </select>
+                                </div>
+                                
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Message</label>
+                                    <textarea rows="4" class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white"></textarea>
+                                </div>
+                                
+                                <div class="flex items-center">
+                                    <input type="checkbox" class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded">
+                                    <label class="ml-2 block text-sm text-gray-700 dark:text-gray-300">
+                                        I agree to the terms and conditions
+                                    </label>
+                                </div>
+                                
+                                <div class="flex justify-end space-x-4">
+                                    <button type="button" class="px-4 py-2 text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-white">Cancel</button>
+                                    <button type="submit" class="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors duration-200">Submit</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Analytics Content -->
+                <div id="analytics-content" class="content-panel hidden">
+                    <div class="space-y-6">
+                        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6">
+                            <h3 class="text-lg font-semibold text-gray-800 dark:text-white mb-4">Performance Metrics</h3>
+                            <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                                <div class="text-center">
+                                    <div class="text-3xl font-bold text-blue-600 dark:text-blue-400">98.5%</div>
+                                    <div class="text-sm text-gray-600 dark:text-gray-400">Uptime</div>
+                                </div>
+                                <div class="text-center">
+                                    <div class="text-3xl font-bold text-green-600 dark:text-green-400">1.2s</div>
+                                    <div class="text-sm text-gray-600 dark:text-gray-400">Avg Response</div>
+                                </div>
+                                <div class="text-center">
+                                    <div class="text-3xl font-bold text-yellow-600 dark:text-yellow-400">156</div>
+                                    <div class="text-sm text-gray-600 dark:text-gray-400">Requests/min</div>
+                                </div>
+                                <div class="text-center">
+                                    <div class="text-3xl font-bold text-purple-600 dark:text-purple-400">99.2%</div>
+                                    <div class="text-sm text-gray-600 dark:text-gray-400">Success Rate</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                            <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6">
+                                <h4 class="text-lg font-semibold text-gray-800 dark:text-white mb-4">Traffic Sources</h4>
+                                <div class="space-y-3">
+                                    <div class="flex items-center justify-between">
+                                        <span class="text-gray-600 dark:text-gray-400">Direct</span>
+                                        <span class="font-medium text-gray-800 dark:text-white">45%</span>
+                                    </div>
+                                    <div class="flex items-center justify-between">
+                                        <span class="text-gray-600 dark:text-gray-400">Search</span>
+                                        <span class="font-medium text-gray-800 dark:text-white">32%</span>
+                                    </div>
+                                    <div class="flex items-center justify-between">
+                                        <span class="text-gray-600 dark:text-gray-400">Social</span>
+                                        <span class="font-medium text-gray-800 dark:text-white">15%</span>
+                                    </div>
+                                    <div class="flex items-center justify-between">
+                                        <span class="text-gray-600 dark:text-gray-400">Referral</span>
+                                        <span class="font-medium text-gray-800 dark:text-white">8%</span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6">
+                                <h4 class="text-lg font-semibold text-gray-800 dark:text-white mb-4">Top Pages</h4>
+                                <div class="space-y-3">
+                                    <div class="flex items-center justify-between">
+                                        <span class="text-gray-600 dark:text-gray-400">/dashboard</span>
+                                        <span class="font-medium text-gray-800 dark:text-white">1,234</span>
+                                    </div>
+                                    <div class="flex items-center justify-between">
+                                        <span class="text-gray-600 dark:text-gray-400">/analytics</span>
+                                        <span class="font-medium text-gray-800 dark:text-white">892</span>
+                                    </div>
+                                    <div class="flex items-center justify-between">
+                                        <span class="text-gray-600 dark:text-gray-400">/form</span>
+                                        <span class="font-medium text-gray-800 dark:text-white">567</span>
+                                    </div>
+                                    <div class="flex items-center justify-between">
+                                        <span class="text-gray-600 dark:text-gray-400">/wizard</span>
+                                        <span class="font-medium text-gray-800 dark:text-white">234</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+    
+    <!-- Settings Modal -->
+    <div id="settings-modal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-xl p-6 w-96">
+            <div class="flex items-center justify-between mb-6">
+                <h3 class="text-lg font-semibold text-gray-800 dark:text-white">Settings</h3>
+                <button onclick="toggleSettings()" class="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Theme</label>
+                    <div class="flex space-x-4">
+                        <button onclick="setTheme('light')" class="theme-btn flex-1 px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md text-sm hover:bg-gray-50 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300">
+                            <i class="fas fa-sun mr-2"></i>Light
+                        </button>
+                        <button onclick="setTheme('dark')" class="theme-btn flex-1 px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md text-sm hover:bg-gray-50 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300">
+                            <i class="fas fa-moon mr-2"></i>Dark
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Command-K Search Modal -->
+    <div id="search-modal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-start justify-center pt-32 z-50">
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-xl w-96 max-w-full mx-4">
+            <div class="p-4 border-b border-gray-200 dark:border-gray-700">
+                <input id="search-input" type="text" placeholder="Search..." class="w-full px-0 py-2 text-lg bg-transparent border-none outline-none text-gray-800 dark:text-white placeholder-gray-500 dark:placeholder-gray-400">
+            </div>
+            <div id="search-results" class="p-4 max-h-64 overflow-y-auto">
+                <div class="text-sm text-gray-500 dark:text-gray-400">Start typing to search...</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Application state
+        let currentSection = 'dashboard';
+        let appState = {
+            dashboard: {},
+            wizard: {},
+            form: {},
+            analytics: {}
+        };
+
+        // Navigation
+        function navigateTo(section) {
+            // Update current section
+            currentSection = section;
+            
+            // Update navigation active state
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.classList.remove('active', 'bg-blue-100', 'dark:bg-blue-900', 'text-blue-700', 'dark:text-blue-300');
+                item.classList.add('text-gray-700', 'dark:text-gray-300');
+            });
+            
+            const activeItem = document.querySelector(`[data-section="${section}"]`);
+            if (activeItem) {
+                activeItem.classList.add('active', 'bg-blue-100', 'dark:bg-blue-900', 'text-blue-700', 'dark:text-blue-300');
+                activeItem.classList.remove('text-gray-700', 'dark:text-gray-300');
+            }
+            
+            // Update page title
+            const titles = {
+                dashboard: 'Dashboard',
+                wizard: 'Setup Wizard',
+                form: 'Data Input Form',
+                analytics: 'Analytics'
+            };
+            document.getElementById('page-title').textContent = titles[section] || section;
+            
+            // Show/hide content panels
+            document.querySelectorAll('.content-panel').forEach(panel => {
+                panel.classList.add('hidden');
+            });
+            
+            const targetPanel = document.getElementById(`${section}-content`);
+            if (targetPanel) {
+                targetPanel.classList.remove('hidden');
+            }
+        }
+
+        // Settings modal
+        function toggleSettings() {
+            const modal = document.getElementById('settings-modal');
+            modal.classList.toggle('hidden');
+            modal.classList.toggle('flex');
+        }
+
+        // Theme management
+        function setTheme(theme) {
+            if (theme === 'dark') {
+                document.documentElement.classList.add('dark');
+                localStorage.setItem('theme', 'dark');
+            } else {
+                document.documentElement.classList.remove('dark');
+                localStorage.setItem('theme', 'light');
+            }
+        }
+
+        // Initialize theme
+        function initTheme() {
+            const savedTheme = localStorage.getItem('theme');
+            const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            
+            if (savedTheme === 'dark' || (!savedTheme && prefersDark)) {
+                setTheme('dark');
+            } else {
+                setTheme('light');
+            }
+        }
+
+        // Command-K search functionality
+        function toggleSearch() {
+            const modal = document.getElementById('search-modal');
+            const input = document.getElementById('search-input');
+            
+            if (modal.classList.contains('hidden')) {
+                modal.classList.remove('hidden');
+                modal.classList.add('flex');
+                input.focus();
+            } else {
+                modal.classList.add('hidden');
+                modal.classList.remove('flex');
+                input.value = '';
+                updateSearchResults('');
+            }
+        }
+
+        function updateSearchResults(query) {
+            const resultsContainer = document.getElementById('search-results');
+            
+            if (!query.trim()) {
+                resultsContainer.innerHTML = '<div class="text-sm text-gray-500 dark:text-gray-400">Start typing to search...</div>';
+                return;
+            }
+            
+            // Mock search data
+            const searchData = [
+                { type: 'section', title: 'Dashboard', icon: 'fas fa-chart-line', action: () => navigateTo('dashboard') },
+                { type: 'section', title: 'Wizard', icon: 'fas fa-magic', action: () => navigateTo('wizard') },
+                { type: 'section', title: 'Form', icon: 'fas fa-edit', action: () => navigateTo('form') },
+                { type: 'section', title: 'Analytics', icon: 'fas fa-chart-bar', action: () => navigateTo('analytics') },
+                { type: 'data', title: 'Total Users', icon: 'fas fa-users', action: () => navigateTo('dashboard') },
+                { type: 'data', title: 'Revenue', icon: 'fas fa-dollar-sign', action: () => navigateTo('dashboard') },
+                { type: 'data', title: 'Active Projects', icon: 'fas fa-project-diagram', action: () => navigateTo('dashboard') },
+                { type: 'setting', title: 'Settings', icon: 'fas fa-cog', action: () => toggleSettings() },
+                { type: 'setting', title: 'Dark Mode', icon: 'fas fa-moon', action: () => setTheme('dark') },
+                { type: 'setting', title: 'Light Mode', icon: 'fas fa-sun', action: () => setTheme('light') }
+            ];
+            
+            const filteredResults = searchData.filter(item => 
+                item.title.toLowerCase().includes(query.toLowerCase())
+            );
+            
+            if (filteredResults.length === 0) {
+                resultsContainer.innerHTML = '<div class="text-sm text-gray-500 dark:text-gray-400">No results found</div>';
+                return;
+            }
+            
+            const resultsHTML = filteredResults.map(item => `
+                <div class="flex items-center px-3 py-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer transition-colors duration-200" onclick="executeSearchAction('${item.title}')">
+                    <i class="${item.icon} text-gray-400 mr-3 w-4"></i>
+                    <span class="text-gray-800 dark:text-white">${item.title}</span>
+                    <span class="ml-auto text-xs text-gray-500 dark:text-gray-400">${item.type}</span>
+                </div>
+            `).join('');
+            
+            resultsContainer.innerHTML = resultsHTML;
+        }
+
+        function executeSearchAction(title) {
+            const searchData = {
+                'Dashboard': () => navigateTo('dashboard'),
+                'Wizard': () => navigateTo('wizard'),
+                'Form': () => navigateTo('form'),
+                'Analytics': () => navigateTo('analytics'),
+                'Total Users': () => navigateTo('dashboard'),
+                'Revenue': () => navigateTo('dashboard'),
+                'Active Projects': () => navigateTo('dashboard'),
+                'Settings': () => toggleSettings(),
+                'Dark Mode': () => setTheme('dark'),
+                'Light Mode': () => setTheme('light')
+            };
+            
+            if (searchData[title]) {
+                searchData[title]();
+                toggleSearch();
+            }
+        }
+
+        // Event listeners
+        document.addEventListener('DOMContentLoaded', function() {
+            initTheme();
+            navigateTo('dashboard');
+        });
+
+        // Keyboard shortcuts
+        document.addEventListener('keydown', function(e) {
+            // Command/Ctrl + K for search
+            if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+                e.preventDefault();
+                toggleSearch();
+            }
+            
+            // Escape to close modals
+            if (e.key === 'Escape') {
+                const settingsModal = document.getElementById('settings-modal');
+                const searchModal = document.getElementById('search-modal');
+                
+                if (!settingsModal.classList.contains('hidden')) {
+                    toggleSettings();
+                }
+                
+                if (!searchModal.classList.contains('hidden')) {
+                    toggleSearch();
+                }
+            }
+        });
+
+        // Search input handler
+        document.getElementById('search-input').addEventListener('input', function(e) {
+            updateSearchResults(e.target.value);
+        });
+
+        // Click outside to close modals
+        document.addEventListener('click', function(e) {
+            const settingsModal = document.getElementById('settings-modal');
+            const searchModal = document.getElementById('search-modal');
+            
+            if (e.target === settingsModal) {
+                toggleSettings();
+            }
+            
+            if (e.target === searchModal) {
+                toggleSearch();
+            }
+        });
+    </script>
+</body>
+</html>

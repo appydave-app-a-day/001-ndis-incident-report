@@ -12,26 +12,6 @@ export default {
     },
     extend: {
       colors: {
-        // Style guide specific colors
-        'primary-blue': 'hsl(var(--primary-blue))',
-        'deep-navy': 'hsl(var(--deep-navy))',
-        'light-blue': 'hsl(var(--light-blue))',
-        'soft-blue': 'hsl(var(--soft-blue))',
-        'primary-text': 'hsl(var(--primary-text))',
-        'secondary-text': 'hsl(var(--secondary-text))',
-        'tertiary-text': 'hsl(var(--tertiary-text))',
-        'border-light': 'hsl(var(--border-light))',
-        'border-medium': 'hsl(var(--border-medium))',
-        'app-background': 'hsl(var(--app-background))',
-        'card-background': 'hsl(var(--card-background))',
-        'light-background': 'hsl(var(--light-background))',
-        'success-green': 'hsl(var(--success-green))',
-        'warning-orange': 'hsl(var(--warning-orange))',
-        'warning-background': 'hsl(var(--warning-background))',
-        'warning-text': 'hsl(var(--warning-text))',
-        'error-red': 'hsl(var(--error-red))',
-        
-        // Shadcn/ui compatibility
         border: 'hsl(var(--border))',
         input: 'hsl(var(--input))',
         ring: 'hsl(var(--ring))',
