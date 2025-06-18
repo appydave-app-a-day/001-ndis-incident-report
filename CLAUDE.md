@@ -73,13 +73,22 @@ The wizard framework is fully functional with professional styling. Ready to beg
 
 This project follows the **BMAD Method (Breakthrough Method of Agile (ai-driven) Development)** for structured AI-assisted development. When implementing stories, follow this 5-step iterative workflow:
 
+### IMPORTANT: Story Creation vs Implementation
+**When asked to "create a story":**
+- ONLY create the story card documentation
+- DO NOT implement the story code
+- Present the story card to the user for review
+- Wait for explicit approval before implementing
+
 ### 1. Write Story Card
 - Create detailed story documentation in `docs/stories/{Epic}.{Story}.story.md`
 - Use the story template with complete acceptance criteria and technical guidance
 - Include specific implementation tasks and development context
 - Story must be approved before proceeding to implementation
+- **STOP HERE when asked to "create a story"**
 
 ### 2. Implement Story Card  
+- **ONLY proceed with implementation when explicitly asked**
 - Code implementation following the story's technical guidance and tasks
 - Use existing project conventions and architectural patterns
 - Implement all acceptance criteria and functional requirements
