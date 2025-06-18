@@ -1,4 +1,5 @@
 import { BeforeEventClarificationStep } from '@/components/BeforeEventClarificationStep';
+import { DuringEventClarificationStep } from '@/components/DuringEventClarificationStep';
 import { MetadataInputStep } from '@/components/MetadataInputStep';
 import { NarrativeInputStep } from '@/components/NarrativeInputStep';
 import { Wizard } from '@/components/wizard';
@@ -14,28 +15,7 @@ const Step2 = () => <NarrativeInputStep />;
 
 const Step3 = () => <BeforeEventClarificationStep />;
 
-const Step4 = () => (
-  <div>
-    <StepHeader
-      stepNumber={4}
-      title="Step 4: Incident Details"
-      subtitle="Describe what happened during the incident."
-      onViewContent={() => console.log('View content clicked')}
-    />
-    <div className="px-6 py-6">
-      <div className="space-y-6">
-        <div className="bg-white border border-gray-200 rounded-lg p-6 hover:border-gray-300 hover:shadow-sm transition-all duration-200">
-          <label className="text-sm font-semibold text-gray-900 block mb-3">
-            Description
-          </label>
-          <p className="text-base text-gray-700 leading-relaxed">
-            The participant experienced difficulty with mobility during the morning activity session...
-          </p>
-        </div>
-      </div>
-    </div>
-  </div>
-);
+const Step4 = () => <DuringEventClarificationStep />;
 
 const Step5 = () => (
   <div>
@@ -87,7 +67,7 @@ export default function IncidentCapture() {
       onLeave: fetchClarificationQuestions
     },
     { id: 'before-clarification', title: 'Before Event', component: Step3 },
-    { id: 'details', title: 'Details', component: Step4 },
+    { id: 'during-clarification', title: 'During Event', component: Step4 },
     { id: 'review', title: 'Review', component: Step5 },
   ];
 
