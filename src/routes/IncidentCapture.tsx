@@ -1,5 +1,4 @@
-import { FileText, Shield, CheckCircle } from 'lucide-react';
-
+import { BeforeEventClarificationStep } from '@/components/BeforeEventClarificationStep';
 import { MetadataInputStep } from '@/components/MetadataInputStep';
 import { NarrativeInputStep } from '@/components/NarrativeInputStep';
 import { Wizard } from '@/components/wizard';
@@ -13,50 +12,25 @@ const Step1 = () => <MetadataInputStep />;
 
 const Step2 = () => <NarrativeInputStep />;
 
-const Step3 = () => (
-  <div>
-    <StepHeader
-      stepNumber={3}
-      title="Step 3: Incident Details"
-      subtitle="Describe what happened during the incident."
-      icon={<FileText className="w-7 h-7 text-white" />}
-      onViewContent={() => console.log('View content clicked')}
-    />
-    <div className="px-6 py-6">
-      <div className="bg-white border border-gray-200 rounded-lg p-6 hover:border-gray-300 hover:shadow-sm transition-all duration-200">
-        <label className="text-sm font-semibold text-gray-900 block mb-3">
-          Description
-        </label>
-        <p className="text-base text-gray-700 leading-relaxed">
-          The participant experienced difficulty with mobility during the morning activity session...
-        </p>
-      </div>
-    </div>
-  </div>
-);
+const Step3 = () => <BeforeEventClarificationStep />;
 
 const Step4 = () => (
   <div>
     <StepHeader
       stepNumber={4}
-      title="Step 4: Actions Taken"
-      subtitle="Document the immediate actions taken."
-      icon={<Shield className="w-7 h-7 text-white" />}
+      title="Step 4: Incident Details"
+      subtitle="Describe what happened during the incident."
       onViewContent={() => console.log('View content clicked')}
     />
     <div className="px-6 py-6">
       <div className="space-y-6">
         <div className="bg-white border border-gray-200 rounded-lg p-6 hover:border-gray-300 hover:shadow-sm transition-all duration-200">
           <label className="text-sm font-semibold text-gray-900 block mb-3">
-            Immediate Response
+            Description
           </label>
-          <p className="text-base text-gray-700 leading-relaxed">Staff provided assistance and ensured participant safety</p>
-        </div>
-        <div className="bg-white border border-gray-200 rounded-lg p-6 hover:border-gray-300 hover:shadow-sm transition-all duration-200">
-          <label className="text-sm font-semibold text-gray-900 block mb-3">
-            Medical Attention
-          </label>
-          <p className="text-base text-gray-700 leading-relaxed">First aid administered, no further medical attention required</p>
+          <p className="text-base text-gray-700 leading-relaxed">
+            The participant experienced difficulty with mobility during the morning activity session...
+          </p>
         </div>
       </div>
     </div>
@@ -69,7 +43,6 @@ const Step5 = () => (
       stepNumber={5}
       title="Step 5: Review & Submit"
       subtitle="Review all information before submitting."
-      icon={<CheckCircle className="w-7 h-7 text-white" />}
       onViewContent={() => console.log('View content clicked')}
     />
     <div className="px-6 py-6">
@@ -113,8 +86,8 @@ export default function IncidentCapture() {
       isValid: isNarrativeComplete,
       onLeave: fetchClarificationQuestions
     },
-    { id: 'details', title: 'Details', component: Step3 },
-    { id: 'actions', title: 'Actions', component: Step4 },
+    { id: 'before-clarification', title: 'Before Event', component: Step3 },
+    { id: 'details', title: 'Details', component: Step4 },
     { id: 'review', title: 'Review', component: Step5 },
   ];
 

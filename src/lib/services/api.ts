@@ -1,4 +1,4 @@
-import type { IncidentNarrative, ClarificationQuestions } from '@/store/useIncidentStore';
+import type { ClarificationQuestions, IncidentNarrative } from '@/store/useIncidentStore';
 
 // API configuration
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5678';
@@ -7,7 +7,7 @@ const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5678
 const mockClarificationQuestions: ClarificationQuestions = {
   before: [
     { id: 'b1', question: 'What was the participant doing before the incident?', phase: 'before' },
-    { id: 'b2', question: 'Were there any warning signs or triggers?', phase: 'before' },
+    { id: 'b2', question: 'Do you like green eggs?', phase: 'before' },
     { id: 'b3', question: 'What was the environment like before the incident?', phase: 'before' }
   ],
   during: [
