@@ -1,39 +1,17 @@
-import { Wizard } from '@/components/wizard';
-import { StepHeader } from '@/components/wizard/StepHeader';
+import { FileText, Shield, CheckCircle } from 'lucide-react';
+
 import { MetadataInputStep } from '@/components/MetadataInputStep';
-import { useIncidentStore } from '@/store/useIncidentStore';
+import { NarrativeInputStep } from '@/components/NarrativeInputStep';
+import { Wizard } from '@/components/wizard';
 import type { WizardStep } from '@/components/wizard';
-import { Users, FileText, Shield, CheckCircle } from 'lucide-react';
+import { StepHeader } from '@/components/wizard/StepHeader';
+import { IncidentApiService } from '@/lib/services/api';
+import { useIncidentStore } from '@/store/useIncidentStore';
+
 
 const Step1 = () => <MetadataInputStep />;
 
-const Step2 = () => (
-  <div>
-    <StepHeader
-      stepNumber={2}
-      title="Step 2: People Involved"
-      subtitle="Identify all people involved in the incident."
-      icon={<Users className="w-7 h-7 text-white" />}
-      onViewContent={() => console.log('View content clicked')}
-    />
-    <div className="px-6 py-6">
-      <div className="space-y-6">
-        <div className="bg-white border border-gray-200 rounded-lg p-6 hover:border-gray-300 hover:shadow-sm transition-all duration-200">
-          <label className="text-sm font-semibold text-gray-900 block mb-3">
-            Participant
-          </label>
-          <p className="text-base text-gray-700 font-medium">John Doe</p>
-        </div>
-        <div className="bg-white border border-gray-200 rounded-lg p-6 hover:border-gray-300 hover:shadow-sm transition-all duration-200">
-          <label className="text-sm font-semibold text-gray-900 block mb-3">
-            Staff Member
-          </label>
-          <p className="text-base text-gray-700 font-medium">Jane Smith</p>
-        </div>
-      </div>
-    </div>
-  </div>
-);
+const Step2 = () => <NarrativeInputStep />;
 
 const Step3 = () => (
   <div>
@@ -106,7 +84,20 @@ const Step5 = () => (
 );
 
 export default function IncidentCapture() {
-  const { isMetadataComplete } = useIncidentStore();
+  const { isMetadataComplete, isNarrativeComplete, report, setClarificationQuestions, setLoadingQuestions } = useIncidentStore();
+
+  // Function to fetch clarification questions when leaving narrative step
+  const fetchClarificationQuestions = async () => {
+    try {
+      setLoadingQuestions(true);
+      const questions = await IncidentApiService.getClarificationQuestions(report.narrative);
+      setClarificationQuestions(questions);
+    } catch (error) {
+      console.error('Failed to fetch clarification questions:', error);
+    } finally {
+      setLoadingQuestions(false);
+    }
+  };
 
   const steps: WizardStep[] = [
     { 
@@ -115,7 +106,13 @@ export default function IncidentCapture() {
       component: Step1,
       isValid: isMetadataComplete
     },
-    { id: 'people', title: 'People', component: Step2 },
+    { 
+      id: 'narrative', 
+      title: 'Narrative', 
+      component: Step2,
+      isValid: isNarrativeComplete,
+      onLeave: fetchClarificationQuestions
+    },
     { id: 'details', title: 'Details', component: Step3 },
     { id: 'actions', title: 'Actions', component: Step4 },
     { id: 'review', title: 'Review', component: Step5 },
@@ -129,8 +126,7 @@ export default function IncidentCapture() {
   return (
     <div className='p-8'>
       <div className='max-w-4xl mx-auto'>
-        <h1 className='wizard-main-title'>Incident Capture Workflow</h1>
-        <div className='wizard-container min-h-[600px] flex flex-col'>
+        <div className='wizard-container flex flex-col'>
           <Wizard steps={steps} onComplete={handleComplete} />
         </div>
       </div>

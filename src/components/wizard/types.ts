@@ -5,6 +5,7 @@ export interface WizardStep {
   title: string;
   component: ComponentType;
   isValid?: () => boolean;
+  onLeave?: () => Promise<void> | void;
 }
 
 export interface WizardProps {

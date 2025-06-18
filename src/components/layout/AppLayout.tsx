@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from 'react';
 import { BarChart3, Settings, Wand2, FileText } from 'lucide-react';
-import { Outlet, useLocation, useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { Outlet, useLocation, useNavigate, NavLink } from 'react-router-dom';
 
-import { SettingsModal } from '@/components/layout/SettingsModal';
 import { CommandPalette } from '@/components/layout/CommandPalette';
+import { SettingsModal } from '@/components/layout/SettingsModal';
 import { cn } from '@/lib/utils';
 
 const navigationItems = [
@@ -156,9 +156,9 @@ export const AppLayout: React.FC = () => {
         </header>
         
         {/* Main Content */}
-        <main className="flex-1 overflow-hidden bg-gray-50 dark:bg-gray-900">
+        <main className="flex-1 overflow-y-auto bg-gray-50 dark:bg-gray-900">
           {isHome ? (
-            <div className="h-full overflow-y-auto p-6">
+            <div className="h-full p-6">
               <div className="max-w-4xl mx-auto">
                 <div className="text-center mb-12">
                   <h1 className="text-4xl font-bold text-gray-900 dark:text-white mb-4">
@@ -197,7 +197,7 @@ export const AppLayout: React.FC = () => {
               </div>
             </div>
           ) : (
-            <div className="h-full p-6">
+            <div className="p-6">
               <Outlet />
             </div>
           )}

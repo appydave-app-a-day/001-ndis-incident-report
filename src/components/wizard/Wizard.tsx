@@ -36,7 +36,17 @@ export const Wizard: React.FC<WizardProps> = ({ steps, onComplete }) => {
 
   const StepComponent = currentStep.component;
 
-  const handleNext = () => {
+  const handleNext = async () => {
+    // Call onLeave callback if defined for current step
+    if (currentStep.onLeave) {
+      try {
+        await currentStep.onLeave();
+      } catch (error) {
+        console.error('Error in onLeave callback:', error);
+        // Continue anyway - don't block navigation on callback errors
+      }
+    }
+    
     if (isLastStep() && onComplete) {
       onComplete();
     } else {
@@ -57,9 +67,9 @@ export const Wizard: React.FC<WizardProps> = ({ steps, onComplete }) => {
   };
 
   return (
-    <div className="w-full bg-white rounded-xl overflow-hidden h-full flex flex-col">
+    <div className="w-full bg-white rounded-xl overflow-hidden flex flex-col">
       <ProgressIndicator steps={steps} />
-      <div className="wizard-content flex-1 min-h-[500px]">
+      <div className="wizard-content">
         <StepComponent />
       </div>
       <div className="border-t border-gray-200 bg-gray-50 px-8 py-6 flex justify-between items-center">

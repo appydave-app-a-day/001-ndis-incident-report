@@ -14,6 +14,19 @@ export interface IncidentNarrative {
   postEvent: string;
 }
 
+export interface ClarificationQuestion {
+  id: string;
+  question: string;
+  phase: 'before' | 'during' | 'end' | 'postEvent';
+}
+
+export interface ClarificationQuestions {
+  before: ClarificationQuestion[];
+  during: ClarificationQuestion[];
+  end: ClarificationQuestion[];
+  postEvent: ClarificationQuestion[];
+}
+
 export interface IncidentReport {
   metadata: IncidentMetadata;
   narrative: IncidentNarrative;
@@ -21,10 +34,15 @@ export interface IncidentReport {
 
 interface IncidentState {
   report: IncidentReport;
+  clarificationQuestions: ClarificationQuestions | null;
+  isLoadingQuestions: boolean;
   updateMetadata: (metadata: Partial<IncidentMetadata>) => void;
   updateNarrative: (narrative: Partial<IncidentNarrative>) => void;
+  setClarificationQuestions: (questions: ClarificationQuestions) => void;
+  setLoadingQuestions: (loading: boolean) => void;
   reset: () => void;
   isMetadataComplete: () => boolean;
+  isNarrativeComplete: () => boolean;
 }
 
 const initialReport: IncidentReport = {
@@ -44,6 +62,8 @@ const initialReport: IncidentReport = {
 
 export const useIncidentStore = create<IncidentState>((set, get) => ({
   report: initialReport,
+  clarificationQuestions: null,
+  isLoadingQuestions: false,
   
   updateMetadata: (metadata) =>
     set((state) => ({
@@ -61,6 +81,12 @@ export const useIncidentStore = create<IncidentState>((set, get) => ({
       },
     })),
     
+  setClarificationQuestions: (questions) =>
+    set({ clarificationQuestions: questions }),
+    
+  setLoadingQuestions: (loading) =>
+    set({ isLoadingQuestions: loading }),
+    
   isMetadataComplete: () => {
     const { metadata } = get().report;
     return !!(
@@ -70,6 +96,20 @@ export const useIncidentStore = create<IncidentState>((set, get) => ({
       metadata.location.trim()
     );
   },
+  
+  isNarrativeComplete: () => {
+    const { narrative } = get().report;
+    return !!(
+      narrative.before.trim() ||
+      narrative.during.trim() ||
+      narrative.end.trim() ||
+      narrative.postEvent.trim()
+    );
+  },
     
-  reset: () => set({ report: initialReport }),
+  reset: () => set({ 
+    report: initialReport,
+    clarificationQuestions: null,
+    isLoadingQuestions: false
+  }),
 }));

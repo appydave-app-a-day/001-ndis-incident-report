@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { Calendar } from 'lucide-react';
 
+import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Card, CardContent } from '@/components/ui/card';
 import { StepHeader } from '@/components/wizard/StepHeader';
 import { useIncidentStore } from '@/store/useIncidentStore';
 
@@ -29,7 +28,6 @@ export const MetadataInputStep: React.FC = () => {
         stepNumber={1}
         title="Step 1: Incident Metadata"
         subtitle="Enter the basic information about the incident"
-        icon={<Calendar className="w-7 h-7 text-white" />}
         onViewContent={() => console.log('View content clicked')}
       />
       <div className="px-8 py-8">

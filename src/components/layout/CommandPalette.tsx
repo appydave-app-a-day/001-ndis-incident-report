@@ -1,5 +1,5 @@
-import React from 'react';
 import { BarChart3, Wand2, FileText, Settings, X } from 'lucide-react';
+import React from 'react';
 
 interface CommandPaletteProps {
   isOpen: boolean;
