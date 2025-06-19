@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 
 import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -9,10 +9,23 @@ import { useIncidentStore } from '@/store/useIncidentStore';
 export const MetadataInputStep: React.FC = () => {
   const { report, updateMetadata } = useIncidentStore();
   const [formData, setFormData] = useState(report.metadata);
+  const isUpdatingFromStoreRef = useRef(false);
 
-  // Update store when form data changes
+  // Sync local state with store when store changes externally
   useEffect(() => {
-    updateMetadata(formData);
+    isUpdatingFromStoreRef.current = true;
+    setFormData(report.metadata);
+    // Reset flag after state update completes
+    setTimeout(() => {
+      isUpdatingFromStoreRef.current = false;
+    }, 0);
+  }, [report.metadata]);
+
+  // Update store when form data changes (but not when updating from store)
+  useEffect(() => {
+    if (!isUpdatingFromStoreRef.current) {
+      updateMetadata(formData);
+    }
   }, [formData, updateMetadata]);
 
   const handleInputChange = (field: keyof typeof formData, value: string) => {

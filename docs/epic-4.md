@@ -69,7 +69,18 @@
     5.  Any answers provided are captured and stored in the application's state, associated with their respective questions.
     6.  This new wizard step is committed to version control.
 
-- **Story 4.7: Consolidate Narratives with AI**
+- **Story 4.7: Add Test Data Pre-Population Button**
+
+  - **User Story:** As a developer/tester, I want a quick way to populate all form fields with realistic test data so I can efficiently test and demonstrate the incident capture workflow without manually entering data every time.
+  - **Acceptance Criteria:**
+    1.  A "Test Data" button is added to the wizard header, positioned to the left of the existing "View" button.
+    2.  The button uses an appropriate icon (Flask, TestTube, or Data icon) with clear visual styling.
+    3.  Clicking the button instantly populates all 8 form fields across metadata and narrative sections with realistic test data.
+    4.  All populated data is immediately saved to the application state using existing store methods.
+    5.  The test data includes proper formatting for date/time fields (current date minus 1 day).
+    6.  Button functionality works from any wizard step and maintains design system consistency.
+
+- **Story 4.8: Consolidate Narratives with AI**
 
   - **User Story:** As a frontline worker, after answering the clarification questions, I want the system to automatically combine my original notes and my answers into a polished, well-written narrative for each phase of the incident.
   - **Acceptance Criteria:**
@@ -77,7 +88,7 @@
     2.  The request body contains the original narratives and the new clarification answers.
     3.  The application saves the four returned `_extra` string values into the `IncidentReport.narrative` object in the global state.
 
-- **Story 4.8: Implement Dynamic "Add Question" Feature**
+- **Story 4.9: Implement Dynamic "Add Question" Feature**
 
   - **User Story:** As a frontline worker, I want a simple button and text prompt on the clarification screens to suggest a new, useful question so I can help improve the reporting process.
   - **Acceptance Criteria:**
@@ -88,7 +99,7 @@
     5.  After submission, the input field is cleared and hidden, returning the UI to its previous state.
     6.  The new UI elements and their functionality are committed to version control.
 
-- **Story 4.9: Implement "Review and Complete" Step**
+- **Story 4.10: Implement "Review and Complete" Step**
   - **User Story:** As a frontline worker, I want a final review screen that consolidates my original narrative with all the answers from the clarification steps so I can confirm the complete report before finalizing it.
   - **Acceptance Criteria:**
     1.  The final step of the "Incident Capture" wizard is a read-only review screen.

@@ -3,6 +3,7 @@ import { DuringEventClarificationStep } from '@/components/DuringEventClarificat
 import { EndOfEventClarificationStep } from '@/components/EndOfEventClarificationStep';
 import { MetadataInputStep } from '@/components/MetadataInputStep';
 import { NarrativeInputStep } from '@/components/NarrativeInputStep';
+import { PostEventSupportClarificationStep } from '@/components/PostEventSupportClarificationStep';
 import { Wizard } from '@/components/wizard';
 import type { WizardStep } from '@/components/wizard';
 import { StepHeader } from '@/components/wizard/StepHeader';
@@ -20,11 +21,13 @@ const Step4 = () => <DuringEventClarificationStep />;
 
 const Step5 = () => <EndOfEventClarificationStep />;
 
-const Step6 = () => (
+const Step6 = () => <PostEventSupportClarificationStep />;
+
+const Step7 = () => (
   <div>
     <StepHeader
-      stepNumber={6}
-      title="Step 6: Review & Submit"
+      stepNumber={7}
+      title="Step 7: Review & Submit"
       subtitle="Review all information before submitting."
       onViewContent={() => console.log('View content clicked')}
     />
@@ -72,7 +75,8 @@ export default function IncidentCapture() {
     { id: 'before-clarification', title: 'Before Event', component: Step3 },
     { id: 'during-clarification', title: 'During Event', component: Step4 },
     { id: 'end-clarification', title: 'End of Event', component: Step5 },
-    { id: 'review', title: 'Review', component: Step6 },
+    { id: 'post-clarification', title: 'Post-Event Support', component: Step6 },
+    { id: 'review', title: 'Review', component: Step7 },
   ];
 
   const handleComplete = () => {

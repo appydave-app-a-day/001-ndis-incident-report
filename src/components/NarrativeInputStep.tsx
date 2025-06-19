@@ -1,5 +1,5 @@
 import { Loader2 } from 'lucide-react';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Card, CardContent } from '@/components/ui/card';
@@ -16,10 +16,23 @@ export const NarrativeInputStep: React.FC = () => {
   } = useIncidentStore();
   
   const [formData, setFormData] = useState(report.narrative);
+  const isUpdatingFromStoreRef = useRef(false);
 
-  // Update store when form data changes
+  // Sync local state with store when store changes externally
   useEffect(() => {
-    updateNarrative(formData);
+    isUpdatingFromStoreRef.current = true;
+    setFormData(report.narrative);
+    // Reset flag after state update completes
+    setTimeout(() => {
+      isUpdatingFromStoreRef.current = false;
+    }, 0);
+  }, [report.narrative]);
+
+  // Update store when form data changes (but not when updating from store)
+  useEffect(() => {
+    if (!isUpdatingFromStoreRef.current) {
+      updateNarrative(formData);
+    }
   }, [formData, updateNarrative]);
 
   const handleInputChange = (field: keyof typeof formData, value: string) => {

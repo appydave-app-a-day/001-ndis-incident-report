@@ -1,5 +1,7 @@
-import { Eye } from 'lucide-react';
+import { Eye, Database } from 'lucide-react';
 import React from 'react';
+
+import { useIncidentStore } from '@/store/useIncidentStore';
 
 interface StepHeaderProps {
   stepNumber: number;
@@ -14,8 +16,23 @@ export const StepHeader: React.FC<StepHeaderProps> = ({
   subtitle,
   onViewContent,
 }) => {
+  const { populateTestData } = useIncidentStore();
+
+  const handleTestData = () => {
+    populateTestData();
+  };
+
   return (
     <div className="step-header-improved">
+      <button
+        onClick={handleTestData}
+        className="debug-button z-10"
+        title="Populate test data"
+        style={{ right: '3.5rem' }}
+      >
+        <Database className="w-4 h-4" />
+      </button>
+      
       {onViewContent && (
         <button
           onClick={onViewContent}

@@ -54,6 +54,7 @@ interface IncidentState {
   updateClarificationAnswer: (phase: keyof ClarificationAnswers, questionId: string, answer: string) => void;
   setClarificationQuestions: (questions: ClarificationQuestions) => void;
   setLoadingQuestions: (loading: boolean) => void;
+  populateTestData: () => void;
   reset: () => void;
   isMetadataComplete: () => boolean;
   isNarrativeComplete: () => boolean;
@@ -152,6 +153,35 @@ export const useIncidentStore = create<IncidentState>((set, get) => ({
       narrative.end.trim() ||
       narrative.postEvent.trim()
     );
+  },
+
+  populateTestData: () => {
+    // Calculate date minus 1 day and format it
+    const yesterday = new Date();
+    yesterday.setDate(yesterday.getDate() - 1);
+    const formattedDate = yesterday.toISOString().slice(0, 16); // Format: YYYY-MM-DDTHH:MM
+
+    const testMetadata: IncidentMetadata = {
+      reporterName: 'David',
+      participantName: 'Lisa',
+      eventDateTime: formattedDate,
+      location: 'mascot',
+    };
+
+    const testNarrative: IncidentNarrative = {
+      before: 'Lisa was sitting in the lounge room just watching a little bit of TV she was fairly calm and peaceful, And then a pizza delivery man came and bashed on the door really loudly',
+      during: 'Lisa started getting incredibly agitated and started screaming intruder intruder, and went into the kitchen and grabbed a knife and threatened to hurt. Whoever was at the door',
+      end: 'the police were called and they came and were able to subdue Lisa get the knife away from her and then she was taken to the local psychiatric hospital',
+      postEvent: 'Lisa was is and kept overnight and returned back to the house the next day, she was calm',
+    };
+
+    set((state) => ({
+      report: {
+        ...state.report,
+        metadata: testMetadata,
+        narrative: testNarrative,
+      },
+    }));
   },
     
   reset: () => set({ 
