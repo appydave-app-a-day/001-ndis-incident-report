@@ -16,10 +16,19 @@ export const StepHeader: React.FC<StepHeaderProps> = ({
   subtitle,
   onViewContent,
 }) => {
-  const { populateTestData } = useIncidentStore();
+  const { populateTestData, testDataLevel } = useIncidentStore();
 
   const handleTestData = () => {
     populateTestData();
+  };
+
+  const getTooltipText = () => {
+    switch (testDataLevel) {
+      case 'none': return 'Populate basic test data (8 fields)';
+      case 'basic': return 'Add clarification answers (12 fields)';
+      case 'full': return 'Reset all data';
+      default: return 'Populate test data';
+    }
   };
 
   return (
@@ -27,7 +36,7 @@ export const StepHeader: React.FC<StepHeaderProps> = ({
       <button
         onClick={handleTestData}
         className="debug-button z-10"
-        title="Populate test data"
+        title={getTooltipText()}
         style={{ right: '3.5rem' }}
       >
         <Database className="w-4 h-4" />
