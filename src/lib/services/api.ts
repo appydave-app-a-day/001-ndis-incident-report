@@ -5,20 +5,20 @@ const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5678
 
 // Mock data for development
 const mockClarificationQuestions: ClarificationQuestions = {
-  before: [
-    { id: 'b1', question: 'What was the participant doing before the incident?', phase: 'before' },
-    { id: 'b2', question: 'Do you like green eggs?', phase: 'before' },
-    { id: 'b3', question: 'What was the environment like before the incident?', phase: 'before' }
+  beforeEvent: [
+    { id: 'b1', question: 'What was the participant doing before the incident?', phase: 'beforeEvent' },
+    { id: 'b2', question: 'Do you like green eggs?', phase: 'beforeEvent' },
+    { id: 'b3', question: 'What was the environment like before the incident?', phase: 'beforeEvent' }
   ],
-  during: [
-    { id: 'd1', question: 'How long did the incident last?', phase: 'during' },
-    { id: 'd2', question: 'Who else was present during the incident?', phase: 'during' },
-    { id: 'd3', question: 'What interventions were attempted?', phase: 'during' }
+  duringEvent: [
+    { id: 'd1', question: 'How long did the incident last?', phase: 'duringEvent' },
+    { id: 'd2', question: 'Who else was present during the incident?', phase: 'duringEvent' },
+    { id: 'd3', question: 'What interventions were attempted?', phase: 'duringEvent' }
   ],
-  end: [
-    { id: 'e1', question: 'How was the incident resolved?', phase: 'end' },
-    { id: 'e2', question: 'Was anyone injured?', phase: 'end' },
-    { id: 'e3', question: 'What was the immediate outcome?', phase: 'end' }
+  endEvent: [
+    { id: 'e1', question: 'How was the incident resolved?', phase: 'endEvent' },
+    { id: 'e2', question: 'Was anyone injured?', phase: 'endEvent' },
+    { id: 'e3', question: 'What was the immediate outcome?', phase: 'endEvent' }
   ],
   postEvent: [
     { id: 'p1', question: 'What follow-up actions were taken?', phase: 'postEvent' },
@@ -48,9 +48,9 @@ export const fetchClarificationQuestions = async (
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        narrative_before: narrative.before,
-        narrative_during: narrative.during,
-        narrative_end: narrative.end,
+        narrative_before: narrative.beforeEvent,
+        narrative_during: narrative.duringEvent,
+        narrative_end: narrative.endEvent,
         narrative_post_event: narrative.postEvent,
       }),
     });
@@ -63,20 +63,20 @@ export const fetchClarificationQuestions = async (
     
     // Transform API response to match our interface
     return {
-      before: data.before_questions?.map((q: string, index: number) => ({
+      beforeEvent: data.before_questions?.map((q: string, index: number) => ({
         id: `b${index + 1}`,
         question: q,
-        phase: 'before' as const
+        phase: 'beforeEvent' as const
       })) || [],
-      during: data.during_questions?.map((q: string, index: number) => ({
+      duringEvent: data.during_questions?.map((q: string, index: number) => ({
         id: `d${index + 1}`,
         question: q,
-        phase: 'during' as const
+        phase: 'duringEvent' as const
       })) || [],
-      end: data.end_questions?.map((q: string, index: number) => ({
+      endEvent: data.end_questions?.map((q: string, index: number) => ({
         id: `e${index + 1}`,
         question: q,
-        phase: 'end' as const
+        phase: 'endEvent' as const
       })) || [],
       postEvent: data.post_event_questions?.map((q: string, index: number) => ({
         id: `p${index + 1}`,

@@ -8,22 +8,22 @@ export interface IncidentMetadata {
 }
 
 export interface IncidentNarrative {
-  before: string;
-  during: string;
-  end: string;
+  beforeEvent: string;
+  duringEvent: string;
+  endEvent: string;
   postEvent: string;
 }
 
 export interface ClarificationQuestion {
   id: string;
   question: string;
-  phase: 'before' | 'during' | 'end' | 'postEvent';
+  phase: 'beforeEvent' | 'duringEvent' | 'endEvent' | 'postEvent';
 }
 
 export interface ClarificationQuestions {
-  before: ClarificationQuestion[];
-  during: ClarificationQuestion[];
-  end: ClarificationQuestion[];
+  beforeEvent: ClarificationQuestion[];
+  duringEvent: ClarificationQuestion[];
+  endEvent: ClarificationQuestion[];
   postEvent: ClarificationQuestion[];
 }
 
@@ -33,9 +33,9 @@ export interface ClarificationAnswer {
 }
 
 export interface ClarificationAnswers {
-  before: ClarificationAnswer[];
-  during: ClarificationAnswer[];
-  end: ClarificationAnswer[];
+  beforeEvent: ClarificationAnswer[];
+  duringEvent: ClarificationAnswer[];
+  endEvent: ClarificationAnswer[];
   postEvent: ClarificationAnswer[];
 }
 
@@ -71,15 +71,15 @@ const initialReport: IncidentReport = {
     location: '',
   },
   narrative: {
-    before: '',
-    during: '',
-    end: '',
+    beforeEvent: '',
+    duringEvent: '',
+    endEvent: '',
     postEvent: '',
   },
   clarificationAnswers: {
-    before: [],
-    during: [],
-    end: [],
+    beforeEvent: [],
+    duringEvent: [],
+    endEvent: [],
     postEvent: [],
   },
 };
@@ -152,9 +152,9 @@ export const useIncidentStore = create<IncidentState>((set, get) => ({
   isNarrativeComplete: () => {
     const { narrative } = get().report;
     return !!(
-      narrative.before.trim() ||
-      narrative.during.trim() ||
-      narrative.end.trim() ||
+      narrative.beforeEvent.trim() ||
+      narrative.duringEvent.trim() ||
+      narrative.endEvent.trim() ||
       narrative.postEvent.trim()
     );
   },
@@ -176,9 +176,9 @@ export const useIncidentStore = create<IncidentState>((set, get) => ({
       };
 
       const testNarrative: IncidentNarrative = {
-        before: 'Lisa was sitting in the lounge room just watching a little bit of TV she was fairly calm and peaceful, And then a pizza delivery man came and bashed on the door really loudly',
-        during: 'Lisa started getting incredibly agitated and started screaming intruder intruder, and went into the kitchen and grabbed a knife and threatened to hurt. Whoever was at the door',
-        end: 'the police were called and they came and were able to subdue Lisa get the knife away from her and then she was taken to the local psychiatric hospital',
+        beforeEvent: 'Lisa was sitting in the lounge room just watching a little bit of TV she was fairly calm and peaceful, And then a pizza delivery man came and bashed on the door really loudly',
+        duringEvent: 'Lisa started getting incredibly agitated and started screaming intruder intruder, and went into the kitchen and grabbed a knife and threatened to hurt. Whoever was at the door',
+        endEvent: 'the police were called and they came and were able to subdue Lisa get the knife away from her and then she was taken to the local psychiatric hospital',
         postEvent: 'Lisa was is and kept overnight and returned back to the house the next day, she was calm',
       };
 
@@ -193,20 +193,20 @@ export const useIncidentStore = create<IncidentState>((set, get) => ({
     } else if (currentLevel === 'basic') {
       // Level 2: Load mock questions and populate clarification answers
       const mockQuestions: ClarificationQuestions = {
-        before: [
-          { id: 'b1', question: 'What was the participant doing before the incident?', phase: 'before' },
-          { id: 'b2', question: 'Do you like green eggs?', phase: 'before' },
-          { id: 'b3', question: 'What was the environment like before the incident?', phase: 'before' }
+        beforeEvent: [
+          { id: 'b1', question: 'What was the participant doing before the incident?', phase: 'beforeEvent' },
+          { id: 'b2', question: 'Do you like green eggs?', phase: 'beforeEvent' },
+          { id: 'b3', question: 'What was the environment like before the incident?', phase: 'beforeEvent' }
         ],
-        during: [
-          { id: 'd1', question: 'How long did the incident last?', phase: 'during' },
-          { id: 'd2', question: 'Who else was present during the incident?', phase: 'during' },
-          { id: 'd3', question: 'What interventions were attempted?', phase: 'during' }
+        duringEvent: [
+          { id: 'd1', question: 'How long did the incident last?', phase: 'duringEvent' },
+          { id: 'd2', question: 'Who else was present during the incident?', phase: 'duringEvent' },
+          { id: 'd3', question: 'What interventions were attempted?', phase: 'duringEvent' }
         ],
-        end: [
-          { id: 'e1', question: 'How was the incident resolved?', phase: 'end' },
-          { id: 'e2', question: 'Was anyone injured?', phase: 'end' },
-          { id: 'e3', question: 'What was the immediate outcome?', phase: 'end' }
+        endEvent: [
+          { id: 'e1', question: 'How was the incident resolved?', phase: 'endEvent' },
+          { id: 'e2', question: 'Was anyone injured?', phase: 'endEvent' },
+          { id: 'e3', question: 'What was the immediate outcome?', phase: 'endEvent' }
         ],
         postEvent: [
           { id: 'p1', question: 'What follow-up actions were taken?', phase: 'postEvent' },
@@ -216,17 +216,17 @@ export const useIncidentStore = create<IncidentState>((set, get) => ({
       };
 
       const testClarificationAnswers: ClarificationAnswers = {
-        before: [
+        beforeEvent: [
           { questionId: 'b1', answer: 'Lisa was sitting quietly on the couch, watching afternoon television and appeared relaxed' },
           { questionId: 'b2', answer: 'No, she prefers regular eggs' },
           { questionId: 'b3', answer: 'The living room was calm and quiet, with normal lighting and no other people present' }
         ],
-        during: [
+        duringEvent: [
           { questionId: 'd1', answer: 'The incident lasted approximately 15-20 minutes from start to finish' },
           { questionId: 'd2', answer: 'Only the pizza delivery person at the door and myself as the support worker were present' },
           { questionId: 'd3', answer: 'I attempted verbal de-escalation and tried to explain who was at the door, but Lisa was too agitated to listen' }
         ],
-        end: [
+        endEvent: [
           { questionId: 'e1', answer: 'Police officers were able to calm Lisa down using verbal de-escalation techniques and safely removed the knife' },
           { questionId: 'e2', answer: 'No one was physically injured during the incident, though Lisa was emotionally distressed' },
           { questionId: 'e3', answer: 'Lisa was taken to the local psychiatric hospital for assessment and stabilization' }

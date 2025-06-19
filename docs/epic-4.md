@@ -91,7 +91,30 @@
     5.  Clarification answers extend the David/Lisa incident scenario with contextually appropriate responses.
     6.  Progressive population works seamlessly with existing state management across all wizard steps.
 
-- **Story 4.9: Consolidate Narratives with AI**
+- **Story 4.9: Refactor Narrative Field Names for API Alignment**
+
+  - **User Story:** As a developer working with the incident capture system, I want descriptive and semantically clear field names so that the code is more maintainable, API integration is straightforward, and the data model is self-documenting.
+  - **Acceptance Criteria:**
+    1.  All narrative field names are refactored from generic to descriptive names.
+    2.  Field name changes: `before` → `beforeEvent`, `during` → `duringEvent`, `end` → `endEvent`, `postEvent` remains unchanged.
+    3.  All TypeScript interfaces, form components, and clarification steps use the new field names consistently.
+    4.  Test data and API service layer use the new field names for proper request/response mapping.
+    5.  All existing functionality continues to work without regression.
+    6.  Code maintains consistent camelCase naming conventions throughout.
+
+- **Story 4.10: Implement N8N API Integration Foundation**
+
+  - **User Story:** As a developer integrating with N8N workflows, I want a complete API service foundation with proper configuration, error handling, and documentation so that I can seamlessly switch between mock and live API modes and have clear contracts for backend workflow development.
+  - **Acceptance Criteria:**
+    1.  API service architecture with configurable domain via environment variables.
+    2.  Two distinct API endpoints: clarification questions and narrative consolidation.
+    3.  Complete TypeScript interfaces and error handling for both endpoints.
+    4.  Mock mode functionality preserved for development.
+    5.  Comprehensive documentation with curl examples and N8N setup instructions.
+    6.  LLM prompts written in N8N interpolation format.
+    7.  Phase-specific custom instructions for narrative consolidation.
+
+- **Story 4.11: Consolidate Narratives with AI**
 
   - **User Story:** As a frontline worker, after answering the clarification questions, I want the system to automatically combine my original notes and my answers into a polished, well-written narrative for each phase of the incident.
   - **Acceptance Criteria:**
@@ -99,7 +122,7 @@
     2.  The request body contains the original narratives and the new clarification answers.
     3.  The application saves the four returned `_extra` string values into the `IncidentReport.narrative` object in the global state.
 
-- **Story 4.10: Implement Dynamic "Add Question" Feature**
+- **Story 4.12: Implement Dynamic "Add Question" Feature**
 
   - **User Story:** As a frontline worker, I want a simple button and text prompt on the clarification screens to suggest a new, useful question so I can help improve the reporting process.
   - **Acceptance Criteria:**
@@ -110,7 +133,7 @@
     5.  After submission, the input field is cleared and hidden, returning the UI to its previous state.
     6.  The new UI elements and their functionality are committed to version control.
 
-- **Story 4.11: Implement "Review and Complete" Step**
+- **Story 4.13: Implement "Review and Complete" Step**
   - **User Story:** As a frontline worker, I want a final review screen that consolidates my original narrative with all the answers from the clarification steps so I can confirm the complete report before finalizing it.
   - **Acceptance Criteria:**
     1.  The final step of the "Incident Capture" wizard is a read-only review screen.

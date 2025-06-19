@@ -21,11 +21,11 @@ export const EndOfEventClarificationStep: React.FC = () => {
   // Initialize answers from store
   useEffect(() => {
     const existingAnswers: Record<string, string> = {};
-    report.clarificationAnswers.end.forEach(answer => {
+    report.clarificationAnswers.endEvent.forEach(answer => {
       existingAnswers[answer.questionId] = answer.answer;
     });
     setAnswers(existingAnswers);
-  }, [report.clarificationAnswers.end]);
+  }, [report.clarificationAnswers.endEvent]);
 
   const handleAnswerChange = (questionId: string, answer: string) => {
     setAnswers(prev => ({
@@ -34,10 +34,10 @@ export const EndOfEventClarificationStep: React.FC = () => {
     }));
     
     // Update store immediately
-    updateClarificationAnswer('end', questionId, answer);
+    updateClarificationAnswer('endEvent', questionId, answer);
   };
 
-  const endQuestions = clarificationQuestions?.end || [];
+  const endQuestions = clarificationQuestions?.endEvent || [];
   const hasQuestions = endQuestions.length > 0;
 
   return (

@@ -57,13 +57,13 @@ export const NarrativeInputStep: React.FC = () => {
               <form>
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                   <div className="form-field">
-                    <Label htmlFor="before" className="custom-label">
+                    <Label htmlFor="beforeEvent" className="custom-label">
                       Before the Event
                     </Label>
                     <Textarea
-                      id="before"
-                      value={formData.before}
-                      onChange={(e) => handleInputChange('before', e.target.value)}
+                      id="beforeEvent"
+                      value={formData.beforeEvent}
+                      onChange={(e) => handleInputChange('beforeEvent', e.target.value)}
                       placeholder="Describe what was happening before the incident occurred. Include relevant context, activities, and any notable circumstances..."
                       className="min-h-[150px]"
                       rows={6}
@@ -71,13 +71,13 @@ export const NarrativeInputStep: React.FC = () => {
                   </div>
 
                   <div className="form-field">
-                    <Label htmlFor="during" className="custom-label">
+                    <Label htmlFor="duringEvent" className="custom-label">
                       During the Event
                     </Label>
                     <Textarea
-                      id="during"
-                      value={formData.during}
-                      onChange={(e) => handleInputChange('during', e.target.value)}
+                      id="duringEvent"
+                      value={formData.duringEvent}
+                      onChange={(e) => handleInputChange('duringEvent', e.target.value)}
                       placeholder="Describe what happened during the incident. Include specific actions, behaviors, and reactions observed..."
                       className="min-h-[150px]"
                       rows={6}
@@ -85,13 +85,13 @@ export const NarrativeInputStep: React.FC = () => {
                   </div>
 
                   <div className="form-field">
-                    <Label htmlFor="end" className="custom-label">
+                    <Label htmlFor="endEvent" className="custom-label">
                       End of the Event
                     </Label>
                     <Textarea
-                      id="end"
-                      value={formData.end}
-                      onChange={(e) => handleInputChange('end', e.target.value)}
+                      id="endEvent"
+                      value={formData.endEvent}
+                      onChange={(e) => handleInputChange('endEvent', e.target.value)}
                       placeholder="Describe how the incident concluded. What actions were taken to resolve or de-escalate the situation..."
                       className="min-h-[150px]"
                       rows={6}
