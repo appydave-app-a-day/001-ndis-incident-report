@@ -39,10 +39,32 @@ export interface ClarificationAnswers {
   postEvent: ClarificationAnswer[];
 }
 
+export interface NarrativeExtras {
+  beforeEvent: string;
+  duringEvent: string;
+  endEvent: string;
+  postEvent: string;
+}
+
+export interface ConsolidationStatus {
+  beforeEvent: 'pending' | 'loading' | 'complete' | 'error';
+  duringEvent: 'pending' | 'loading' | 'complete' | 'error';
+  endEvent: 'pending' | 'loading' | 'complete' | 'error';
+  postEvent: 'pending' | 'loading' | 'complete' | 'error';
+}
+
+export interface ConsolidationErrors {
+  beforeEvent?: string;
+  duringEvent?: string;
+  endEvent?: string;
+  postEvent?: string;
+}
+
 export interface IncidentReport {
   metadata: IncidentMetadata;
   narrative: IncidentNarrative;
   clarificationAnswers: ClarificationAnswers;
+  narrativeExtras: NarrativeExtras;
 }
 
 type TestDataLevel = 'none' | 'basic' | 'full';
@@ -52,11 +74,17 @@ interface IncidentState {
   clarificationQuestions: ClarificationQuestions | null;
   isLoadingQuestions: boolean;
   testDataLevel: TestDataLevel;
+  consolidationStatus: ConsolidationStatus;
+  consolidationErrors: ConsolidationErrors;
   updateMetadata: (metadata: Partial<IncidentMetadata>) => void;
   updateNarrative: (narrative: Partial<IncidentNarrative>) => void;
   updateClarificationAnswer: (phase: keyof ClarificationAnswers, questionId: string, answer: string) => void;
   setClarificationQuestions: (questions: ClarificationQuestions) => void;
   setLoadingQuestions: (loading: boolean) => void;
+  consolidatePhaseNarrative: (phase: keyof NarrativeExtras) => Promise<void>;
+  setConsolidationStatus: (phase: keyof NarrativeExtras, status: ConsolidationStatus[keyof NarrativeExtras]) => void;
+  setConsolidationError: (phase: keyof NarrativeExtras, error?: string) => void;
+  setNarrativeExtra: (phase: keyof NarrativeExtras, extra: string) => void;
   populateTestData: () => void;
   reset: () => void;
   isMetadataComplete: () => boolean;
@@ -82,6 +110,19 @@ const initialReport: IncidentReport = {
     endEvent: [],
     postEvent: [],
   },
+  narrativeExtras: {
+    beforeEvent: '',
+    duringEvent: '',
+    endEvent: '',
+    postEvent: '',
+  },
+};
+
+const initialConsolidationStatus: ConsolidationStatus = {
+  beforeEvent: 'pending',
+  duringEvent: 'pending',
+  endEvent: 'pending',
+  postEvent: 'pending',
 };
 
 export const useIncidentStore = create<IncidentState>((set, get) => ({
@@ -89,6 +130,8 @@ export const useIncidentStore = create<IncidentState>((set, get) => ({
   clarificationQuestions: null,
   isLoadingQuestions: false,
   testDataLevel: 'none',
+  consolidationStatus: initialConsolidationStatus,
+  consolidationErrors: {},
   
   updateMetadata: (metadata) =>
     set((state) => ({
@@ -253,14 +296,134 @@ export const useIncidentStore = create<IncidentState>((set, get) => ({
         clarificationQuestions: null,
         isLoadingQuestions: false,
         testDataLevel: 'none',
+        consolidationStatus: initialConsolidationStatus,
+        consolidationErrors: {},
       });
     }
   },
+
+  // ============================================================================
+  // Narrative Consolidation Methods
+  // ============================================================================
+
+  consolidatePhaseNarrative: async (phase: keyof NarrativeExtras) => {
+    const state = get();
+    
+    // Set loading state
+    set((currentState) => ({
+      consolidationStatus: {
+        ...currentState.consolidationStatus,
+        [phase]: 'loading',
+      },
+    }));
+
+    try {
+      // Import N8N API service dynamically to avoid circular dependencies
+      const { n8nApi } = await import('../lib/services/n8n-api');
+      
+      // Get clarification answers for this phase
+      const clarificationAnswers = state.report.clarificationAnswers[phase];
+      const clarificationQuestions = state.clarificationQuestions?.[phase] || [];
+      
+      // Map to API format
+      const apiData = clarificationAnswers.map(answer => {
+        const question = clarificationQuestions.find(q => q.id === answer.questionId);
+        return {
+          questionId: answer.questionId,
+          question: question?.question || 'Unknown question',
+          answer: answer.answer,
+        };
+      });
+
+      // Map phase names for API
+      const apiPhase = phase === 'beforeEvent' ? 'before_event' as const :
+                      phase === 'duringEvent' ? 'during_event' as const :
+                      phase === 'endEvent' ? 'end_event' as const :
+                      'post_event' as const;
+
+      // Make API call
+      const result = await n8nApi.consolidateNarrative(apiData, apiPhase);
+
+      if (result.success && result.data) {
+        // Update narrative extra and mark as complete
+        set((currentState) => ({
+          report: {
+            ...currentState.report,
+            narrativeExtras: {
+              ...currentState.report.narrativeExtras,
+              [phase]: result.data!.narrative_extra,
+            },
+          },
+          consolidationStatus: {
+            ...currentState.consolidationStatus,
+            [phase]: 'complete',
+          },
+          consolidationErrors: {
+            ...currentState.consolidationErrors,
+            [phase]: undefined,
+          },
+        }));
+      } else {
+        // Handle API error
+        set((currentState) => ({
+          consolidationStatus: {
+            ...currentState.consolidationStatus,
+            [phase]: 'error',
+          },
+          consolidationErrors: {
+            ...currentState.consolidationErrors,
+            [phase]: result.error || 'Consolidation failed',
+          },
+        }));
+      }
+    } catch (error) {
+      // Handle unexpected errors
+      set((currentState) => ({
+        consolidationStatus: {
+          ...currentState.consolidationStatus,
+          [phase]: 'error',
+        },
+        consolidationErrors: {
+          ...currentState.consolidationErrors,
+          [phase]: error instanceof Error ? error.message : 'Unknown error',
+        },
+      }));
+    }
+  },
+
+  setConsolidationStatus: (phase: keyof NarrativeExtras, status: ConsolidationStatus[keyof NarrativeExtras]) =>
+    set((state) => ({
+      consolidationStatus: {
+        ...state.consolidationStatus,
+        [phase]: status,
+      },
+    })),
+
+  setConsolidationError: (phase: keyof NarrativeExtras, error?: string) =>
+    set((state) => ({
+      consolidationErrors: {
+        ...state.consolidationErrors,
+        [phase]: error,
+      },
+    })),
+
+  setNarrativeExtra: (phase: keyof NarrativeExtras, extra: string) =>
+    set((state) => ({
+      report: {
+        ...state.report,
+        narrativeExtras: {
+          ...state.report.narrativeExtras,
+          [phase]: extra,
+        },
+      },
+    })),
     
   reset: () => set({ 
     report: initialReport,
     clarificationQuestions: null,
     isLoadingQuestions: false,
-    testDataLevel: 'none'
+    testDataLevel: 'none',
+    consolidationStatus: initialConsolidationStatus,
+    consolidationErrors: {},
   }),
 }));
