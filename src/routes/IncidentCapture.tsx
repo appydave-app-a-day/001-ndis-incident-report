@@ -1,12 +1,12 @@
 import { BeforeEventClarificationStep } from '@/components/BeforeEventClarificationStep';
 import { DuringEventClarificationStep } from '@/components/DuringEventClarificationStep';
 import { EndOfEventClarificationStep } from '@/components/EndOfEventClarificationStep';
+import { IncidentReviewStep } from '@/components/IncidentReviewStep';
 import { MetadataInputStep } from '@/components/MetadataInputStep';
 import { NarrativeInputStep } from '@/components/NarrativeInputStep';
 import { PostEventSupportClarificationStep } from '@/components/PostEventSupportClarificationStep';
 import { Wizard } from '@/components/wizard';
 import type { WizardStep } from '@/components/wizard';
-import { StepHeader } from '@/components/wizard/StepHeader';
 import { IncidentApiService } from '@/lib/services/api';
 import { useIncidentStore } from '@/store/useIncidentStore';
 
@@ -23,24 +23,7 @@ const Step5 = () => <EndOfEventClarificationStep />;
 
 const Step6 = () => <PostEventSupportClarificationStep />;
 
-const Step7 = () => (
-  <div>
-    <StepHeader
-      stepNumber={7}
-      title="Step 7: Review & Submit"
-      subtitle="Review all information before submitting."
-      onViewContent={() => console.log('View content clicked')}
-    />
-    <div className="px-6 py-6">
-      <div className="bg-blue-50 border border-blue-200 rounded-lg p-6">
-        <p className="text-sm font-semibold text-blue-900 mb-2">Ready to Submit</p>
-        <p className="text-base text-gray-700 leading-relaxed">
-          All required information has been collected. Click Finish to submit the incident report.
-        </p>
-      </div>
-    </div>
-  </div>
-);
+const Step7 = () => <IncidentReviewStep />;
 
 export default function IncidentCapture() {
   const { isMetadataComplete, isNarrativeComplete, report, setClarificationQuestions, setLoadingQuestions } = useIncidentStore();

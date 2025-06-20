@@ -122,7 +122,20 @@
     2.  The request body contains the original narratives and the new clarification answers.
     3.  The application saves the four returned `_extra` string values into the `IncidentReport.narrative` object in the global state.
 
-- **Story 4.12: Implement Dynamic "Add Question" Feature**
+- **Story 4.12: Implement Enhanced Review and Complete Step**
+
+  - **User Story:** As a frontline worker, I want a comprehensive review screen that shows all my incident data including the AI-enhanced narratives, so I can review the complete report before submitting and see how my original information has been professionally enhanced.
+  - **Acceptance Criteria:**
+    1.  The final step of the "Incident Capture" wizard is a comprehensive review screen replacing the current placeholder.
+    2.  The screen displays all collected incident information including metadata, original narratives, and AI-enhanced supplementary narratives.
+    3.  Enhanced narratives are prominently showcased with consolidation status indicators.
+    4.  Original narratives are accessible through show/hide toggle functionality.
+    5.  The information is presented in a clear, easy-to-read professional format.
+    6.  A "Complete Report" button finalizes the incident capture process.
+    7.  Error states are handled gracefully with fallback to original content when consolidation fails.
+    8.  The review experience showcases the value of the AI enhancement process.
+
+- **Story 4.13: Implement Dynamic "Add Question" Feature**
 
   - **User Story:** As a frontline worker, I want a simple button and text prompt on the clarification screens to suggest a new, useful question so I can help improve the reporting process.
   - **Acceptance Criteria:**
@@ -132,14 +145,3 @@
     4.  For the MVP, the submitted question text is logged to the browser's developer console. No backend action is required.
     5.  After submission, the input field is cleared and hidden, returning the UI to its previous state.
     6.  The new UI elements and their functionality are committed to version control.
-
-- **Story 4.13: Implement "Review and Complete" Step**
-  - **User Story:** As a frontline worker, I want a final review screen that consolidates my original narrative with all the answers from the clarification steps so I can confirm the complete report before finalizing it.
-  - **Acceptance Criteria:**
-    1.  The final step of the "Incident Capture" wizard is a read-only review screen.
-    2.  The screen displays the polished, AI-consolidated `_extra` narrative for each of the four phases.
-    3.  The information is presented in a clear, easy-to-read format.
-    4.  A "Complete" button is displayed on this step.
-    5.  Clicking the "Complete" button updates the application's state to mark the "Incident Capture" workflow as finished.
-    6.  Upon completion, the "Analysis" workflow in the left-hand navigation menu becomes enabled and clickable.
-    7.  This new wizard step is committed to version control.
