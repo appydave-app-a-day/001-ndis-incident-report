@@ -4,10 +4,8 @@ import React, { useState, useEffect } from 'react';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Card, CardContent } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
-import { PhaseConsolidationStatus } from '@/components/ui/PhaseConsolidationStatus';
 import { Textarea } from '@/components/ui/textarea';
 import { StepHeader } from '@/components/wizard/StepHeader';
-import { useStepConsolidation } from '@/hooks/useStepConsolidation';
 import { useIncidentStore } from '@/store/useIncidentStore';
 
 export const BeforeEventClarificationStep: React.FC = () => {
@@ -15,16 +13,10 @@ export const BeforeEventClarificationStep: React.FC = () => {
     clarificationQuestions, 
     isLoadingQuestions, 
     report,
-    updateClarificationAnswer,
-    consolidationStatus,
-    consolidationErrors,
-    consolidatePhaseNarrative
+    updateClarificationAnswer
   } = useIncidentStore();
   
   const [answers, setAnswers] = useState<Record<string, string>>({});
-
-  // Enable progressive consolidation for this step
-  useStepConsolidation('beforeEvent');
 
   // Initialize answers from store
   useEffect(() => {
@@ -47,11 +39,6 @@ export const BeforeEventClarificationStep: React.FC = () => {
 
   const beforeQuestions = clarificationQuestions?.beforeEvent || [];
   const hasQuestions = beforeQuestions.length > 0;
-
-  // Handle consolidation retry
-  const handleRetryConsolidation = () => {
-    consolidatePhaseNarrative('beforeEvent');
-  };
 
   return (
     <div>
@@ -129,15 +116,7 @@ export const BeforeEventClarificationStep: React.FC = () => {
                     </div>
                   )}
 
-                  {/* Consolidation Status */}
-                  <div className="mt-4">
-                    <PhaseConsolidationStatus
-                      phase="beforeEvent"
-                      status={consolidationStatus.beforeEvent}
-                      error={consolidationErrors.beforeEvent}
-                      onRetry={handleRetryConsolidation}
-                    />
-                  </div>
+
                 </div>
               )}
             </CardContent>

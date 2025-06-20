@@ -31,11 +31,16 @@ const mockClarificationQuestions: ClarificationQuestions = {
  * Fetches clarification questions based on incident narrative
  */
 export const fetchClarificationQuestions = async (
-  narrative: IncidentNarrative
+  narrative: IncidentNarrative,
+  apiMode?: 'mock' | 'live'
 ): Promise<ClarificationQuestions> => {
   try {
-    // Check if we're in mock mode or live mode
-    if (import.meta.env.DEV || !import.meta.env.VITE_API_BASE_URL) {
+    // Check user preference first, then fallback to environment
+    const sessionMode = sessionStorage.getItem('apiMode') as 'mock' | 'live' | null;
+    const effectiveMode = apiMode || sessionMode || (import.meta.env.VITE_API_MODE === 'live' ? 'live' : 'mock');
+    
+    // Check if we're in mock mode
+    if (effectiveMode === 'mock' || import.meta.env.DEV || !import.meta.env.VITE_API_BASE_URL) {
       // Mock mode - simulate API delay
       await new Promise(resolve => setTimeout(resolve, 1500));
       return mockClarificationQuestions;
@@ -94,7 +99,7 @@ export const fetchClarificationQuestions = async (
  * API service class for incident-related operations
  */
 export class IncidentApiService {
-  static async getClarificationQuestions(narrative: IncidentNarrative): Promise<ClarificationQuestions> {
-    return fetchClarificationQuestions(narrative);
+  static async getClarificationQuestions(narrative: IncidentNarrative, apiMode?: 'mock' | 'live'): Promise<ClarificationQuestions> {
+    return fetchClarificationQuestions(narrative, apiMode);
   }
 }

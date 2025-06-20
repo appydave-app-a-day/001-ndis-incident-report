@@ -27,7 +27,7 @@ export const MetadataDisplay: React.FC<MetadataDisplayProps> = ({
         minute: '2-digit',
         hour12: true,
       });
-    } catch (error) {
+    } catch {
       return dateTimeString; // Fallback to original string if parsing fails
     }
   };

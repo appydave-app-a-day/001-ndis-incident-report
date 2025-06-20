@@ -75,8 +75,23 @@ export const API_TIMEOUT = 30000; // 30 seconds
 // ============================================================================
 
 export const isDevelopment = () => import.meta.env.DEV;
-export const isMockMode = () => getN8NApiConfig().mode === 'mock';
-export const isLiveMode = () => getN8NApiConfig().mode === 'live';
+export const isMockMode = (userMode?: 'mock' | 'live') => {
+  // Check user override first, then environment
+  if (userMode) {
+    return userMode === 'mock';
+  }
+  
+  // Check session storage for user preference
+  const sessionMode = sessionStorage.getItem('apiMode') as 'mock' | 'live' | null;
+  if (sessionMode) {
+    return sessionMode === 'mock';
+  }
+  
+  // Fall back to environment configuration
+  return getN8NApiConfig().mode === 'mock';
+};
+
+export const isLiveMode = (userMode?: 'mock' | 'live') => !isMockMode(userMode);
 
 // ============================================================================
 // Configuration Validation

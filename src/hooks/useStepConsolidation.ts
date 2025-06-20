@@ -4,6 +4,7 @@ import { useIncidentStore } from '@/store/useIncidentStore';
 
 /**
  * Hook to handle automatic narrative consolidation when leaving a clarification step
+ * Now integrates with modal-based consolidation process
  */
 export const useStepConsolidation = (
   phase: 'beforeEvent' | 'duringEvent' | 'endEvent' | 'postEvent'
@@ -34,6 +35,7 @@ export const useStepConsolidation = (
         hasTriggeredRef.current = true;
         
         // Trigger consolidation asynchronously to not block navigation
+        // The modal will be opened by the consolidatePhaseNarrative method
         setTimeout(() => {
           consolidatePhaseNarrative(phase);
         }, 100);

@@ -53,6 +53,13 @@ export interface ConsolidationStatus {
   postEvent: 'pending' | 'loading' | 'complete' | 'error';
 }
 
+export interface ConsolidationHashes {
+  beforeEvent?: string;
+  duringEvent?: string;
+  endEvent?: string;
+  postEvent?: string;
+}
+
 export interface ConsolidationErrors {
   beforeEvent?: string;
   duringEvent?: string;
@@ -68,23 +75,38 @@ export interface IncidentReport {
 }
 
 type TestDataLevel = 'none' | 'basic' | 'full';
+type ApiMode = 'mock' | 'live';
+
+interface LoadingOverlayState {
+  isOpen: boolean;
+  message: string;
+}
 
 interface IncidentState {
   report: IncidentReport;
   clarificationQuestions: ClarificationQuestions | null;
+  lastNarrativeHash: string | null;
   isLoadingQuestions: boolean;
   testDataLevel: TestDataLevel;
   consolidationStatus: ConsolidationStatus;
   consolidationErrors: ConsolidationErrors;
+  consolidationHashes: ConsolidationHashes;
+  apiMode: ApiMode;
+  loadingOverlay: LoadingOverlayState;
   updateMetadata: (metadata: Partial<IncidentMetadata>) => void;
   updateNarrative: (narrative: Partial<IncidentNarrative>) => void;
   updateClarificationAnswer: (phase: keyof ClarificationAnswers, questionId: string, answer: string) => void;
   setClarificationQuestions: (questions: ClarificationQuestions) => void;
   setLoadingQuestions: (loading: boolean) => void;
-  consolidatePhaseNarrative: (phase: keyof NarrativeExtras) => Promise<void>;
+  consolidatePhaseNarrative: (phase: keyof NarrativeExtras, skipCache?: boolean) => Promise<void>;
+  fetchClarificationQuestionsIfNeeded: () => Promise<void>;
   setConsolidationStatus: (phase: keyof NarrativeExtras, status: ConsolidationStatus[keyof NarrativeExtras]) => void;
   setConsolidationError: (phase: keyof NarrativeExtras, error?: string) => void;
   setNarrativeExtra: (phase: keyof NarrativeExtras, extra: string) => void;
+  toggleApiMode: () => void;
+  setApiMode: (mode: ApiMode) => void;
+  showLoadingOverlay: (message: string) => void;
+  hideLoadingOverlay: () => void;
   populateTestData: () => void;
   reset: () => void;
   isMetadataComplete: () => boolean;
@@ -125,13 +147,104 @@ const initialConsolidationStatus: ConsolidationStatus = {
   postEvent: 'pending',
 };
 
+// Get initial API mode from environment, default to mock
+const getInitialApiMode = (): ApiMode => {
+  const envMode = import.meta.env.VITE_API_MODE;
+  const sessionMode = sessionStorage.getItem('apiMode') as ApiMode;
+  
+  // Prefer session storage, then environment, default to mock
+  return sessionMode || (envMode === 'live' ? 'live' : 'mock');
+};
+
+// ============================================================================
+// Constants
+// ============================================================================
+
+const PHASE_LABELS = {
+  beforeEvent: 'Before Event',
+  duringEvent: 'During Event',
+  endEvent: 'End Event',
+  postEvent: 'Post-Event Support',
+} as const;
+
+const MIN_LOADING_TIME = 2000; // 2 seconds minimum
+
+// ============================================================================
+// Hash Utility Functions
+// ============================================================================
+
+/**
+ * Simple hash function for strings
+ */
+const simpleHash = (str: string): string => {
+  let hash = 0;
+  if (str.length === 0) return hash.toString();
+  for (let i = 0; i < str.length; i++) {
+    const char = str.charCodeAt(i);
+    hash = ((hash << 5) - hash) + char;
+    hash = hash & hash; // Convert to 32bit integer
+  }
+  return Math.abs(hash).toString();
+};
+
+/**
+ * Hash narrative content for dependency tracking
+ */
+const hashNarrative = (narrative: IncidentNarrative): string => {
+  const content = `${narrative.beforeEvent}|${narrative.duringEvent}|${narrative.endEvent}|${narrative.postEvent}`;
+  return simpleHash(content);
+};
+
+/**
+ * Hash consolidation inputs (answers + narrative) for dependency tracking
+ */
+const hashConsolidationInputs = (
+  answers: ClarificationAnswer[],
+  narrative: IncidentNarrative,
+  phase: keyof NarrativeExtras
+): string => {
+  const answersStr = JSON.stringify(answers.sort((a, b) => a.questionId.localeCompare(b.questionId)));
+  const narrativeStr = narrative[phase];
+  const content = `${answersStr}|${narrativeStr}`;
+  return simpleHash(content);
+};
+
+// ============================================================================
+// Utility Functions
+// ============================================================================
+
+/**
+ * Helper to manage minimum loading time
+ */
+const waitForMinimumLoadingTime = async (startTime: number): Promise<void> => {
+  const elapsedTime = Date.now() - startTime;
+  const remainingTime = Math.max(0, MIN_LOADING_TIME - elapsedTime);
+  if (remainingTime > 0) {
+    await new Promise(resolve => setTimeout(resolve, remainingTime));
+  }
+};
+
+/**
+ * Helper to manage loading overlay state
+ */
+const createLoadingOverlayUpdate = (message: string, isOpen: boolean = true) => ({
+  loadingOverlay: { 
+    isOpen, 
+    message: isOpen ? message : '' 
+  }
+});
+
 export const useIncidentStore = create<IncidentState>((set, get) => ({
   report: initialReport,
   clarificationQuestions: null,
+  lastNarrativeHash: null,
   isLoadingQuestions: false,
   testDataLevel: 'none',
   consolidationStatus: initialConsolidationStatus,
   consolidationErrors: {},
+  consolidationHashes: {},
+  apiMode: getInitialApiMode(),
+  loadingOverlay: { isOpen: false, message: '' },
   
   updateMetadata: (metadata) =>
     set((state) => ({
@@ -306,15 +419,38 @@ export const useIncidentStore = create<IncidentState>((set, get) => ({
   // Narrative Consolidation Methods
   // ============================================================================
 
-  consolidatePhaseNarrative: async (phase: keyof NarrativeExtras) => {
+  consolidatePhaseNarrative: async (phase: keyof NarrativeExtras, skipCache: boolean = false) => {
     const state = get();
     
-    // Set loading state
+    // Smart caching - check if work is needed unless skipCache is true
+    if (!skipCache) {
+      const answers = state.report.clarificationAnswers[phase];
+      const currentInputHash = hashConsolidationInputs(answers, state.report.narrative, phase);
+      const existingHash = state.consolidationHashes[phase];
+      
+      if (state.consolidationStatus[phase] === 'complete' && existingHash === currentInputHash) {
+        return; // Skip if already consolidated and inputs haven't changed
+      }
+      
+      // Store the hash before consolidation
+      set((currentState) => ({
+        consolidationHashes: {
+          ...currentState.consolidationHashes,
+          [phase]: currentInputHash
+        }
+      }));
+    }
+    
+    const startTime = Date.now();
+    const message = `Enhancing ${PHASE_LABELS[phase]} narrative with AI assistance...`;
+    
+    // Set loading state with overlay in mock mode
     set((currentState) => ({
       consolidationStatus: {
         ...currentState.consolidationStatus,
         [phase]: 'loading',
       },
+      ...(state.apiMode === 'mock' ? createLoadingOverlayUpdate(message) : {})
     }));
 
     try {
@@ -341,8 +477,11 @@ export const useIncidentStore = create<IncidentState>((set, get) => ({
                       phase === 'endEvent' ? 'end_event' as const :
                       'post_event' as const;
 
-      // Make API call
-      const result = await n8nApi.consolidateNarrative(apiData, apiPhase);
+      // Make API call with user's preferred mode
+      const result = await n8nApi.consolidateNarrative(apiData, apiPhase, state.apiMode);
+
+      // Ensure minimum loading time has elapsed
+      await waitForMinimumLoadingTime(startTime);
 
       if (result.success && result.data) {
         // Update narrative extra and mark as complete
@@ -362,6 +501,7 @@ export const useIncidentStore = create<IncidentState>((set, get) => ({
             ...currentState.consolidationErrors,
             [phase]: undefined,
           },
+          ...createLoadingOverlayUpdate('', false)
         }));
       } else {
         // Handle API error
@@ -374,10 +514,17 @@ export const useIncidentStore = create<IncidentState>((set, get) => ({
             ...currentState.consolidationErrors,
             [phase]: result.error || 'Consolidation failed',
           },
+          ...createLoadingOverlayUpdate('', false)
         }));
       }
     } catch (error) {
+      // Ensure minimum loading time has elapsed even for errors
+      await waitForMinimumLoadingTime(startTime);
+
       // Handle unexpected errors
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+      console.error(`Consolidation error for ${phase}:`, errorMessage);
+      
       set((currentState) => ({
         consolidationStatus: {
           ...currentState.consolidationStatus,
@@ -385,9 +532,53 @@ export const useIncidentStore = create<IncidentState>((set, get) => ({
         },
         consolidationErrors: {
           ...currentState.consolidationErrors,
-          [phase]: error instanceof Error ? error.message : 'Unknown error',
+          [phase]: errorMessage,
         },
+        ...createLoadingOverlayUpdate('', false)
       }));
+    }
+  },
+
+  // ============================================================================
+  // Smart Wrapper Methods with Dependency Tracking
+  // ============================================================================
+
+  fetchClarificationQuestionsIfNeeded: async () => {
+    const state = get();
+    
+    // Calculate current narrative hash
+    const currentNarrativeHash = hashNarrative(state.report.narrative);
+    
+    // Skip if questions exist and narrative hasn't changed
+    if (state.clarificationQuestions && state.lastNarrativeHash === currentNarrativeHash) {
+      return;
+    }
+    
+    const message = 'Analyzing narrative content to generate relevant clarification questions...';
+    
+    // Show loading overlay in mock mode
+    set({
+      isLoadingQuestions: true,
+      ...(state.apiMode === 'mock' ? createLoadingOverlayUpdate(message) : {})
+    });
+    
+    try {
+      const { IncidentApiService } = await import('../lib/services/api');
+      const questions = await IncidentApiService.getClarificationQuestions(state.report.narrative, state.apiMode);
+      
+      // Update questions and hash
+      set({
+        clarificationQuestions: questions,
+        lastNarrativeHash: currentNarrativeHash,
+        isLoadingQuestions: false,
+        ...createLoadingOverlayUpdate('', false)
+      });
+    } catch (error) {
+      console.error('Failed to fetch clarification questions:', error);
+      set({ 
+        isLoadingQuestions: false,
+        ...createLoadingOverlayUpdate('', false)
+      });
     }
   },
 
@@ -417,13 +608,50 @@ export const useIncidentStore = create<IncidentState>((set, get) => ({
         },
       },
     })),
+
+  // ============================================================================
+  // API Mode Methods
+  // ============================================================================
+
+  toggleApiMode: () => {
+    const currentMode = get().apiMode;
+    const newMode = currentMode === 'mock' ? 'live' : 'mock';
+    sessionStorage.setItem('apiMode', newMode);
+    set({ apiMode: newMode });
+  },
+
+  setApiMode: (mode: ApiMode) => {
+    sessionStorage.setItem('apiMode', mode);
+    set({ apiMode: mode });
+  },
+
+  // ============================================================================
+  // Loading Overlay Methods
+  // ============================================================================
+
+  showLoadingOverlay: (message: string) =>
+    set({ 
+      loadingOverlay: { 
+        isOpen: true, 
+        message
+      }
+    }),
+
+  hideLoadingOverlay: () =>
+    set({ 
+      loadingOverlay: { isOpen: false, message: '' }
+    }),
     
   reset: () => set({ 
     report: initialReport,
     clarificationQuestions: null,
+    lastNarrativeHash: null,
     isLoadingQuestions: false,
     testDataLevel: 'none',
     consolidationStatus: initialConsolidationStatus,
     consolidationErrors: {},
+    consolidationHashes: {},
+    apiMode: getInitialApiMode(),
+    loadingOverlay: { isOpen: false, message: '' },
   }),
 }));

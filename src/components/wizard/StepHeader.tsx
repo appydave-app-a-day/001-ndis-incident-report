@@ -1,6 +1,7 @@
 import { Eye, Database } from 'lucide-react';
 import React from 'react';
 
+import { ApiModeToggle } from '@/components/ui/ApiModeToggle';
 import { useIncidentStore } from '@/store/useIncidentStore';
 
 interface StepHeaderProps {
@@ -33,6 +34,8 @@ export const StepHeader: React.FC<StepHeaderProps> = ({
 
   return (
     <div className="step-header-improved">
+      <ApiModeToggle />
+      
       <button
         onClick={handleTestData}
         className="debug-button z-10"

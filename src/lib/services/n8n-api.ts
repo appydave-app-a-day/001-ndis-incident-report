@@ -54,12 +54,13 @@ export class N8NApiService {
    * Get clarification questions for an incident
    */
   async getClarificationQuestions(
-    incidentData: IncidentDataForQuestions
+    incidentData: IncidentDataForQuestions,
+    userApiMode?: 'mock' | 'live'
   ): Promise<ApiResponse<ClarificationQuestionsResponse>> {
     try {
       const request = this.mapIncidentDataToRequest(incidentData);
 
-      if (isMockMode()) {
+      if (isMockMode(userApiMode)) {
         return await MockN8NApiService.getClarificationQuestions(request);
       }
 
@@ -74,12 +75,13 @@ export class N8NApiService {
    */
   async consolidateNarrative(
     clarificationAnswers: ClarificationAnswersForConsolidation[],
-    phase: IncidentPhase
+    phase: IncidentPhase,
+    userApiMode?: 'mock' | 'live'
   ): Promise<ApiResponse<NarrativeConsolidationResponse>> {
     try {
       const request = this.mapToConsolidationRequest(clarificationAnswers, phase);
 
-      if (isMockMode()) {
+      if (isMockMode(userApiMode)) {
         return await MockN8NApiService.consolidateNarrative(request, phase);
       }
 

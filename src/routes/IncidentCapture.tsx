@@ -1,3 +1,4 @@
+
 import { BeforeEventClarificationStep } from '@/components/BeforeEventClarificationStep';
 import { DuringEventClarificationStep } from '@/components/DuringEventClarificationStep';
 import { EndOfEventClarificationStep } from '@/components/EndOfEventClarificationStep';
@@ -5,9 +6,9 @@ import { IncidentReviewStep } from '@/components/IncidentReviewStep';
 import { MetadataInputStep } from '@/components/MetadataInputStep';
 import { NarrativeInputStep } from '@/components/NarrativeInputStep';
 import { PostEventSupportClarificationStep } from '@/components/PostEventSupportClarificationStep';
+import { LoadingOverlay } from '@/components/ui/LoadingOverlay';
 import { Wizard } from '@/components/wizard';
 import type { WizardStep } from '@/components/wizard';
-import { IncidentApiService } from '@/lib/services/api';
 import { useIncidentStore } from '@/store/useIncidentStore';
 
 
@@ -26,20 +27,13 @@ const Step6 = () => <PostEventSupportClarificationStep />;
 const Step7 = () => <IncidentReviewStep />;
 
 export default function IncidentCapture() {
-  const { isMetadataComplete, isNarrativeComplete, report, setClarificationQuestions, setLoadingQuestions } = useIncidentStore();
-
-  // Function to fetch clarification questions when leaving narrative step
-  const fetchClarificationQuestions = async () => {
-    try {
-      setLoadingQuestions(true);
-      const questions = await IncidentApiService.getClarificationQuestions(report.narrative);
-      setClarificationQuestions(questions);
-    } catch (error) {
-      console.error('Failed to fetch clarification questions:', error);
-    } finally {
-      setLoadingQuestions(false);
-    }
-  };
+  const { 
+    isMetadataComplete, 
+    isNarrativeComplete, 
+    loadingOverlay,
+    fetchClarificationQuestionsIfNeeded,
+    consolidatePhaseNarrative
+  } = useIncidentStore();
 
   const steps: WizardStep[] = [
     { 
@@ -53,17 +47,36 @@ export default function IncidentCapture() {
       title: 'Narrative', 
       component: Step2,
       isValid: isNarrativeComplete,
-      onLeave: fetchClarificationQuestions
+      onLeave: fetchClarificationQuestionsIfNeeded
     },
-    { id: 'before-clarification', title: 'Before Event', component: Step3 },
-    { id: 'during-clarification', title: 'During Event', component: Step4 },
-    { id: 'end-clarification', title: 'End of Event', component: Step5 },
-    { id: 'post-clarification', title: 'Post-Event Support', component: Step6 },
+    { 
+      id: 'before-clarification', 
+      title: 'Before Event', 
+      component: Step3,
+      onLeave: () => consolidatePhaseNarrative('beforeEvent')
+    },
+    { 
+      id: 'during-clarification', 
+      title: 'During Event', 
+      component: Step4,
+      onLeave: () => consolidatePhaseNarrative('duringEvent')
+    },
+    { 
+      id: 'end-clarification', 
+      title: 'End of Event', 
+      component: Step5,
+      onLeave: () => consolidatePhaseNarrative('endEvent')
+    },
+    { 
+      id: 'post-clarification', 
+      title: 'Post-Event Support', 
+      component: Step6,
+      onLeave: () => consolidatePhaseNarrative('postEvent')
+    },
     { id: 'review', title: 'Review', component: Step7 },
   ];
 
   const handleComplete = () => {
-    console.log('Wizard completed!');
     alert('Incident report submitted successfully!');
   };
 
@@ -74,6 +87,12 @@ export default function IncidentCapture() {
           <Wizard steps={steps} onComplete={handleComplete} />
         </div>
       </div>
+      
+      {/* Global Loading Overlay */}
+      <LoadingOverlay
+        isOpen={loadingOverlay.isOpen}
+        message={loadingOverlay.message}
+      />
     </div>
   );
 }
