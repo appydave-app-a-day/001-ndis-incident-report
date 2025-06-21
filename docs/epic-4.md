@@ -135,13 +135,14 @@
     7.  Error states are handled gracefully with fallback to original content when consolidation fails.
     8.  The review experience showcases the value of the AI enhancement process.
 
-- **Story 4.13: Implement Dynamic "Add Question" Feature**
+- **Story 4.13: Enhanced Consolidation UX & Controls**
 
-  - **User Story:** As a frontline worker, I want a simple button and text prompt on the clarification screens to suggest a new, useful question so I can help improve the reporting process.
+  - **User Story:** As a frontline worker, I want clear feedback about which narrative phase is being enhanced with a prominent processing dialog, and I want the ability to switch between mock and live API modes, so I can better understand what's happening and have control over the enhancement process.
   - **Acceptance Criteria:**
-    1.  On each of the four clarification wizard steps (4.3, 4.4, 4.5, and 4.6), a button labeled "Suggest a New Question" is displayed.
-    2.  Clicking this button reveals a text input field and a "Submit Suggestion" button.
-    3.  A user can type a question into the input field and click "Submit Suggestion".
-    4.  For the MVP, the submitted question text is logged to the browser's developer console. No backend action is required.
-    5.  After submission, the input field is cleared and hidden, returning the UI to its previous state.
-    6.  The new UI elements and their functionality are committed to version control.
+    1. Fix phase alignment bug where all four clarification steps show incorrect consolidation messages when pressing "Next".
+    2. Replace small spinner with modal dialog during consolidation process showing clear title, phase-specific message, and prominent spinner.
+    3. Add dynamic mock/live mode toggle icon in wizard header that overrides environment variable and persists user choice.
+    4. Modal blocks user interaction during processing, auto-closes on success, and advances wizard automatically.
+    5. Error handling with retry functionality and graceful degradation when consolidation fails.
+    6. Integration with existing wizard framework maintains responsive design and accessibility standards.
+
