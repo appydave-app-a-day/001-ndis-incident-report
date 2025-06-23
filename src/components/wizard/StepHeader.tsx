@@ -24,9 +24,15 @@ export const StepHeader: React.FC<StepHeaderProps> = ({
   };
 
   const getTooltipText = () => {
+    const { apiMode, clarificationQuestions } = useIncidentStore.getState();
+    
     switch (testDataLevel) {
       case 'none': return 'Populate basic test data (8 fields)';
-      case 'basic': return 'Add clarification answers (12 fields)';
+      case 'basic': 
+        if (apiMode === 'live' && clarificationQuestions) {
+          return 'Generate smart answers for N8N questions';
+        }
+        return 'Add clarification answers (12 fields)';
       case 'full': return 'Reset all data';
       default: return 'Populate test data';
     }

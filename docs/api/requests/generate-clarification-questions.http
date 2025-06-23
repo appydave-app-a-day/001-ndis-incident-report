@@ -1,0 +1,12 @@
+POST https://buildergeniobit.app.n8n.cloud/webhook/generate-clarification-questions
+Content-Type: application/json
+
+{
+  "participant_name": "Angela Cruz",
+  "reporter_name": "Miguel Torres",
+  "location": "Youth Center, Makati",
+  "before_event": "Angela was quietly drawing at a table.",
+  "during_event": "She became upset after a disagreement with another participant and started to cry.",
+  "end_of_event": "Staff intervened, and Angela was able to calm down after a few minutes.",
+  "post_event_support": "Angela was given time to talk with a counselor and rejoined the group later."
+}

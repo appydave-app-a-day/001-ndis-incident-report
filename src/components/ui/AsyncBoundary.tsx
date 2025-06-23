@@ -37,7 +37,7 @@ export const AsyncBoundary: React.FC<AsyncBoundaryProps> = ({
 
   // If loading and not showing children while loading, show only the loading overlay
   if (loading && !showChildrenWhileLoading) {
-    return <LoadingOverlay message={loadingMessage} />;
+    return <LoadingOverlay isOpen={true} message={loadingMessage} />;
   }
 
   // If loading and showing children while loading, render both
@@ -45,7 +45,7 @@ export const AsyncBoundary: React.FC<AsyncBoundaryProps> = ({
     return (
       <>
         {children}
-        <LoadingOverlay message={loadingMessage} />
+        <LoadingOverlay isOpen={true} message={loadingMessage} />
       </>
     );
   }

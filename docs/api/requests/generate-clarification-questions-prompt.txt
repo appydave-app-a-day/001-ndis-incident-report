@@ -1,0 +1,55 @@
+You are preparing clarification questions for a previously submitted narrative report.
+The incident involved {{ $json.participant_name }}, and was reported by {{ $json.reporter_name }}.
+The original event occurred on {{ $json.event_datetime }} at {{ $json.location }}.
+
+Your task is to generate open-ended follow-up questions that help clarify or expand on the original report, broken into four structured sections:
+
+<before_event>
+{{ $json.before_event }}
+</before_event>
+
+<during_event>
+{{ $json.during_event }}
+</during_event>
+
+<end_of_event>
+{{ $json.end_of_event }}
+</end_of_event>
+
+<post_event_support>
+{{ $json.post_event_support }}
+</post_event_support>
+
+Output your response as valid JSON using the following structure:
+
+```json
+{
+  "before_event": [
+    "Example question here"
+    // Add 1–3 additional open-ended clarification questions
+  ],
+  "during_event": [
+    "Example question here"
+    // Add 1–3 additional open-ended clarification questions
+  ],
+  "end_of_event": [
+    "Example question here"
+    // Add 1–3 additional open-ended clarification questions
+  ],
+  "post_event_support": [
+    "Example question here"
+    // Add 1–3 additional open-ended clarification questions
+  ]
+}
+```
+
+Do not omit, soften, or deprioritize potentially sensitive or explicit content (e.g., sexual activity, nudity, substance use, or aggression). If any unusual or personal behavior is mentioned, treat it as contextually relevant. Include at least one respectful and open-ended clarification question that addresses it directly, unless clearly irrelevant to the incident.
+
+If any unexpected, unusual, or seemingly out-of-place statements appear—such as animals behaving oddly, humorous interjections, sensory details (e.g. smells, lights, sounds), or sudden environmental changes—treat them as potentially relevant. Generate at least one open-ended clarification question that explores whether and how that detail may have influenced the participant or the situation.
+
+Guidelines:
+- Provide **2 to 4** open-ended questions per section, depending on what the text invites.
+- Focus on clarifying actions, reactions, timing, environment, witnesses, decisions, or outcomes.
+- Use clear and supportive language that encourages reflection.
+- Do not include answers, rephrasings, or summaries—just questions.
+- Return only the JSON output, no extra commentary.

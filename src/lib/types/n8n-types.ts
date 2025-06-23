@@ -1,60 +1,26 @@
 /**
- * TypeScript interfaces for N8N API integration
- * Supports both clarification questions and narrative consolidation endpoints
+ * DEPRECATED - N8N Types moved to api-types.ts
+ * 
+ * This file contains legacy N8N-specific configuration types.
+ * All API request/response types have been moved to:
+ * @see src/lib/services/types/api-types.ts
  */
 
 // ============================================================================
-// Configuration Types
+// Configuration Types (kept for backward compatibility)
 // ============================================================================
 
 export interface N8NApiConfig {
   domain: string;
   mode: 'mock' | 'live';
   endpoints: {
-    clarificationQuestions: 'narrative-report-clarification';
-    narrativeConsolidation: 'narrative-consolidation';
+    clarificationQuestions: string;
+    narrativeConsolidation: string;
   };
 }
 
 // ============================================================================
-// Clarification Questions API Types
-// ============================================================================
-
-export interface ClarificationQuestionsRequest {
-  participant_name: string;
-  reporter_name: string;
-  location: string;
-  before_event: string;
-  during_event: string;
-  end_of_event: string;
-  post_event_support: string;
-}
-
-export interface ClarificationQuestionsResponse {
-  before_event_questions: string[];
-  during_event_questions: string[];
-  end_of_event_questions: string[];
-  post_event_questions: string[];
-}
-
-// ============================================================================
-// Narrative Consolidation API Types
-// ============================================================================
-
-export interface NarrativeConsolidationRequest {
-  clarification_questions: Array<{
-    question: string;
-    answer: string;
-  }>;
-  custom_instructions: string;
-}
-
-export interface NarrativeConsolidationResponse {
-  narrative_extra: string;
-}
-
-// ============================================================================
-// Phase-Specific Types
+// Phase-Specific Types (kept for config)
 // ============================================================================
 
 export type IncidentPhase = 'before_event' | 'during_event' | 'end_event' | 'post_event';
@@ -67,15 +33,8 @@ export interface PhaseCustomInstructions {
 }
 
 // ============================================================================
-// Service Response Types
+// Error Types 
 // ============================================================================
-
-export interface ApiResponse<T> {
-  success: boolean;
-  data?: T;
-  error?: string;
-  status?: number;
-}
 
 export interface N8NApiError {
   message: string;
@@ -84,22 +43,4 @@ export interface N8NApiError {
   timestamp: string;
 }
 
-// ============================================================================
-// Integration Types (for mapping between internal and API formats)
-// ============================================================================
-
-export interface IncidentDataForQuestions {
-  participantName: string;
-  reporterName: string;
-  location: string;
-  beforeEvent: string;
-  duringEvent: string;
-  endEvent: string;
-  postEvent: string;
-}
-
-export interface ClarificationAnswersForConsolidation {
-  questionId: string;
-  question: string;
-  answer: string;
-}
+// NOTE: All other types have been moved to api-types.ts for better organization

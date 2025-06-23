@@ -1,5 +1,5 @@
 import { Loader2 } from 'lucide-react';
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Card, CardContent } from '@/components/ui/card';
@@ -9,38 +9,64 @@ import { StepHeader } from '@/components/wizard/StepHeader';
 import { useIncidentStore } from '@/store/useIncidentStore';
 
 export const NarrativeInputStep: React.FC = () => {
-  const { 
-    report, 
-    updateNarrative, 
-    isLoadingQuestions 
-  } = useIncidentStore();
-  
-  const [formData, setFormData] = useState(report.narrative);
-  const isUpdatingFromStoreRef = useRef(false);
+  const report = useIncidentStore(state => state.report);
+  const isLoadingQuestions = useIncidentStore(state => state.isLoadingQuestions);
+  const updateNarrative = useIncidentStore(state => state.updateNarrative);
 
-  // Sync local state with store when store changes externally
+  // Performance monitoring (only in development)
+  const renderCountRef = useRef(0);
+  if (import.meta.env.DEV) {
+    renderCountRef.current++;
+    console.log(`NarrativeInputStep render #${renderCountRef.current}`);
+  }
+  
+  const [formData, setFormData] = useState(() => report.narrative);
+  const debounceTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const lastSyncedDataRef = useRef(report.narrative);
+
+  // Sync local state with store when store changes externally (but not from our own updates)
   useEffect(() => {
-    isUpdatingFromStoreRef.current = true;
-    setFormData(report.narrative);
-    // Reset flag after state update completes
-    setTimeout(() => {
-      isUpdatingFromStoreRef.current = false;
-    }, 0);
+    // Only update local state if the store change came from outside this component
+    const storeDataString = JSON.stringify(report.narrative);
+    const lastSyncedString = JSON.stringify(lastSyncedDataRef.current);
+    
+    if (storeDataString !== lastSyncedString) {
+      setFormData(report.narrative);
+      lastSyncedDataRef.current = report.narrative;
+    }
   }, [report.narrative]);
 
-  // Update store when form data changes (but not when updating from store)
-  useEffect(() => {
-    if (!isUpdatingFromStoreRef.current) {
-      updateNarrative(formData);
+  // Debounced store update function
+  const debouncedUpdateNarrative = useCallback((data: typeof formData) => {
+    if (debounceTimeoutRef.current) {
+      clearTimeout(debounceTimeoutRef.current);
     }
-  }, [formData, updateNarrative]);
+    
+    debounceTimeoutRef.current = setTimeout(() => {
+      updateNarrative(data);
+      lastSyncedDataRef.current = data;
+    }, 300); // 300ms debounce
+  }, [updateNarrative]);
 
-  const handleInputChange = (field: keyof typeof formData, value: string) => {
-    setFormData(prev => ({
-      ...prev,
-      [field]: value
-    }));
-  };
+  // Cleanup timeout on unmount
+  useEffect(() => {
+    return () => {
+      if (debounceTimeoutRef.current) {
+        clearTimeout(debounceTimeoutRef.current);
+      }
+    };
+  }, []);
+
+  const handleInputChange = useCallback((field: keyof typeof formData, value: string) => {
+    setFormData(prev => {
+      const newFormData = {
+        ...prev,
+        [field]: value
+      };
+      debouncedUpdateNarrative(newFormData);
+      return newFormData;
+    });
+  }, [debouncedUpdateNarrative]);
 
   return (
     <div>

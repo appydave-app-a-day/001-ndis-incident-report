@@ -347,61 +347,79 @@ export const useIncidentStore = create<IncidentState>((set, get) => ({
         testDataLevel: 'basic',
       }));
     } else if (currentLevel === 'basic') {
-      // Level 2: Load mock questions and populate clarification answers
-      const mockQuestions: ClarificationQuestions = {
-        beforeEvent: [
-          { id: 'b1', question: 'What was the participant doing before the incident?', phase: 'beforeEvent' },
-          { id: 'b2', question: 'Do you like green eggs?', phase: 'beforeEvent' },
-          { id: 'b3', question: 'What was the environment like before the incident?', phase: 'beforeEvent' }
-        ],
-        duringEvent: [
-          { id: 'd1', question: 'How long did the incident last?', phase: 'duringEvent' },
-          { id: 'd2', question: 'Who else was present during the incident?', phase: 'duringEvent' },
-          { id: 'd3', question: 'What interventions were attempted?', phase: 'duringEvent' }
-        ],
-        endEvent: [
-          { id: 'e1', question: 'How was the incident resolved?', phase: 'endEvent' },
-          { id: 'e2', question: 'Was anyone injured?', phase: 'endEvent' },
-          { id: 'e3', question: 'What was the immediate outcome?', phase: 'endEvent' }
-        ],
-        postEvent: [
-          { id: 'p1', question: 'What follow-up actions were taken?', phase: 'postEvent' },
-          { id: 'p2', question: 'Was a supervisor or manager notified?', phase: 'postEvent' },
-          { id: 'p3', question: 'What support was provided to the participant?', phase: 'postEvent' }
-        ]
-      };
+      // Level 2: Generate test data based on current API mode
+      const state = get();
+      
+      if (state.apiMode === 'mock' || !state.clarificationQuestions) {
+        // Mock mode: Load pre-defined mock questions and answers
+        const mockQuestions: ClarificationQuestions = {
+          beforeEvent: [
+            { id: 'b1', question: 'What was the participant doing before the incident?', phase: 'beforeEvent' },
+            { id: 'b2', question: 'Do you like green eggs?', phase: 'beforeEvent' },
+            { id: 'b3', question: 'What was the environment like before the incident?', phase: 'beforeEvent' }
+          ],
+          duringEvent: [
+            { id: 'd1', question: 'How long did the incident last?', phase: 'duringEvent' },
+            { id: 'd2', question: 'Who else was present during the incident?', phase: 'duringEvent' },
+            { id: 'd3', question: 'What interventions were attempted?', phase: 'duringEvent' }
+          ],
+          endEvent: [
+            { id: 'e1', question: 'How was the incident resolved?', phase: 'endEvent' },
+            { id: 'e2', question: 'Was anyone injured?', phase: 'endEvent' },
+            { id: 'e3', question: 'What was the immediate outcome?', phase: 'endEvent' }
+          ],
+          postEvent: [
+            { id: 'p1', question: 'What follow-up actions were taken?', phase: 'postEvent' },
+            { id: 'p2', question: 'Was a supervisor or manager notified?', phase: 'postEvent' },
+            { id: 'p3', question: 'What support was provided to the participant?', phase: 'postEvent' }
+          ]
+        };
 
-      const testClarificationAnswers: ClarificationAnswers = {
-        beforeEvent: [
-          { questionId: 'b1', answer: 'Lisa was sitting quietly on the couch, watching afternoon television and appeared relaxed' },
-          { questionId: 'b2', answer: 'No, she prefers regular eggs' },
-          { questionId: 'b3', answer: 'The living room was calm and quiet, with normal lighting and no other people present' }
-        ],
-        duringEvent: [
-          { questionId: 'd1', answer: 'The incident lasted approximately 15-20 minutes from start to finish' },
-          { questionId: 'd2', answer: 'Only the pizza delivery person at the door and myself as the support worker were present' },
-          { questionId: 'd3', answer: 'I attempted verbal de-escalation and tried to explain who was at the door, but Lisa was too agitated to listen' }
-        ],
-        endEvent: [
-          { questionId: 'e1', answer: 'Police officers were able to calm Lisa down using verbal de-escalation techniques and safely removed the knife' },
-          { questionId: 'e2', answer: 'No one was physically injured during the incident, though Lisa was emotionally distressed' },
-          { questionId: 'e3', answer: 'Lisa was taken to the local psychiatric hospital for assessment and stabilization' }
-        ],
-        postEvent: [
-          { questionId: 'p1', answer: 'Contact was made with Lisa\'s case manager and family, incident was documented, and debriefing was conducted' },
-          { questionId: 'p2', answer: 'Yes, the on-call supervisor was immediately notified and arrived on-site within 30 minutes' },
-          { questionId: 'p3', answer: 'Lisa received immediate psychiatric assessment and overnight monitoring before returning home the next day' }
-        ]
-      };
+        const testClarificationAnswers: ClarificationAnswers = {
+          beforeEvent: [
+            { questionId: 'b1', answer: 'Lisa was sitting quietly on the couch, watching afternoon television and appeared relaxed' },
+            { questionId: 'b2', answer: 'No, she prefers regular eggs' },
+            { questionId: 'b3', answer: 'The living room was calm and quiet, with normal lighting and no other people present' }
+          ],
+          duringEvent: [
+            { questionId: 'd1', answer: 'The incident lasted approximately 15-20 minutes from start to finish' },
+            { questionId: 'd2', answer: 'Only the pizza delivery person at the door and myself as the support worker were present' },
+            { questionId: 'd3', answer: 'I attempted verbal de-escalation and tried to explain who was at the door, but Lisa was too agitated to listen' }
+          ],
+          endEvent: [
+            { questionId: 'e1', answer: 'Police officers were able to calm Lisa down using verbal de-escalation techniques and safely removed the knife' },
+            { questionId: 'e2', answer: 'No one was physically injured during the incident, though Lisa was emotionally distressed' },
+            { questionId: 'e3', answer: 'Lisa was taken to the local psychiatric hospital for assessment and stabilization' }
+          ],
+          postEvent: [
+            { questionId: 'p1', answer: 'Contact was made with Lisa\'s case manager and family, incident was documented, and debriefing was conducted' },
+            { questionId: 'p2', answer: 'Yes, the on-call supervisor was immediately notified and arrived on-site within 30 minutes' },
+            { questionId: 'p3', answer: 'Lisa received immediate psychiatric assessment and overnight monitoring before returning home the next day' }
+          ]
+        };
 
-      set((state) => ({
-        report: {
-          ...state.report,
-          clarificationAnswers: testClarificationAnswers,
-        },
-        clarificationQuestions: mockQuestions,
-        testDataLevel: 'full',
-      }));
+        set((currentState) => ({
+          report: {
+            ...currentState.report,
+            clarificationAnswers: testClarificationAnswers,
+          },
+          clarificationQuestions: mockQuestions,
+          testDataLevel: 'full',
+        }));
+      } else {
+        // Live mode: Generate smart answers for existing N8N questions
+        import('../lib/services/smart-test-data').then(({ generateAllTestAnswers }) => {
+          const smartAnswers = generateAllTestAnswers(state.clarificationQuestions!, state.report.narrative);
+          
+          set((currentState) => ({
+            report: {
+              ...currentState.report,
+              clarificationAnswers: smartAnswers,
+            },
+            testDataLevel: 'full',
+          }));
+        });
+      }
     } else {
       // Level 3: Reset to empty state
       set({ 
@@ -444,25 +462,31 @@ export const useIncidentStore = create<IncidentState>((set, get) => ({
     const startTime = Date.now();
     const message = `Enhancing ${PHASE_LABELS[phase]} narrative with AI assistance...`;
     
-    // Set loading state with overlay in mock mode
+    // Set loading state with overlay for both mock and live modes
     set((currentState) => ({
       consolidationStatus: {
         ...currentState.consolidationStatus,
         [phase]: 'loading',
       },
-      ...(state.apiMode === 'mock' ? createLoadingOverlayUpdate(message) : {})
+      ...createLoadingOverlayUpdate(message)
     }));
 
     try {
-      // Import N8N API service dynamically to avoid circular dependencies
-      const { n8nApi } = await import('../lib/services/n8n-api');
+      // Import unified incident API
+      const { incidentAPI } = await import('../lib/services/incident-api');
       
       // Get clarification answers for this phase
       const clarificationAnswers = state.report.clarificationAnswers[phase];
       const clarificationQuestions = state.clarificationQuestions?.[phase] || [];
+      const originalNarrative = state.report.narrative[phase];
       
-      // Map to API format
-      const apiData = clarificationAnswers.map(answer => {
+      // Set API mode if user has a preference
+      if (state.apiMode !== incidentAPI.getMode()) {
+        incidentAPI.setMode(state.apiMode);
+      }
+
+      // Resolve question IDs to actual question text for the API
+      const resolvedAnswers = clarificationAnswers.map(answer => {
         const question = clarificationQuestions.find(q => q.id === answer.questionId);
         return {
           questionId: answer.questionId,
@@ -471,52 +495,35 @@ export const useIncidentStore = create<IncidentState>((set, get) => ({
         };
       });
 
-      // Map phase names for API
-      const apiPhase = phase === 'beforeEvent' ? 'before_event' as const :
-                      phase === 'duringEvent' ? 'during_event' as const :
-                      phase === 'endEvent' ? 'end_event' as const :
-                      'post_event' as const;
-
-      // Make API call with user's preferred mode
-      const result = await n8nApi.consolidateNarrative(apiData, apiPhase, state.apiMode);
+      // Make API call to enhance narrative
+      const enhancedNarrative = await incidentAPI.enhanceNarrative(
+        phase,
+        originalNarrative,
+        resolvedAnswers
+      );
 
       // Ensure minimum loading time has elapsed
       await waitForMinimumLoadingTime(startTime);
 
-      if (result.success && result.data) {
-        // Update narrative extra and mark as complete
-        set((currentState) => ({
-          report: {
-            ...currentState.report,
-            narrativeExtras: {
-              ...currentState.report.narrativeExtras,
-              [phase]: result.data!.narrative_extra,
-            },
+      // Update narrative extra and mark as complete
+      set((currentState) => ({
+        report: {
+          ...currentState.report,
+          narrativeExtras: {
+            ...currentState.report.narrativeExtras,
+            [phase]: enhancedNarrative,
           },
-          consolidationStatus: {
-            ...currentState.consolidationStatus,
-            [phase]: 'complete',
-          },
-          consolidationErrors: {
-            ...currentState.consolidationErrors,
-            [phase]: undefined,
-          },
-          ...createLoadingOverlayUpdate('', false)
-        }));
-      } else {
-        // Handle API error
-        set((currentState) => ({
-          consolidationStatus: {
-            ...currentState.consolidationStatus,
-            [phase]: 'error',
-          },
-          consolidationErrors: {
-            ...currentState.consolidationErrors,
-            [phase]: result.error || 'Consolidation failed',
-          },
-          ...createLoadingOverlayUpdate('', false)
-        }));
-      }
+        },
+        consolidationStatus: {
+          ...currentState.consolidationStatus,
+          [phase]: 'complete',
+        },
+        consolidationErrors: {
+          ...currentState.consolidationErrors,
+          [phase]: undefined,
+        },
+        ...createLoadingOverlayUpdate('', false)
+      }));
     } catch (error) {
       // Ensure minimum loading time has elapsed even for errors
       await waitForMinimumLoadingTime(startTime);
@@ -556,15 +563,54 @@ export const useIncidentStore = create<IncidentState>((set, get) => ({
     
     const message = 'Analyzing narrative content to generate relevant clarification questions...';
     
-    // Show loading overlay in mock mode
+    // Show loading overlay for both mock and live modes
     set({
       isLoadingQuestions: true,
-      ...(state.apiMode === 'mock' ? createLoadingOverlayUpdate(message) : {})
+      ...createLoadingOverlayUpdate(message)
     });
     
     try {
-      const { IncidentApiService } = await import('../lib/services/api');
-      const questions = await IncidentApiService.getClarificationQuestions(state.report.narrative, state.apiMode);
+      // Import unified incident API
+      const { incidentAPI } = await import('../lib/services/incident-api');
+      
+      // Set API mode if user has a preference
+      if (state.apiMode !== incidentAPI.getMode()) {
+        incidentAPI.setMode(state.apiMode);
+      }
+      
+      // Prepare metadata
+      const metadata = {
+        reporterName: state.report.metadata.reporterName,
+        participantName: state.report.metadata.participantName,
+        location: state.report.metadata.location,
+      };
+      
+      // Get clarification questions
+      const response = await incidentAPI.getClarificationQuestions(state.report.narrative, metadata);
+      
+      // Transform response to match store format
+      const questions = {
+        beforeEvent: response.beforeEventQuestions.map((q, index) => ({
+          id: `before-${index + 1}`,
+          question: q,
+          phase: 'beforeEvent' as const,
+        })),
+        duringEvent: response.duringEventQuestions.map((q, index) => ({
+          id: `during-${index + 1}`,
+          question: q,
+          phase: 'duringEvent' as const,
+        })),
+        endEvent: response.endEventQuestions.map((q, index) => ({
+          id: `end-${index + 1}`,
+          question: q,
+          phase: 'endEvent' as const,
+        })),
+        postEvent: response.postEventQuestions.map((q, index) => ({
+          id: `post-${index + 1}`,
+          question: q,
+          phase: 'postEvent' as const,
+        })),
+      };
       
       // Update questions and hash
       set({

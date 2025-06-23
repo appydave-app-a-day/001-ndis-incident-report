@@ -1,7 +1,7 @@
 import React from 'react';
 import { AlertCircle, RefreshCw } from 'lucide-react';
 import { Button } from './button';
-import { Alert, AlertDescription, AlertTitle } from './alert';
+import { Alert, AlertDescription } from './alert';
 
 export interface ErrorDisplayProps {
   error: Error | string;
@@ -22,7 +22,7 @@ export const ErrorDisplay: React.FC<ErrorDisplayProps> = ({
   return (
     <Alert variant="destructive" className={`${className}`}>
       <AlertCircle className="h-4 w-4" />
-      <AlertTitle>{title}</AlertTitle>
+      <div className="font-medium">{title}</div>
       <AlertDescription className="mt-2">
         <div className="space-y-2">
           <p>{errorMessage}</p>

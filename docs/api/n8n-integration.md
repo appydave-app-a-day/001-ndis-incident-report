@@ -56,39 +56,39 @@ console.log('Current mode:', config.mode);
 
 #### Request
 ```http
-POST https://{domain}/webhook/narrative-report-clarification
+POST https://{domain}/webhook/generate-clarification-questions
 Content-Type: application/json
 
 {
-  "participant_name": "Lisa",
-  "reporter_name": "David",
+  "participantName": "Lisa",
+  "reporterName": "David",
   "location": "Mascot Community Center",
-  "before_event": "Lisa was sitting in the lounge room watching TV, appeared calm",
-  "during_event": "Lisa became agitated when pizza delivery knocked loudly",
-  "end_of_event": "Police were called and Lisa was taken to psychiatric hospital",
-  "post_event_support": "Lisa returned home the next day"
+  "beforeEvent": "Lisa was sitting in the lounge room watching TV, appeared calm",
+  "duringEvent": "Lisa became agitated when pizza delivery knocked loudly",
+  "endEvent": "Police were called and Lisa was taken to psychiatric hospital",
+  "postEvent": "Lisa returned home the next day"
 }
 ```
 
 #### Response
 ```json
 {
-  "before_event_questions": [
+  "beforeEventQuestions": [
     "What was the participant doing before the incident?",
     "What was the environment like before the incident?",
     "Were there any unusual circumstances or triggers present?"
   ],
-  "during_event_questions": [
+  "duringEventQuestions": [
     "How long did the incident last?",
     "Who else was present during the incident?",
     "What interventions were attempted?"
   ],
-  "end_of_event_questions": [
+  "endEventQuestions": [
     "How was the incident resolved?",
     "Was anyone injured during the incident?",
     "What was the immediate outcome?"
   ],
-  "post_event_questions": [
+  "postEventQuestions": [
     "What follow-up actions were taken?",
     "Was a supervisor or manager notified?",
     "What support was provided to the participant?"

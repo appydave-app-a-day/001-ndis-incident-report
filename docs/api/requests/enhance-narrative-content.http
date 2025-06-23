@@ -1,0 +1,19 @@
+POST https://buildergeniobit.app.n8n.cloud/webhook/enhance-narrative-content
+Content-Type: application/json
+
+{
+  "phase": "Before Event",
+  "instruction": "Summarize these details clearly for the report.",
+  "answers": [
+    {
+      "question": "What was the participant doing before the incident?",
+      "answer": "Angela was quietly drawing at a table."
+    },
+    {
+      "question": "What was the environment like?",
+      "answer": "It was calm with low background noise."
+    }
+  ]
+}
+
+

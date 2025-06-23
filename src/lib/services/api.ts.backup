@@ -7,7 +7,7 @@ const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5678
 const mockClarificationQuestions: ClarificationQuestions = {
   beforeEvent: [
     { id: 'b1', question: 'What was the participant doing before the incident?', phase: 'beforeEvent' },
-    { id: 'b2', question: 'Do you like green eggs?', phase: 'beforeEvent' },
+    { id: 'b2', question: 'Were there any warning signs or triggers?', phase: 'beforeEvent' },
     { id: 'b3', question: 'What was the environment like before the incident?', phase: 'beforeEvent' }
   ],
   duringEvent: [

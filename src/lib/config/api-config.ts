@@ -17,8 +17,8 @@ export const getN8NApiConfig = (): N8NApiConfig => {
     domain,
     mode,
     endpoints: {
-      clarificationQuestions: 'narrative-report-clarification',
-      narrativeConsolidation: 'narrative-consolidation',
+      clarificationQuestions: 'generate-clarification-questions',
+      narrativeConsolidation: 'enhance-narrative-content',
     },
   };
 };
