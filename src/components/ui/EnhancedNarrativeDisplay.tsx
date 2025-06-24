@@ -37,8 +37,33 @@ export const EnhancedNarrativeDisplay: React.FC<EnhancedNarrativeDisplayProps> =
   const [showOriginal, setShowOriginal] = useState(false);
   const phaseIcon = PHASE_ICONS[phase];
 
+  // Debug logging in development
+  if (import.meta.env.DEV) {
+    console.log(`EnhancedNarrativeDisplay - ${phase}:`, {
+      consolidationStatus,
+      enhancedNarrativeLength: enhancedNarrative?.length || 0,
+      hasEnhancedNarrative: !!enhancedNarrative,
+      originalNarrativeLength: originalNarrative?.length || 0,
+      error,
+    });
+  }
+
   // Render enhanced narrative when consolidation is complete
-  if (consolidationStatus === 'complete' && enhancedNarrative) {
+  const shouldShowEnhanced = consolidationStatus === 'complete' && enhancedNarrative && enhancedNarrative.trim().length > 0;
+  
+  if (import.meta.env.DEV) {
+    console.log(`${phase} render decision:`, {
+      consolidationStatus,
+      hasEnhancedNarrative: !!enhancedNarrative,
+      enhancedLength: enhancedNarrative?.length || 0,
+      shouldShowEnhanced,
+    });
+  }
+
+  if (shouldShowEnhanced) {
+    if (import.meta.env.DEV) {
+      console.log(`Rendering ENHANCED view for ${phase}:`, enhancedNarrative.substring(0, 100) + '...');
+    }
     return (
       <Card className={`enhanced-narrative-display ${className} mb-6`}>
         <CardHeader>
@@ -106,6 +131,9 @@ export const EnhancedNarrativeDisplay: React.FC<EnhancedNarrativeDisplayProps> =
   }
 
   // Render original narrative with status when consolidation failed/pending
+  if (import.meta.env.DEV) {
+    console.log(`Rendering FALLBACK view for ${phase} - Status: ${consolidationStatus}`);
+  }
   return (
     <Card className={`enhanced-narrative-display ${className} mb-6`}>
       <CardHeader>

@@ -23,6 +23,15 @@ export const IncidentReviewStep: React.FC = () => {
     consolidatePhaseNarrative,
   } = useIncidentStore();
 
+  // Debug logging in development
+  if (import.meta.env.DEV) {
+    console.log('IncidentReviewStep - Data:', {
+      narrativeExtras: report.narrativeExtras,
+      consolidationStatus,
+      consolidationErrors,
+    });
+  }
+
   // Handle retry for individual phases
   const handleRetryConsolidation = (phase: keyof typeof PHASE_LABELS) => {
     consolidatePhaseNarrative(phase);

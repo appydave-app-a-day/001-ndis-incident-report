@@ -1,0 +1,10 @@
+{
+  "clarification_questions": {
+    "output": "```json\n{\n  \"before_event\": [\n    \"Can you describe what Angela was drawing and if there was anything about her drawing or the environment that might have influenced her mood?\",\n    \"Were there any interactions or background activities happening around Angela before she started drawing that could have affected her?\",\n    \"Did Angela appear to be focused or engaged in her activity, or were there signs of any prior discomfort or stress?\"\n  ],\n  \"during_event\": [\n    \"Can you elaborate on what caused the disagreement with the other participant and how Angela responded immediately afterward?\",\n    \"What specific actions or words were exchanged during the disagreement that led to Angela becoming upset?\",\n    \"How did Angela express her upset feelings—beyond crying—and were there any other behaviors observed during this moment?\",\n    \"Did anything in the environment or among other participants seem to influence her emotional reaction?\"\n  ],\n  \"end_of_event\": [\n    \"Can you describe how the staff intervened and what steps were taken to help Angela calm down?\",\n    \"How long did it take for Angela to regain composure, and what strategies did staff use to support her during this time?\",\n    \"Were there any particular cues or signals indicating that Angela was ready to re-engage with the group?\"\n  ],\n  \"post_event_support\": [\n    \"What topics or issues did Angela discuss with the counselor during her recovery time?\",\n    \"How did Angela feel after talking with the counselor and rejoining the group—did she express any feelings or thoughts about the incident?\",\n    \"Were there any follow-up plans or strategies put in place to support Angela’s emotional well-being after this incident?\",\n    \"Did any environmental factors, such as the setting or other participants, seem to influence her ability to rejoin the group smoothly?\"\n  ]\n}\n```"
+  },
+  "metadata": {
+    "processed_at": "2025-06-23T10:47:17.080Z",
+    "status": "success",
+    "report_context": {}
+  }
+}

@@ -123,6 +123,11 @@ export class N8NIncidentAPI implements IIncidentAPI {
       })),
     };
 
+    // Debug log the request in development
+    if (import.meta.env.DEV) {
+      console.log('🔗 N8N Request Data:', JSON.stringify(requestData, null, 2));
+    }
+
     const response = await this.makeRequest<EnhanceNarrativeContentRequest, any>(
       this.urls.narrativeConsolidation,
       requestData
@@ -132,18 +137,22 @@ export class N8NIncidentAPI implements IIncidentAPI {
       throw new Error(response.error || 'Failed to enhance narrative');
     }
 
-    // The response might have a similar structure to clarification questions
-    // For now, assume the enhanced narrative is in response.data directly
-    // This may need to be updated based on the actual N8N response structure
+    // Handle the actual N8N response structure which contains both 'output' and 'narrative' fields
     if (typeof response.data === 'string') {
       return response.data;
+    } else if (response.data.output) {
+      // Use the 'output' field as it contains the enhanced narrative
+      return response.data.output;
+    } else if (response.data.narrative) {
+      // Fallback to 'narrative' field if output is not available
+      return response.data.narrative;
     } else if (response.data.enhancedNarrative) {
       return response.data.enhancedNarrative;
     } else if (response.data.narrative_extra) {
       return response.data.narrative_extra;
     } else {
-      console.warn('Unexpected response structure for narrative enhancement:', response.data);
-      return 'Enhanced narrative content was processed successfully.';
+      console.error('Unable to extract enhanced narrative from response:', response.data);
+      throw new Error('Invalid response structure from narrative enhancement endpoint');
     }
   }
 
