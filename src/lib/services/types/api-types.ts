@@ -139,6 +139,64 @@ export interface ApiError {
 }
 
 // ============================================================================
+// Analysis API Types (Epic 5)
+// ============================================================================
+
+/**
+ * Request to generate comprehensive incident analysis
+ * Endpoint: POST /webhook/generate-incident-analysis
+ */
+export interface GenerateIncidentAnalysisRequest {
+  consolidated_narrative: string;
+  participant_name: string;
+  reporter_name: string;
+  location: string;
+  incident_date: string;
+  analysis_focus?: string;
+}
+
+/**
+ * Response from generate incident analysis API
+ */
+export interface GenerateIncidentAnalysisResponse {
+  contributing_conditions: {
+    immediate_conditions: string;
+    environmental_factors?: string;
+    confidence: number;
+  };
+  incident_classifications: Array<{
+    incident_type: 'Behavioural' | 'Environmental' | 'Medical' | 'Communication' | 'Other';
+    supporting_evidence: string;
+    severity: 'Low' | 'Medium' | 'High';
+    confidence: number;
+  }>;
+  processing_metadata?: {
+    model_used: string;
+    processing_time: number;
+    warnings?: string[];
+  };
+}
+
+/**
+ * Frontend representation of incident classification
+ */
+export interface IncidentClassification {
+  id: string;
+  incidentType: 'Behavioural' | 'Environmental' | 'Medical' | 'Communication' | 'Other';
+  supportingEvidence: string;
+  severity: 'Low' | 'Medium' | 'High';
+  confidence: number;
+}
+
+/**
+ * Frontend response from analysis API
+ */
+export interface GenerateIncidentAnalysisResponseFrontend {
+  contributingConditions: string;
+  classifications: IncidentClassification[];
+}
+
+// ============================================================================
 // Service Interface
 // ============================================================================
 
@@ -166,6 +224,19 @@ export interface IIncidentAPI {
     originalNarrative: string,
     clarificationAnswers: ClarificationAnswerWithQuestion[]
   ): Promise<string>;
+
+  /**
+   * Generate comprehensive incident analysis (Epic 5)
+   */
+  generateIncidentAnalysis(
+    consolidatedNarrative: string,
+    metadata: {
+      participantName: string;
+      reporterName: string;
+      location: string;
+      incidentDate: string;
+    }
+  ): Promise<GenerateIncidentAnalysisResponseFrontend>;
 
   /**
    * Get current API mode

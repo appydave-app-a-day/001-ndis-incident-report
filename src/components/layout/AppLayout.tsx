@@ -45,7 +45,7 @@ export const AppLayout: React.FC = () => {
   const sectionTitles = {
     home: 'Dashboard',
     capture: 'Incident Capture Workflow',
-    analysis: 'Analysis',
+    analysis: 'Incident Analysis Workflow',
   };
 
   const currentSection = getCurrentSection();

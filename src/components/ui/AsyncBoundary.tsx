@@ -1,6 +1,7 @@
 import React from 'react';
-import { LoadingOverlay } from './LoadingOverlay';
+
 import { ErrorDisplay } from './ErrorDisplay';
+import { LoadingOverlay } from './LoadingOverlay';
 
 export interface AsyncBoundaryProps {
   loading?: boolean;

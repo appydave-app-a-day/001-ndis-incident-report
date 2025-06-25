@@ -1,3 +1,4 @@
+import { getN8NApiConfig, getApiUrls, PHASE_CUSTOM_INSTRUCTIONS, API_TIMEOUT } from '../../config/api-config';
 import type {
   IIncidentAPI,
   ApiResponse,
@@ -7,9 +8,11 @@ import type {
   EnhanceNarrativeContentRequest,
   ClarificationAnswerWithQuestion,
   PhaseLabel,
+  GenerateIncidentAnalysisRequest,
+  GenerateIncidentAnalysisResponse,
+  GenerateIncidentAnalysisResponseFrontend,
 } from '../types/api-types';
 import type { NarrativeExtras } from '../types/incident-types';
-import { getN8NApiConfig, getApiUrls, PHASE_CUSTOM_INSTRUCTIONS, API_TIMEOUT } from '../../config/api-config';
 
 /**
  * Live N8N implementation of incident API
@@ -154,6 +157,53 @@ export class N8NIncidentAPI implements IIncidentAPI {
       console.error('Unable to extract enhanced narrative from response:', response.data);
       throw new Error('Invalid response structure from narrative enhancement endpoint');
     }
+  }
+
+  async generateIncidentAnalysis(
+    consolidatedNarrative: string,
+    metadata: {
+      participantName: string;
+      reporterName: string;
+      location: string;
+      incidentDate: string;
+    }
+  ): Promise<GenerateIncidentAnalysisResponseFrontend> {
+    // Map to N8N API expected format
+    const requestData: GenerateIncidentAnalysisRequest = {
+      consolidated_narrative: consolidatedNarrative,
+      participant_name: metadata.participantName,
+      reporter_name: metadata.reporterName,
+      location: metadata.location,
+      incident_date: metadata.incidentDate,
+    };
+
+    // Debug log the request in development
+    if (import.meta.env.DEV) {
+      console.log('🔗 N8N Analysis Request Data:', JSON.stringify(requestData, null, 2));
+    }
+
+    const response = await this.makeRequest<GenerateIncidentAnalysisRequest, GenerateIncidentAnalysisResponse>(
+      this.urls.incidentAnalysis,
+      requestData
+    );
+
+    if (!response.success || !response.data) {
+      throw new Error(response.error || 'Failed to generate incident analysis');
+    }
+
+    // Transform the API response to frontend format
+    const apiData = response.data;
+    
+    return {
+      contributingConditions: apiData.contributing_conditions.immediate_conditions,
+      classifications: apiData.incident_classifications.map((classification, index) => ({
+        id: `api-classification-${index + 1}`,
+        incidentType: classification.incident_type,
+        supportingEvidence: classification.supporting_evidence,
+        severity: classification.severity,
+        confidence: classification.confidence,
+      })),
+    };
   }
 
   getMode(): 'mock' | 'live' {

@@ -19,6 +19,7 @@ export const getN8NApiConfig = (): N8NApiConfig => {
     endpoints: {
       clarificationQuestions: 'generate-clarification-questions',
       narrativeConsolidation: 'enhance-narrative-content',
+      incidentAnalysis: 'generate-incident-analysis',
     },
   };
 };
@@ -34,6 +35,7 @@ export const getApiUrls = () => {
   return {
     clarificationQuestions: `${baseUrl}/${config.endpoints.clarificationQuestions}`,
     narrativeConsolidation: `${baseUrl}/${config.endpoints.narrativeConsolidation}`,
+    incidentAnalysis: `${baseUrl}/${config.endpoints.incidentAnalysis}`,
   };
 };
 

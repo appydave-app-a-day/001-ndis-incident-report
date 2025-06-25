@@ -1,7 +1,8 @@
-import React from 'react';
 import { AlertCircle, RefreshCw } from 'lucide-react';
-import { Button } from './button';
+import React from 'react';
+
 import { Alert, AlertDescription } from './alert';
+import { Button } from './button';
 
 export interface ErrorDisplayProps {
   error: Error | string;

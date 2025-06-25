@@ -1,13 +1,14 @@
+import { MockIncidentAPI } from './providers/mock-incident-api';
+import { N8NIncidentAPI } from './providers/n8n-incident-api';
 import type {
   IIncidentAPI,
   GenerateClarificationQuestionsResponseFrontend,
   ClarificationAnswerWithQuestion,
   ApiResponse,
+  GenerateIncidentAnalysisResponseFrontend,
 } from './types/api-types';
 import type { IncidentNarrative, NarrativeExtras } from './types/incident-types';
 
-import { MockIncidentAPI } from './providers/mock-incident-api';
-import { N8NIncidentAPI } from './providers/n8n-incident-api';
 
 /**
  * Unified Incident API - Single entry point for all incident-related API operations
@@ -88,6 +89,36 @@ export class IncidentAPI implements IIncidentAPI {
   }
 
   /**
+   * Generate comprehensive incident analysis (Epic 5)
+   */
+  async generateIncidentAnalysis(
+    consolidatedNarrative: string,
+    metadata: {
+      participantName: string;
+      reporterName: string;
+      location: string;
+      incidentDate: string;
+    }
+  ): Promise<GenerateIncidentAnalysisResponseFrontend> {
+    try {
+      if (this.mode === 'mock') {
+        return await this.mockAPI.generateIncidentAnalysis(consolidatedNarrative, metadata);
+      } else {
+        return await this.liveAPI.generateIncidentAnalysis(consolidatedNarrative, metadata);
+      }
+    } catch (error) {
+      console.warn('Live API failed, falling back to mock:', error);
+      
+      // Fallback to mock if live fails
+      if (this.mode === 'live') {
+        return await this.mockAPI.generateIncidentAnalysis(consolidatedNarrative, metadata);
+      }
+      
+      throw error;
+    }
+  }
+
+  /**
    * Get current API mode
    */
   getMode(): 'mock' | 'live' {
@@ -117,7 +148,7 @@ export class IncidentAPI implements IIncidentAPI {
     } else {
       try {
         return await this.liveAPI.healthCheck();
-      } catch (error) {
+      } catch (_error) {
         // Fallback to mock health check if live fails
         const mockResult = await this.mockAPI.healthCheck();
         return {
