@@ -48,6 +48,26 @@ export const useAnalysisPrefetch = () => {
       reporterName: report.metadata.reporterName,
       location: report.metadata.location,
       incidentDate: report.metadata.eventDateTime,
+      eventDateTime: report.metadata.eventDateTime,
+    };
+  }, [incidentStore]);
+
+  /**
+   * Get structured narrative sections for API requests
+   */
+  const getNarrativeSections = useCallback(() => {
+    const { report } = incidentStore;
+    const { narrative, narrativeExtras } = report;
+    
+    return {
+      beforeEvent: narrative.beforeEvent,
+      beforeEventExtra: narrativeExtras.beforeEvent || '',
+      duringEvent: narrative.duringEvent,
+      duringEventExtra: narrativeExtras.duringEvent || '',
+      endEvent: narrative.endEvent,
+      endEventExtra: narrativeExtras.endEvent || '',
+      postEvent: narrative.postEvent,
+      postEventExtra: narrativeExtras.postEvent || '',
     };
   }, [incidentStore]);
 
@@ -59,21 +79,24 @@ export const useAnalysisPrefetch = () => {
       analysisStore.setPrefetchStatus('conditions', 'loading');
       analysisStore.setPrefetchError('conditions', undefined);
 
-      const consolidatedNarrative = getConsolidatedNarrative();
+      const narrativeSections = getNarrativeSections();
       const metadata = getMetadata();
 
-      if (!consolidatedNarrative.trim()) {
+      // Check if we have any narrative content
+      const hasContent = Object.values(narrativeSections).some(section => section.trim().length > 0);
+      if (!hasContent) {
         throw new Error('No narrative content available for analysis');
       }
 
-      // Make API call for analysis
-      const analysisResult = await incidentAPI.generateIncidentAnalysis(
-        consolidatedNarrative,
+      // Make API call for contributing conditions analysis
+      const contributingConditions = await incidentAPI.analyzeContributingConditions(
+        narrativeSections,
         metadata
       );
 
       // Store the contributing conditions
-      analysisStore.updateContributingConditions(analysisResult.contributingConditions);
+      analysisStore.updateContributingConditions(contributingConditions);
+      analysisStore.setConditionsOriginalValue(contributingConditions);
       analysisStore.setPrefetchStatus('conditions', 'success');
 
       if (import.meta.env.DEV) {
@@ -88,7 +111,7 @@ export const useAnalysisPrefetch = () => {
         console.error('❌ Contributing conditions prefetch failed:', errorMessage);
       }
     }
-  }, [analysisStore, getConsolidatedNarrative, getMetadata]);
+  }, [analysisStore, getNarrativeSections, getMetadata]);
 
   /**
    * Prefetch incident classifications analysis
@@ -228,6 +251,7 @@ export const useAnalysisPrefetch = () => {
     
     // Data getters
     getConsolidatedNarrative,
+    getNarrativeSections,
     getMetadata,
   };
 };

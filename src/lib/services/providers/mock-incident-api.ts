@@ -116,6 +116,45 @@ export class MockIncidentAPI implements IIncidentAPI {
     return enhancements[phase] || 'Additional contextual information has been consolidated from the clarification responses provided.';
   }
 
+  async analyzeContributingConditions(
+    narrativeSections: {
+      beforeEvent: string;
+      beforeEventExtra: string;
+      duringEvent: string;
+      duringEventExtra: string;
+      endEvent: string;
+      endEventExtra: string;
+      postEvent: string;
+      postEventExtra: string;
+    },
+    metadata: {
+      participantName: string;
+      reporterName: string;
+      location: string;
+      eventDateTime: string;
+    }
+  ): Promise<string> {
+    // Simulate API delay
+    await this.delay(this.delays.incidentAnalysis);
+
+    // Log request in development
+    if (import.meta.env.DEV) {
+      console.group('🔄 Mock API: Analyze Contributing Conditions');
+      console.log('Participant:', metadata.participantName);
+      console.log('Reporter:', metadata.reporterName);
+      console.log('Location:', metadata.location);
+      console.log('Event DateTime:', metadata.eventDateTime);
+      console.log('Before Event Length:', narrativeSections.beforeEvent.length, 'chars');
+      console.log('During Event Length:', narrativeSections.duringEvent.length, 'chars');
+      console.log('End Event Length:', narrativeSections.endEvent.length, 'chars');
+      console.log('Post Event Length:', narrativeSections.postEvent.length, 'chars');
+      console.groupEnd();
+    }
+
+    // Generate realistic contributing conditions in markdown format
+    return this.generateMockContributingConditionsMarkdown(narrativeSections, metadata);
+  }
+
   async generateIncidentAnalysis(
     consolidatedNarrative: string,
     metadata: {
@@ -167,7 +206,84 @@ export class MockIncidentAPI implements IIncidentAPI {
   }
 
   /**
-   * Generate mock contributing conditions based on narrative content
+   * Generate mock contributing conditions in markdown format
+   */
+  private generateMockContributingConditionsMarkdown(
+    narrativeSections: {
+      beforeEvent: string;
+      beforeEventExtra: string;
+      duringEvent: string;
+      duringEventExtra: string;
+      endEvent: string;
+      endEventExtra: string;
+      postEvent: string;
+      postEventExtra: string;
+    },
+    metadata: { participantName: string; reporterName: string; location: string; eventDateTime: string }
+  ): string {
+    // Combine all narrative text for analysis
+    const fullNarrative = [
+      narrativeSections.beforeEvent,
+      narrativeSections.beforeEventExtra,
+      narrativeSections.duringEvent,
+      narrativeSections.duringEventExtra,
+      narrativeSections.endEvent,
+      narrativeSections.endEventExtra,
+      narrativeSections.postEvent,
+      narrativeSections.postEventExtra,
+    ].join(' ').toLowerCase();
+
+    // Analyze content for keywords
+    const hasLoudNoise = fullNarrative.includes('loud') || fullNarrative.includes('noise') || fullNarrative.includes('knock');
+    const hasDelivery = fullNarrative.includes('delivery') || fullNarrative.includes('pizza');
+    const hasAgitation = fullNarrative.includes('agitated') || fullNarrative.includes('yelling') || fullNarrative.includes('throwing');
+    const hasPolice = fullNarrative.includes('police');
+    const hasAlone = fullNarrative.includes('alone') || fullNarrative.includes('by herself') || fullNarrative.includes('by himself');
+
+    let markdown = '```\n**Immediate Contributing Conditions**\n\n';
+
+    if (hasLoudNoise && hasDelivery) {
+      markdown += '### Unexpected Sensory Trigger\n';
+      markdown += `- Loud knocking from pizza delivery person startled ${metadata.participantName} who was not expecting visitors\n`;
+      markdown += `- ${metadata.participantName} was in a calm, regulated state when the sudden loud noise occurred\n`;
+      markdown += '- Known sensitivity to unexpected loud noises was not adequately managed\n\n';
+    }
+
+    if (hasAlone) {
+      markdown += '### Delayed Support Response\n';
+      markdown += `- ${metadata.participantName} was alone when the trigger occurred\n`;
+      markdown += '- No immediate support staff presence to intervene quickly\n';
+      markdown += '- Staff member was not in immediate vicinity to prevent escalation\n\n';
+    }
+
+    if (hasAgitation) {
+      markdown += '### Ineffective De-escalation\n';
+      markdown += '- Verbal de-escalation techniques attempted were unsuccessful\n';
+      markdown += `- ${metadata.participantName} continued to escalate despite intervention attempts\n`;
+      markdown += '- Physical environment allowed for object throwing (items within reach)\n\n';
+    }
+
+    markdown += '### Environmental Factors\n';
+    markdown += '- Quiet environment was suddenly disrupted without warning\n';
+    if (fullNarrative.includes('afternoon')) {
+      markdown += '- Afternoon timing may have contributed to reduced tolerance\n';
+    }
+    markdown += '- No protocols in place for managing unexpected visitors\n';
+
+    if (hasPolice) {
+      markdown += '\n### Emergency Response Escalation\n';
+      markdown += '- Situation escalated beyond standard support capabilities\n';
+      markdown += '- Police intervention required due to safety concerns\n';
+      markdown += '- Indicates need for enhanced crisis management protocols\n';
+    }
+
+    markdown += '\n```';
+
+    return markdown;
+  }
+
+  /**
+   * Generate mock contributing conditions based on narrative content (legacy method)
    */
   private generateMockContributingConditions(
     narrative: string,

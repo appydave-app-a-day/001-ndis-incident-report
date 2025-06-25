@@ -30,6 +30,14 @@ interface AnalysisState {
   prefetchStatus: PrefetchStatus;
   prefetchErrors: PrefetchErrors;
   
+  // Editing state
+  editingState: {
+    conditions: {
+      isDirty: boolean;
+      originalValue: string;
+    };
+  };
+  
   // Workflow state
   isAnalysisComplete: boolean;
   currentStep: 'review' | 'conditions' | 'classifications' | 'complete';
@@ -41,6 +49,11 @@ interface AnalysisState {
   addClassification: (classification: Omit<IncidentClassification, 'id'>) => void;
   removeClassification: (id: string) => void;
   updateClassification: (id: string, updates: Partial<IncidentClassification>) => void;
+  
+  // Actions - Editing State Management
+  setConditionsOriginalValue: (value: string) => void;
+  markConditionsClean: () => void;
+  isConditionsDirty: () => boolean;
   
   // Actions - Prefetch Management
   setPrefetchStatus: (type: keyof PrefetchStatus, status: PrefetchStatus[keyof PrefetchStatus]) => void;
@@ -75,6 +88,13 @@ const initialPrefetchStatus: PrefetchStatus = {
   classifications: 'idle',
 };
 
+const initialEditingState = {
+  conditions: {
+    isDirty: false,
+    originalValue: '',
+  },
+};
+
 // ============================================================================
 // Utility Functions
 // ============================================================================
@@ -95,6 +115,7 @@ export const useAnalysisStore = create<AnalysisState>((set, get) => ({
   analysisReport: initialAnalysisReport,
   prefetchStatus: initialPrefetchStatus,
   prefetchErrors: {},
+  editingState: initialEditingState,
   isAnalysisComplete: false,
   currentStep: 'review',
   
@@ -112,6 +133,13 @@ export const useAnalysisStore = create<AnalysisState>((set, get) => ({
       analysisReport: {
         ...state.analysisReport,
         contributing_conditions: conditions,
+      },
+      editingState: {
+        ...state.editingState,
+        conditions: {
+          ...state.editingState.conditions,
+          isDirty: conditions !== state.editingState.conditions.originalValue,
+        },
       },
     })),
     
@@ -154,6 +182,36 @@ export const useAnalysisStore = create<AnalysisState>((set, get) => ({
         ),
       },
     })),
+  
+  // Editing State Management Actions
+  setConditionsOriginalValue: (value) =>
+    set((state) => ({
+      editingState: {
+        ...state.editingState,
+        conditions: {
+          ...state.editingState.conditions,
+          originalValue: value,
+          isDirty: state.analysisReport.contributing_conditions !== value,
+        },
+      },
+    })),
+    
+  markConditionsClean: () =>
+    set((state) => ({
+      editingState: {
+        ...state.editingState,
+        conditions: {
+          ...state.editingState.conditions,
+          isDirty: false,
+          originalValue: state.analysisReport.contributing_conditions,
+        },
+      },
+    })),
+    
+  isConditionsDirty: () => {
+    const state = get();
+    return state.editingState.conditions.isDirty;
+  },
   
   // Prefetch Management Actions
   setPrefetchStatus: (type, status) =>
@@ -209,6 +267,7 @@ export const useAnalysisStore = create<AnalysisState>((set, get) => ({
       analysisReport: initialAnalysisReport,
       prefetchStatus: initialPrefetchStatus,
       prefetchErrors: {},
+      editingState: initialEditingState,
       isAnalysisComplete: false,
       currentStep: 'review',
     }),

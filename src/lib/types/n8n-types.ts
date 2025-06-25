@@ -16,6 +16,7 @@ export interface N8NApiConfig {
   endpoints: {
     clarificationQuestions: string;
     narrativeConsolidation: string;
+    contributingConditionsAnalysis: string;
     incidentAnalysis: string;
   };
 }

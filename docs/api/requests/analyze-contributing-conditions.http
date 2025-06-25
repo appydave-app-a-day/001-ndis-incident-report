@@ -1,0 +1,17 @@
+POST https://buildergeniobit.app.n8n.cloud/webhook/analyze-contributing-conditions
+Content-Type: application/json
+
+{
+  "reporter_name": "David Smith",
+  "participant_name": "Lisa Thompson",
+  "event_datetime": "2024-06-20T15:30:00Z",
+  "location": "Mascot Community Center - Unit 4",
+  "before_event": "Lisa was sitting in the lounge room watching afternoon television in a calm state. The environment was quiet with normal lighting and no other people present.",
+  "before_event_extra": "Lisa had been in a positive mood earlier in the day and had completed her morning routine without any issues. Staff noted she seemed relaxed and content.",
+  "during_event": "At approximately 3:30 PM, a pizza delivery person knocked loudly on the door, startling Lisa who was not expecting visitors. Lisa became extremely agitated, began yelling and throwing objects.",
+  "during_event_extra": "Staff member David attempted verbal de-escalation techniques but Lisa continued to escalate. She threw a cushion and overturned a small table. David maintained safe distance and called for backup.",
+  "end_of_event": "Police were called at 3:45 PM and arrived at 4:00 PM. Lisa was assessed and transported to the psychiatric unit at the local hospital for evaluation.",
+  "end_of_event_extra": "Lisa had calmed slightly by the time police arrived but was still agitated. She cooperated with the assessment and agreed to go to the hospital for evaluation.",
+  "post_event_support": "Lisa was discharged the following day and returned home. A debrief was held with the support team to discuss trigger management strategies.",
+  "post_event_support_extra": "The support team reviewed Lisa's behavior support plan and identified the need for better management of unexpected visitors and loud noises. Additional sensory supports were recommended."
+}

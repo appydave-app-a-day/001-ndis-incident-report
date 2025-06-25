@@ -89,7 +89,46 @@ export class IncidentAPI implements IIncidentAPI {
   }
 
   /**
-   * Generate comprehensive incident analysis (Epic 5)
+   * Analyze contributing conditions from structured narrative (Epic 5 - Story 5.2)
+   */
+  async analyzeContributingConditions(
+    narrativeSections: {
+      beforeEvent: string;
+      beforeEventExtra: string;
+      duringEvent: string;
+      duringEventExtra: string;
+      endEvent: string;
+      endEventExtra: string;
+      postEvent: string;
+      postEventExtra: string;
+    },
+    metadata: {
+      participantName: string;
+      reporterName: string;
+      location: string;
+      eventDateTime: string;
+    }
+  ): Promise<string> {
+    try {
+      if (this.mode === 'mock') {
+        return await this.mockAPI.analyzeContributingConditions(narrativeSections, metadata);
+      } else {
+        return await this.liveAPI.analyzeContributingConditions(narrativeSections, metadata);
+      }
+    } catch (error) {
+      console.warn('Live API failed, falling back to mock:', error);
+      
+      // Fallback to mock if live fails
+      if (this.mode === 'live') {
+        return await this.mockAPI.analyzeContributingConditions(narrativeSections, metadata);
+      }
+      
+      throw error;
+    }
+  }
+
+  /**
+   * Generate comprehensive incident analysis (Epic 5 - Future)
    */
   async generateIncidentAnalysis(
     consolidatedNarrative: string,

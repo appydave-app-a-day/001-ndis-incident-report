@@ -8,6 +8,8 @@ import type {
   EnhanceNarrativeContentRequest,
   ClarificationAnswerWithQuestion,
   PhaseLabel,
+  AnalyzeContributingConditionsRequest,
+  AnalyzeContributingConditionsResponse,
   GenerateIncidentAnalysisRequest,
   GenerateIncidentAnalysisResponse,
   GenerateIncidentAnalysisResponseFrontend,
@@ -157,6 +159,61 @@ export class N8NIncidentAPI implements IIncidentAPI {
       console.error('Unable to extract enhanced narrative from response:', response.data);
       throw new Error('Invalid response structure from narrative enhancement endpoint');
     }
+  }
+
+  async analyzeContributingConditions(
+    narrativeSections: {
+      beforeEvent: string;
+      beforeEventExtra: string;
+      duringEvent: string;
+      duringEventExtra: string;
+      endEvent: string;
+      endEventExtra: string;
+      postEvent: string;
+      postEventExtra: string;
+    },
+    metadata: {
+      participantName: string;
+      reporterName: string;
+      location: string;
+      eventDateTime: string;
+    }
+  ): Promise<string> {
+    // Map to N8N API expected format
+    const requestData: AnalyzeContributingConditionsRequest = {
+      reporter_name: metadata.reporterName,
+      participant_name: metadata.participantName,
+      event_datetime: metadata.eventDateTime,
+      location: metadata.location,
+      before_event: narrativeSections.beforeEvent,
+      before_event_extra: narrativeSections.beforeEventExtra,
+      during_event: narrativeSections.duringEvent,
+      during_event_extra: narrativeSections.duringEventExtra,
+      end_of_event: narrativeSections.endEvent,
+      end_of_event_extra: narrativeSections.endEventExtra,
+      post_event_support: narrativeSections.postEvent,
+      post_event_support_extra: narrativeSections.postEventExtra,
+    };
+
+    // Debug log the request in development
+    if (import.meta.env.DEV) {
+      console.log('🔗 N8N Contributing Conditions Request Data:', JSON.stringify(requestData, null, 2));
+    }
+
+    const response = await this.makeRequest<AnalyzeContributingConditionsRequest, AnalyzeContributingConditionsResponse>(
+      this.urls.contributingConditionsAnalysis,
+      requestData
+    );
+
+    if (!response.success || !response.data) {
+      throw new Error(response.error || 'Failed to analyze contributing conditions');
+    }
+
+    // Extract the conditions markdown from the response
+    const apiData = response.data;
+    
+    // Return the conditions_markdown field, fallback to output if needed
+    return apiData.conditions_markdown || apiData.output || '';
   }
 
   async generateIncidentAnalysis(

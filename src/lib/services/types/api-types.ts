@@ -143,7 +143,34 @@ export interface ApiError {
 // ============================================================================
 
 /**
- * Request to generate comprehensive incident analysis
+ * Request to analyze contributing conditions from structured narrative
+ * Endpoint: POST /webhook/analyze-contributing-conditions
+ */
+export interface AnalyzeContributingConditionsRequest {
+  reporter_name: string;
+  participant_name: string;
+  event_datetime: string;
+  location: string;
+  before_event: string;
+  before_event_extra: string;
+  during_event: string;
+  during_event_extra: string;
+  end_of_event: string;
+  end_of_event_extra: string;
+  post_event_support: string;
+  post_event_support_extra: string;
+}
+
+/**
+ * Response from analyze contributing conditions API
+ */
+export interface AnalyzeContributingConditionsResponse {
+  output: string;
+  conditions_markdown: string;
+}
+
+/**
+ * Request to generate comprehensive incident analysis (future use)
  * Endpoint: POST /webhook/generate-incident-analysis
  */
 export interface GenerateIncidentAnalysisRequest {
@@ -156,7 +183,7 @@ export interface GenerateIncidentAnalysisRequest {
 }
 
 /**
- * Response from generate incident analysis API
+ * Response from generate incident analysis API (future use)
  */
 export interface GenerateIncidentAnalysisResponse {
   contributing_conditions: {
@@ -226,7 +253,29 @@ export interface IIncidentAPI {
   ): Promise<string>;
 
   /**
-   * Generate comprehensive incident analysis (Epic 5)
+   * Analyze contributing conditions from structured narrative (Epic 5 - Story 5.2)
+   */
+  analyzeContributingConditions(
+    narrativeSections: {
+      beforeEvent: string;
+      beforeEventExtra: string;
+      duringEvent: string;
+      duringEventExtra: string;
+      endEvent: string;
+      endEventExtra: string;
+      postEvent: string;
+      postEventExtra: string;
+    },
+    metadata: {
+      participantName: string;
+      reporterName: string;
+      location: string;
+      eventDateTime: string;
+    }
+  ): Promise<string>;
+
+  /**
+   * Generate comprehensive incident analysis (Epic 5 - Future)
    */
   generateIncidentAnalysis(
     consolidatedNarrative: string,

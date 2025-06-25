@@ -1,0 +1,69 @@
+const reporterName = $json.reporter_name || "Staff Member";
+const participantName = $json.participant_name || "Participant";
+const eventDateTime = $json.event_datetime || "Date/Time";
+const location = $json.location || "Location";
+
+const beforeEvent = $json.before_event || "";
+const beforeEventExtra = $json.before_event_extra || "";
+const duringEvent = $json.during_event || "";
+const duringEventExtra = $json.during_event_extra || "";
+const endOfEvent = $json.end_of_event || "";
+const endOfEventExtra = $json.end_of_event_extra || "";
+const postEventSupport = $json.post_event_support || "";
+const postEventSupportExtra = $json.post_event_support_extra || "";
+
+const prompt = `You are reviewing a narrative report from ${reporterName} about an incident involving ${participantName} on ${eventDateTime} at ${location}.
+
+Incident Inputs
+
+What was happening in the lead-up to the incident?
+before_event:
+<before_event>${beforeEvent}</before_event>
+<before_event_extra>${beforeEventExtra}</before_event_extra>
+
+What occurred during the incident itself?
+during_event:
+<during_event>${duringEvent}</during_event>
+<during_event_extra>${duringEventExtra}</during_event_extra>
+
+How did the incident conclude?
+end_of_event:
+<end_of_event>${endOfEvent}</end_of_event>
+<end_of_event_extra>${endOfEventExtra}</end_of_event_extra>
+
+What support or care was provided in the two hours after the event?
+post_event_support:
+<post_event_support>${postEventSupport}</post_event_support>
+<post_event_support_extra>${postEventSupportExtra}</post_event_support_extra>
+
+Your task
+Identify and summarise the immediate contributing conditions — any meaningful patterns, responses, support gaps, or participant behaviours that contributed to the occurrence or escalation of this specific incident.
+
+These may include:
+- Known behaviour patterns or risks that were triggered
+- Gaps in communication, coordination, or support
+- Unclear roles or delayed responses
+- Environmental or emotional triggers
+- Process failures or ineffective de-escalation
+- Misaligned support strategies
+- Use only the information provided. Do not make assumptions or speculate. Focus on what can be reasonably supported by the report.
+
+Response Format
+Return your findings a code block in the following format:
+
+\`\`\`
+**Immediate Contributing Conditions**
+
+### [Condition Name 1]
+- [Specific supporting detail from the report]
+- [Another relevant observation]
+
+### [Condition Name 2]
+- [Specific supporting detail]
+\`\`\`
+
+Only include items clearly supported by the data.
+🚫 Do not include conditions if there's no evidence they occurred.
+🧭 Focus on immediate relevance to this incident — not long-term systemic causes.`.trim();
+
+return [{ json: { prompt } }];

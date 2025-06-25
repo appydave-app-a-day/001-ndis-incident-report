@@ -3,6 +3,7 @@ import { useEffect, useCallback, useRef, useState } from 'react';
 import { LoadingOverlay } from '@/components/ui/LoadingOverlay';
 import { Wizard } from '@/components/wizard';
 import type { WizardStep } from '@/components/wizard';
+import ContributingConditionsStep from '@/features/analysis/components/ContributingConditionsStep';
 import ReviewNarrativeStep from '@/features/analysis/components/ReviewNarrativeStep';
 import { useAnalysisPrefetch } from '@/features/analysis/hooks/useAnalysisPrefetch';
 import { useAnalysisStore } from '@/store/useAnalysisStore';
@@ -10,14 +11,7 @@ import { useIncidentStore } from '@/store/useIncidentStore';
 
 // Wizard step components
 const Step1 = () => <ReviewNarrativeStep />;
-
-// Placeholder components for future stories
-const Step2 = () => (
-  <div className="p-8 text-center">
-    <h2 className="text-xl font-semibold text-gray-900 mb-4">Contributing Conditions</h2>
-    <p className="text-gray-600">Story 5.2 - Review and edit contributing conditions (Coming Soon)</p>
-  </div>
-);
+const Step2 = () => <ContributingConditionsStep />;
 
 const Step3 = () => (
   <div className="p-8 text-center">
