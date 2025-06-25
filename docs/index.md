@@ -15,6 +15,7 @@ This file serves as a central directory for all key documentation related to the
 ### Core Architecture
 
 - **[API Reference](https://www.google.com/search?q=./api-reference.md)** - Defines the data contracts for all external API calls to N8N workflows.
+- **[Epic 5 Analysis API](./api/epic-5-analysis-api.md)** - Complete API contracts for the Team Lead analysis workflow (Epic 5).
 - **[Data Models](https://www.google.com/search?q=./data-models.md)** - Specifies the core TypeScript interfaces for the application's state, primarily the `IncidentReport` model.
 - **[Project Structure](https://www.google.com/search?q=./project-structure.md)** - Contains the official folder and file structure for the project codebase.
 - **[Tech Stack](https://www.google.com/search?q=./tech-stack.md)** - Lists the definitive technology choices for the project, including frameworks and libraries.

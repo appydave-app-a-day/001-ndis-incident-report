@@ -2,6 +2,19 @@
 
 - **Goal:** To implement the full business logic and UI screens for the Team Lead's analysis process, which includes reviewing the captured narrative, adding contributing factors, and classifying the incident, all within the core wizard framework.
 
+#### Process Improvements from Epic 4:
+- **Progressive Enhancement**: Apply progressive data fetching after narrative review (Story 5.1)
+- **Just-in-Time Story Creation**: Stories will be created as needed during implementation
+- **Developer Experience**: Include test data and debugging tools from the start
+- **API Contracts**: Define contracts early (see implementation guide)
+- **Reusable Patterns**: Leverage Epic 4's successful patterns
+
+#### Implementation Resources:
+- See `docs/epic-5-implementation-guide.md` for technical patterns and implementation details
+- See `docs/api/epic-5-analysis-api.md` for complete API contracts and N8N integration
+- Reference `docs/retrospectives/epic-4-retrospective.md` for lessons learned
+- Stories will be created just-in-time following BMAD workflow
+
 #### Stories:
 
 - **Story 5.1: Create "Review Full Narrative" & Trigger Analysis**
@@ -9,8 +22,9 @@
   - **User Story:** As a Team Lead, I want the first step of the analysis workflow to be a read-only view of the complete, enriched narrative from the capture stage so that I have all the context before I begin my analysis.
   - **Acceptance Criteria:**
     1.  The first step of the "Analysis" wizard displays the complete, consolidated narrative in a read-only format.
-    2.  Upon the user clicking "Next" to leave this step, the application shall trigger a single, asynchronous request (using the live/mock switch) with the full narrative data to pre-fetch both the "Contributing Conditions" and the "Incident Type Classification" analysis.
-    3.  This wizard step is committed to version control.
+    2.  Upon the user clicking "Next" to leave this step, the application shall trigger progressive, asynchronous requests (using the live/mock switch) with the full narrative data to pre-fetch both the "Contributing Conditions" and the "Incident Type Classification" analysis.
+    3.  The prefetch operations should not block the UI and should handle failures gracefully.
+    4.  This wizard step is committed to version control.
 
 - **Story 5.2: Review and Edit "Contributing Conditions"**
 
