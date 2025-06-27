@@ -60,3 +60,19 @@
     5.  A "Complete Analysis" button is displayed.
     6.  Clicking the "Complete Analysis" button updates the application's state to mark this stage as finished.
     7.  This new wizard step is committed to version control.
+
+- **Story 5.5: Branding and Content Refinement**
+  - **User Story:** As a product stakeholder, I want to rebrand the application from "NDIS Incident Report" to "Support Signal" with proper branding, localised content, and refined user experience, so that the application has a professional identity and uses appropriate Australian English throughout.
+  - **Key Tasks:**
+    - Rebrand from "NDIS Incident Report" to "Support Signal" across all components
+    - Add Support Signal logo to sidebar and header with light/dark mode support
+    - Transform homepage into summary dashboard with metrics cards
+    - Convert all American English to Australian English (analyzing→analysing, organize→organise, etc.)
+    - Fix loading message capitalisation ("Loading Your Data..."→"Loading your data...")
+    - Remove explicit AI references, replace with neutral terms (AI-powered→automated)
+    - Update index.html, AppLayout.tsx, Home.tsx, and all user-facing text
+    - Fix Epic 4 finish button to navigate to beginning of analysis workflow (Epic 5)
+  - **Estimated Effort:** Medium complexity, 3-4 hours
+  - **Dependencies:** Logo assets required
+    - Locate the location public/logo.jpeg
+

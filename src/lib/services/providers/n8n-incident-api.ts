@@ -52,7 +52,7 @@ export class N8NIncidentAPI implements IIncidentAPI {
       post_event_support: narrative.postEvent,
     };
 
-    const response = await this.makeRequest<GenerateClarificationQuestionsRequest, any>(
+    const response = await this.makeRequest<GenerateClarificationQuestionsRequest, Record<string, unknown>>(
       this.urls.clarificationQuestions,
       requestData
     );
@@ -64,13 +64,14 @@ export class N8NIncidentAPI implements IIncidentAPI {
     // Transform N8N response to our interface
     // The actual response structure is: { clarification_questions: { output: "json_string" } }
     try {
-      const clarificationData = response.data.clarification_questions;
-      if (!clarificationData || !clarificationData.output) {
+      const responseData = response.data as Record<string, unknown>;
+      const clarificationData = responseData.clarification_questions as Record<string, unknown> | undefined;
+      if (!clarificationData || !(clarificationData.output)) {
         throw new Error('Invalid response structure: missing clarification_questions.output');
       }
 
       // Parse the JSON string from the output field
-      const questionsJson = clarificationData.output;
+      const questionsJson = clarificationData.output as string;
       
       // Clean up the JSON string (remove markdown code blocks if present)
       const cleanJson = questionsJson.replace(/```json\n?/g, '').replace(/```\n?/g, '').trim();
@@ -133,7 +134,7 @@ export class N8NIncidentAPI implements IIncidentAPI {
       console.log('🔗 N8N Request Data:', JSON.stringify(requestData, null, 2));
     }
 
-    const response = await this.makeRequest<EnhanceNarrativeContentRequest, any>(
+    const response = await this.makeRequest<EnhanceNarrativeContentRequest, Record<string, unknown>>(
       this.urls.narrativeConsolidation,
       requestData
     );
@@ -143,18 +144,19 @@ export class N8NIncidentAPI implements IIncidentAPI {
     }
 
     // Handle the actual N8N response structure which contains both 'output' and 'narrative' fields
+    const responseData = response.data as Record<string, unknown>;
     if (typeof response.data === 'string') {
       return response.data;
-    } else if (response.data.output) {
+    } else if (responseData.output) {
       // Use the 'output' field as it contains the enhanced narrative
-      return response.data.output;
-    } else if (response.data.narrative) {
+      return responseData.output as string;
+    } else if (responseData.narrative) {
       // Fallback to 'narrative' field if output is not available
-      return response.data.narrative;
-    } else if (response.data.enhancedNarrative) {
-      return response.data.enhancedNarrative;
-    } else if (response.data.narrative_extra) {
-      return response.data.narrative_extra;
+      return responseData.narrative as string;
+    } else if (responseData.enhancedNarrative) {
+      return responseData.enhancedNarrative as string;
+    } else if (responseData.narrative_extra) {
+      return responseData.narrative_extra as string;
     } else {
       console.error('Unable to extract enhanced narrative from response:', response.data);
       throw new Error('Invalid response structure from narrative enhancement endpoint');

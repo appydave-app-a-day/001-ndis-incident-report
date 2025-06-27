@@ -1,4 +1,4 @@
-import { useEffect, useCallback, useRef, useState } from 'react';
+import { useEffect, useCallback, useRef } from 'react';
 
 import { LoadingOverlay } from '@/components/ui/LoadingOverlay';
 import { Wizard } from '@/components/wizard';
@@ -33,9 +33,6 @@ export default function IncidentAnalysis() {
   const { prefetchAnalysisData, getConsolidatedNarrative } = useAnalysisPrefetch();
   const hasRunConsolidation = useRef(false);
   
-  // Local loading state for workflow entry
-  const [isWorkflowLoading, setIsWorkflowLoading] = useState(false);
-  const [workflowLoadingMessage, setWorkflowLoadingMessage] = useState('');
 
   // Check if we have narrative content available for analysis
   const hasNarrativeContent = useCallback(() => {
@@ -89,37 +86,23 @@ export default function IncidentAnalysis() {
 
     try {
       if (import.meta.env.DEV) {
-        console.log('🚀 Starting workflow entry consolidation...');
+        console.log('🚀 Starting workflow entry consolidation (narrative only)...');
       }
 
-      // Show BOTH loading overlays to ensure visibility
-      setIsWorkflowLoading(true);
-      setWorkflowLoadingMessage('Loading analysis workflow... Consolidating incident narrative and preparing analysis data.');
-      incidentStore.showLoadingOverlay('Loading analysis workflow... Consolidating incident narrative and preparing analysis data.');
-      
       // Set the consolidated narrative in analysis store
+      // Note: Prefetch will happen when user clicks "Next" from Step 1
       analysisStore.setConsolidatedNarrative(consolidatedNarrative);
       
-      // Run the analysis prefetch
-      await prefetchAnalysisData();
-      
       if (import.meta.env.DEV) {
-        console.log('✅ Workflow entry consolidation completed successfully');
+        console.log('✅ Workflow entry consolidation completed - narrative ready for Step 1');
       }
     } catch (error) {
       console.error('❌ Workflow entry consolidation failed:', error);
-    } finally {
-      // Hide BOTH loading overlays
-      setIsWorkflowLoading(false);
-      setWorkflowLoadingMessage('');
-      incidentStore.hideLoadingOverlay();
     }
   }, [
     analysisStore,
-    incidentStore,
     hasNarrativeContent,
     getConsolidatedNarrative,
-    prefetchAnalysisData,
   ]);
 
   // Run consolidation on component mount
@@ -133,7 +116,22 @@ export default function IncidentAnalysis() {
       title: 'Review Narrative',
       component: Step1,
       isValid: hasNarrativeContent,
-      // Note: Consolidation now happens on workflow entry, not on step leave
+      onLeave: async () => {
+        // Trigger prefetch when user clicks "Next" from Step 1
+        if (import.meta.env.DEV) {
+          console.log('🚀 Step 1 onLeave: Triggering analysis prefetch...');
+        }
+        
+        // Show loading overlay during prefetch
+        incidentStore.showLoadingOverlay('Analysing incident narrative and preparing contributing conditions...');
+        
+        try {
+          await prefetchAnalysisData();
+        } finally {
+          // Hide loading overlay
+          incidentStore.hideLoadingOverlay();
+        }
+      },
     },
     {
       id: 'contributing-conditions',
@@ -171,12 +169,6 @@ export default function IncidentAnalysis() {
       <LoadingOverlay
         isOpen={incidentStore.loadingOverlay.isOpen}
         message={incidentStore.loadingOverlay.message}
-      />
-      
-      {/* Workflow-specific Loading Overlay */}
-      <LoadingOverlay
-        isOpen={isWorkflowLoading}
-        message={workflowLoadingMessage}
       />
     </div>
   );

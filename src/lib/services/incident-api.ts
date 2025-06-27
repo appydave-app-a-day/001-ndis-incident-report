@@ -187,7 +187,7 @@ export class IncidentAPI implements IIncidentAPI {
     } else {
       try {
         return await this.liveAPI.healthCheck();
-      } catch (_error) {
+      } catch {
         // Fallback to mock health check if live fails
         const mockResult = await this.mockAPI.healthCheck();
         return {

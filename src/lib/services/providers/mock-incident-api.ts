@@ -1,9 +1,9 @@
 import type {
-  IIncidentAPI,
-  GenerateClarificationQuestionsResponseFrontend,
-  ClarificationAnswerWithQuestion,
   ApiResponse,
+  ClarificationAnswerWithQuestion,
+  GenerateClarificationQuestionsResponseFrontend,
   GenerateIncidentAnalysisResponseFrontend,
+  IIncidentAPI,
   IncidentClassification,
 } from '../types/api-types';
 import type { NarrativeExtras } from '../types/incident-types';
@@ -240,7 +240,7 @@ export class MockIncidentAPI implements IIncidentAPI {
     const hasPolice = fullNarrative.includes('police');
     const hasAlone = fullNarrative.includes('alone') || fullNarrative.includes('by herself') || fullNarrative.includes('by himself');
 
-    let markdown = '```\n**Immediate Contributing Conditions**\n\n';
+    let markdown = '\n**Immediate Contributing Conditions**\n\n';
 
     if (hasLoudNoise && hasDelivery) {
       markdown += '### Unexpected Sensory Trigger\n';
@@ -277,7 +277,7 @@ export class MockIncidentAPI implements IIncidentAPI {
       markdown += '- Indicates need for enhanced crisis management protocols\n';
     }
 
-    markdown += '\n```';
+    markdown += '\n';
 
     return markdown;
   }

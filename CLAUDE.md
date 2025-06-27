@@ -59,15 +59,17 @@ This is a front-end-only React SPA (Single Page Application) built with Vite and
 - **Important**: Uses CSS custom properties and `@layer components` for reliable styling
 
 ### Current Implementation Status
-The project has completed Epic 1 (foundation), Epic 2 (wizard framework), and Epic 3 Story 3.1 (wizard styling & visual polish). The application now features a professional design system with:
+The project has completed Epic 1 (foundation), Epic 2 (wizard framework), Epic 3 Story 3.1 (wizard styling & visual polish), and Epic 4 (guided incident capture workflow). Epic 5 (AI-assisted report analysis workflow) is currently in progress. The application now features:
 
 - **Professional App Shell** - Fixed sidebar navigation with clean typography and shadows
 - **Enhanced Color Scheme** - Gray-based palette with blue accents for optimal contrast
 - **Dark/Light Mode** - Complete theme switching with Settings modal
 - **Modern UI Components** - Consistent styling across wizard, navigation, and content areas
 - **Responsive Design** - Mobile-friendly layout with proper breakpoints
+- **Complete Incident Capture Workflow** - Multi-step wizard for frontline workers
+- **Partial Analysis Workflow** - Stories 5.1 & 5.2 implemented, 5.3 next to create
 
-The wizard framework is fully functional with professional styling. Ready to begin Epic 4 (guided incident capture workflow) implementation.
+**Current Epic 5 Status:** Stories 5.1 ✅, 5.2 ✅, 5.3 next (Incident Type Classification), 5.4 & 5.5 planned in epic.
 
 ## BMAD Development Workflow
 
@@ -94,12 +96,21 @@ This project follows the **BMAD Method (Breakthrough Method of Agile (ai-driven)
 - Implement all acceptance criteria and functional requirements
 - Follow the project's coding standards and file structure
 
-### 3. Review and Update Checklist
-- Compare implemented code against the story requirements
-- Use the Definition of Done checklist (`bmad-agent/checklists/story-dod-checklist.md`)
-- Verify all acceptance criteria are met
-- Update story status and document any changes or deviations
+### 3. Complete Definition of Done (DOD) Checklist
+- **CRITICAL**: Use the BMAD checklist process to mark story as complete
+- Run the Story DOD Checklist (`bmad-agent/checklists/story-dod-checklist.md`) using the Checklist Run Task (`bmad-agent/tasks/checklist-run-task.md`)
+- Go through all 57 checklist items systematically:
+  - Requirements Met (functional requirements, acceptance criteria)
+  - Coding Standards & Project Structure
+  - Testing (unit tests, integration tests, manual verification)
+  - Functionality & Verification
+  - Story Administration
+  - Dependencies, Build & Configuration
+  - Documentation (if applicable)
+- **Mark each item as [x] Done, [ ] Not Done, or [N/A] Not Applicable** in the story file
+- Update story Definition of Done section with completed checklist
 - Run linting and type checking: `npm run lint` and `npm run build`
+- **NEVER mark a story as complete without completing the DOD checklist**
 
 ### 4. Write Commit Message
 - Create descriptive commit message summarizing the story implementation
