@@ -1,7 +1,5 @@
 import React from 'react';
 
-import { Card, CardContent, CardHeader } from '@/components/ui/card';
-import { Label } from '@/components/ui/label';
 import type { IncidentMetadata } from '@/store/useIncidentStore';
 
 interface MetadataDisplayProps {
@@ -33,41 +31,41 @@ export const MetadataDisplay: React.FC<MetadataDisplayProps> = ({
   };
 
   return (
-    <Card className={`metadata-display ${className}`}>
-      <CardHeader>
-        <h3 className="text-lg font-semibold text-gray-900">📋 Incident Details</h3>
-      </CardHeader>
-      <CardContent>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div className="metadata-field">
-            <Label className="text-sm font-medium text-gray-600">Reporter</Label>
-            <p className="text-base text-gray-900 mt-1">
-              {metadata.reporterName || 'Not specified'}
-            </p>
-          </div>
-
-          <div className="metadata-field">
-            <Label className="text-sm font-medium text-gray-600">Participant</Label>
-            <p className="text-base text-gray-900 mt-1">
-              {metadata.participantName || 'Not specified'}
-            </p>
-          </div>
-
-          <div className="metadata-field">
-            <Label className="text-sm font-medium text-gray-600">Date & Time</Label>
-            <p className="text-base text-gray-900 mt-1">
-              {formatDateTime(metadata.eventDateTime)}
-            </p>
-          </div>
-
-          <div className="metadata-field">
-            <Label className="text-sm font-medium text-gray-600">Location</Label>
-            <p className="text-base text-gray-900 mt-1">
-              {metadata.location || 'Not specified'}
-            </p>
-          </div>
+    <div className={`metadata-display ${className}`}>
+      <div className="metadata-header">
+        <span>📋</span>
+        <h3 className="metadata-title">Incident Details</h3>
+      </div>
+      
+      <div className="metadata-grid">
+        <div className="metadata-field">
+          <span className="metadata-label">Reporter</span>
+          <p className="metadata-value">
+            {metadata.reporterName || 'Not specified'}
+          </p>
         </div>
-      </CardContent>
-    </Card>
+
+        <div className="metadata-field">
+          <span className="metadata-label">Participant</span>
+          <p className="metadata-value">
+            {metadata.participantName || 'Not specified'}
+          </p>
+        </div>
+
+        <div className="metadata-field">
+          <span className="metadata-label">Date & Time</span>
+          <p className="metadata-value">
+            {formatDateTime(metadata.eventDateTime)}
+          </p>
+        </div>
+
+        <div className="metadata-field">
+          <span className="metadata-label">Location</span>
+          <p className="metadata-value">
+            {metadata.location || 'Not specified'}
+          </p>
+        </div>
+      </div>
+    </div>
   );
 };

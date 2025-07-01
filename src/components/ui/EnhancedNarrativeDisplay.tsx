@@ -1,9 +1,10 @@
-import { CheckCircle2, AlertCircle, Eye, EyeOff } from 'lucide-react';
-import React, { useState } from 'react';
+import { CheckCircle2, AlertCircle } from 'lucide-react';
+import React from 'react';
 
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { PhaseConsolidationStatus } from '@/components/ui/PhaseConsolidationStatus';
+import { QADisplay } from '@/components/ui/QADisplay';
 import type { ConsolidationStatus } from '@/store/useIncidentStore';
 
 interface EnhancedNarrativeDisplayProps {
@@ -17,11 +18,11 @@ interface EnhancedNarrativeDisplayProps {
   className?: string;
 }
 
-const PHASE_ICONS = {
-  beforeEvent: '🔵',
-  duringEvent: '🟡', 
-  endEvent: '🟠',
-  postEvent: '🟢',
+const PHASE_COLORS = {
+  beforeEvent: 'blue',
+  duringEvent: 'yellow', 
+  endEvent: 'orange',
+  postEvent: 'green',
 };
 
 export const EnhancedNarrativeDisplay: React.FC<EnhancedNarrativeDisplayProps> = ({
@@ -34,8 +35,7 @@ export const EnhancedNarrativeDisplay: React.FC<EnhancedNarrativeDisplayProps> =
   onRetry,
   className = '',
 }) => {
-  const [showOriginal, setShowOriginal] = useState(false);
-  const phaseIcon = PHASE_ICONS[phase];
+  const phaseColor = PHASE_COLORS[phase];
 
   // Debug logging in development
   if (import.meta.env.DEV) {
@@ -66,65 +66,37 @@ export const EnhancedNarrativeDisplay: React.FC<EnhancedNarrativeDisplayProps> =
     }
     return (
       <Card className={`enhanced-narrative-display ${className} mb-6`}>
-        <CardHeader>
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-3">
-              <span className="text-xl">{phaseIcon}</span>
-              <h3 className="text-lg font-semibold text-gray-900">{phaseLabel}</h3>
+        <CardHeader className="p-0">
+          <div className="phase-heading">
+            <div className="phase-heading-left">
+              <h3 className="phase-heading-text">{phaseLabel}</h3>
             </div>
-            <div className="flex items-center space-x-2 text-green-600">
-              <CheckCircle2 className="h-5 w-5" />
-              <span className="text-sm font-medium">Enhanced</span>
+            <div className="phase-heading-status enhanced">
+              <CheckCircle2 className="h-4 w-4" />
+              <span>Enhanced</span>
             </div>
           </div>
         </CardHeader>
-        <CardContent>
-          {/* Enhanced Narrative - Primary Display */}
-          <div className="bg-green-50 border border-green-200 rounded-lg p-4 mb-3">
-            <div className="flex items-center mb-3">
-              <span className="text-sm font-medium text-green-800">✨ Enhanced Professional Narrative</span>
-            </div>
-            <p className="text-gray-800 leading-relaxed text-base">
-              {enhancedNarrative}
-            </p>
-          </div>
-
-          {/* Toggle to show/hide original */}
+        <CardContent className="card-content-padded">
+          {/* Original Narrative - Show at top */}
           {originalNarrative && (
-            <div>
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => setShowOriginal(!showOriginal)}
-                className="text-sm text-blue-600 hover:text-blue-800 p-0 h-auto font-normal"
-              >
-                {showOriginal ? (
-                  <>
-                    <EyeOff className="h-4 w-4 mr-1" />
-                    Hide Original Narrative
-                  </>
-                ) : (
-                  <>
-                    <Eye className="h-4 w-4 mr-1" />
-                    View Original Narrative
-                  </>
-                )}
-              </Button>
-              
-              {showOriginal && (
-                <div className="mt-3 p-3 bg-gray-50 border border-gray-200 rounded-lg">
-                  <div className="flex items-center mb-2">
-                    <span className="text-xs font-medium text-gray-600 uppercase tracking-wide">
-                      Original Entry
-                    </span>
-                  </div>
-                  <p className="text-gray-700 text-sm leading-relaxed">
-                    {originalNarrative}
-                  </p>
-                </div>
-              )}
+            <div className="mb-6">
+              <h4 className="text-sm font-semibold text-gray-600 uppercase tracking-wide mb-3">
+                Original Entry
+              </h4>
+              <p className="text-gray-800 text-base leading-relaxed bg-gray-50 p-4 rounded-md border-l-4 border-gray-300">
+                {originalNarrative}
+              </p>
             </div>
           )}
+
+          {/* Enhanced Narrative - Primary Display */}
+          <div>
+            <h4 className="text-sm font-semibold text-green-700 uppercase tracking-wide mb-3">
+              Enhanced Professional Narrative
+            </h4>
+            <QADisplay text={enhancedNarrative} />
+          </div>
         </CardContent>
       </Card>
     );
@@ -136,17 +108,16 @@ export const EnhancedNarrativeDisplay: React.FC<EnhancedNarrativeDisplayProps> =
   }
   return (
     <Card className={`enhanced-narrative-display ${className} mb-6`}>
-      <CardHeader>
-        <div className="flex items-center justify-between">
-          <div className="flex items-center space-x-3">
-            <span className="text-xl">{phaseIcon}</span>
-            <h3 className="text-lg font-semibold text-gray-900">{phaseLabel}</h3>
+      <CardHeader className="p-0">
+        <div className="phase-heading">
+          <div className="phase-heading-left">
+            <h3 className="phase-heading-text">{phaseLabel}</h3>
           </div>
-          <div className="flex items-center space-x-2">
+          <div className="phase-heading-status">
             {consolidationStatus === 'error' ? (
-              <div className="flex items-center space-x-2 text-red-600">
-                <AlertCircle className="h-5 w-5" />
-                <span className="text-sm font-medium">Enhancement Failed</span>
+              <div className="flex items-center space-x-2 phase-heading-status error">
+                <AlertCircle className="h-4 w-4" />
+                <span>Enhancement Failed</span>
               </div>
             ) : consolidationStatus === 'loading' ? (
               <PhaseConsolidationStatus
@@ -161,11 +132,13 @@ export const EnhancedNarrativeDisplay: React.FC<EnhancedNarrativeDisplayProps> =
           </div>
         </div>
       </CardHeader>
-      <CardContent>
+      <CardContent className="card-content-padded">
         {/* Fallback to original narrative */}
-        <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
+        <div>
           <div className="flex items-center justify-between mb-3">
-            <span className="text-sm font-medium text-yellow-800">📝 Original Narrative</span>
+            <h4 className="text-sm font-semibold text-gray-600 uppercase tracking-wide">
+              Original Narrative
+            </h4>
             {consolidationStatus === 'error' && onRetry && (
               <Button
                 variant="outline"
@@ -177,7 +150,7 @@ export const EnhancedNarrativeDisplay: React.FC<EnhancedNarrativeDisplayProps> =
               </Button>
             )}
           </div>
-          <p className="text-gray-800 leading-relaxed text-base">
+          <p className="text-gray-800 leading-relaxed text-base bg-gray-50 p-4 rounded-md border-l-4 border-gray-300">
             {originalNarrative || 'No narrative provided for this phase.'}
           </p>
           

@@ -79,10 +79,10 @@ export const IncidentReviewStep: React.FC = () => {
 
           {/* Enhanced Narratives Section */}
           <div className="enhanced-narratives-section">
-            <div className="flex items-center space-x-3 mb-6">
-              <FileText className="h-6 w-6 text-blue-600" />
-              <h2 className="text-xl font-semibold text-gray-900">
-                ✨ Professional Incident Report
+            <div className="section-heading-primary">
+              <FileText className="h-6 w-6 section-heading-primary-icon" />
+              <h2 className="section-heading-primary-text">
+                Professional Incident Report
               </h2>
             </div>
 

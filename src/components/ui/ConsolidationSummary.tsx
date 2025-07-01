@@ -81,21 +81,20 @@ export const ConsolidationSummary: React.FC<ConsolidationSummaryProps> = ({
 
   return (
     <Card className={`consolidation-summary ${className}`}>
-      <CardHeader>
-        <h3 className="text-lg font-semibold text-gray-900">📊 Enhancement Status</h3>
+      <CardHeader className="pb-4">
+        <div className="section-heading-secondary">
+          <h3 className="section-heading-secondary-text">Enhancement Status</h3>
+        </div>
       </CardHeader>
-      <CardContent>
+      <CardContent className="card-content-padded">
         <Alert className={`${status.bgColor} ${status.borderColor}`}>
-          <div className="flex items-start space-x-3">
-            {status.icon}
-            <div className="flex-1">
-              <h4 className={`font-medium ${status.textColor} mb-1`}>
-                {status.title}
-              </h4>
-              <AlertDescription className={status.textColor}>
-                {status.message}
-              </AlertDescription>
-            </div>
+          <div>
+            <h4 className={`font-semibold ${status.textColor} mb-2 text-lg`}>
+              {status.title}
+            </h4>
+            <AlertDescription className={`${status.textColor} text-base leading-relaxed`}>
+              {status.message}
+            </AlertDescription>
           </div>
         </Alert>
 
