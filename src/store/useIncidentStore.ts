@@ -1,4 +1,5 @@
 import { create } from 'zustand';
+import type { PanelType } from '@/components/wizard/StepHeader';
 
 export interface IncidentMetadata {
   reporterName: string;
@@ -74,7 +75,6 @@ export interface IncidentReport {
   narrativeExtras: NarrativeExtras;
 }
 
-type TestDataLevel = 'none' | 'basic' | 'full';
 type ApiMode = 'mock' | 'live';
 
 interface LoadingOverlayState {
@@ -87,12 +87,12 @@ interface IncidentState {
   clarificationQuestions: ClarificationQuestions | null;
   lastNarrativeHash: string | null;
   isLoadingQuestions: boolean;
-  testDataLevel: TestDataLevel;
   consolidationStatus: ConsolidationStatus;
   consolidationErrors: ConsolidationErrors;
   consolidationHashes: ConsolidationHashes;
   apiMode: ApiMode;
   loadingOverlay: LoadingOverlayState;
+  lastNarrativeScenarioIndex: number | null;
   updateMetadata: (metadata: Partial<IncidentMetadata>) => void;
   updateNarrative: (narrative: Partial<IncidentNarrative>) => void;
   updateClarificationAnswer: (phase: keyof ClarificationAnswers, questionId: string, answer: string) => void;
@@ -107,7 +107,8 @@ interface IncidentState {
   setApiMode: (mode: ApiMode) => void;
   showLoadingOverlay: (message: string) => void;
   hideLoadingOverlay: () => void;
-  populateTestData: () => void;
+  populateTestData: (panelType?: PanelType) => void;
+  populateQuestionAnswers: () => void;
   reset: () => void;
   isMetadataComplete: () => boolean;
   isNarrativeComplete: () => boolean;
@@ -239,12 +240,12 @@ export const useIncidentStore = create<IncidentState>((set, get) => ({
   clarificationQuestions: null,
   lastNarrativeHash: null,
   isLoadingQuestions: false,
-  testDataLevel: 'none',
   consolidationStatus: initialConsolidationStatus,
   consolidationErrors: {},
   consolidationHashes: {},
   apiMode: getInitialApiMode(),
   loadingOverlay: { isOpen: false, message: '' },
+  lastNarrativeScenarioIndex: null,
   
   updateMetadata: (metadata) =>
     set((state) => ({
@@ -315,122 +316,137 @@ export const useIncidentStore = create<IncidentState>((set, get) => ({
     );
   },
 
-  populateTestData: () => {
-    const currentLevel = get().testDataLevel;
-    
-    if (currentLevel === 'none') {
-      // Level 1: Populate basic data (metadata + narrative)
-      const yesterday = new Date();
-      yesterday.setDate(yesterday.getDate() - 1);
-      const formattedDate = yesterday.toISOString().slice(0, 16); // Format: YYYY-MM-DDTHH:MM
+  populateTestData: (panelType?: PanelType) => {
+    if (!panelType) {
+      console.warn('No panel type provided to populateTestData');
+      return;
+    }
 
-      const testMetadata: IncidentMetadata = {
-        reporterName: 'David',
-        participantName: 'Lisa',
-        eventDateTime: formattedDate,
-        location: 'mascot',
-      };
+    switch (panelType) {
+      case 'metadata-input':
+        // Populate metadata test data
+        const yesterday = new Date();
+        yesterday.setDate(yesterday.getDate() - 1);
+        const formattedDate = yesterday.toISOString().slice(0, 16);
 
-      const testNarrative: IncidentNarrative = {
-        beforeEvent: 'Lisa was sitting in the lounge room just watching a little bit of TV she was fairly calm and peaceful, And then a pizza delivery man came and bashed on the door really loudly',
-        duringEvent: 'Lisa started getting incredibly agitated and started screaming intruder intruder, and went into the kitchen and grabbed a knife and threatened to hurt. Whoever was at the door',
-        endEvent: 'the police were called and they came and were able to subdue Lisa get the knife away from her and then she was taken to the local psychiatric hospital',
-        postEvent: 'Lisa was is and kept overnight and returned back to the house the next day, she was calm',
-      };
-
-      set((state) => ({
-        report: {
-          ...state.report,
-          metadata: testMetadata,
-          narrative: testNarrative,
-        },
-        testDataLevel: 'basic',
-      }));
-    } else if (currentLevel === 'basic') {
-      // Level 2: Generate test data based on current API mode
-      const state = get();
-      
-      if (state.apiMode === 'mock' || !state.clarificationQuestions) {
-        // Mock mode: Load pre-defined mock questions and answers
-        const mockQuestions: ClarificationQuestions = {
-          beforeEvent: [
-            { id: 'b1', question: 'What was the participant doing before the incident?', phase: 'beforeEvent' },
-            { id: 'b2', question: 'Do you like green eggs?', phase: 'beforeEvent' },
-            { id: 'b3', question: 'What was the environment like before the incident?', phase: 'beforeEvent' }
-          ],
-          duringEvent: [
-            { id: 'd1', question: 'How long did the incident last?', phase: 'duringEvent' },
-            { id: 'd2', question: 'Who else was present during the incident?', phase: 'duringEvent' },
-            { id: 'd3', question: 'What interventions were attempted?', phase: 'duringEvent' }
-          ],
-          endEvent: [
-            { id: 'e1', question: 'How was the incident resolved?', phase: 'endEvent' },
-            { id: 'e2', question: 'Was anyone injured?', phase: 'endEvent' },
-            { id: 'e3', question: 'What was the immediate outcome?', phase: 'endEvent' }
-          ],
-          postEvent: [
-            { id: 'p1', question: 'What follow-up actions were taken?', phase: 'postEvent' },
-            { id: 'p2', question: 'Was a supervisor or manager notified?', phase: 'postEvent' },
-            { id: 'p3', question: 'What support was provided to the participant?', phase: 'postEvent' }
-          ]
+        const testMetadata: IncidentMetadata = {
+          reporterName: 'David',
+          participantName: 'Lisa',
+          eventDateTime: formattedDate,
+          location: 'Mascot',
         };
 
-        const testClarificationAnswers: ClarificationAnswers = {
-          beforeEvent: [
-            { questionId: 'b1', answer: 'Lisa was sitting quietly on the couch, watching afternoon television and appeared relaxed' },
-            { questionId: 'b2', answer: 'No, she prefers regular eggs' },
-            { questionId: 'b3', answer: 'The living room was calm and quiet, with normal lighting and no other people present' }
-          ],
-          duringEvent: [
-            { questionId: 'd1', answer: 'The incident lasted approximately 15-20 minutes from start to finish' },
-            { questionId: 'd2', answer: 'Only the pizza delivery person at the door and myself as the support worker were present' },
-            { questionId: 'd3', answer: 'I attempted verbal de-escalation and tried to explain who was at the door, but Lisa was too agitated to listen' }
-          ],
-          endEvent: [
-            { questionId: 'e1', answer: 'Police officers were able to calm Lisa down using verbal de-escalation techniques and safely removed the knife' },
-            { questionId: 'e2', answer: 'No one was physically injured during the incident, though Lisa was emotionally distressed' },
-            { questionId: 'e3', answer: 'Lisa was taken to the local psychiatric hospital for assessment and stabilization' }
-          ],
-          postEvent: [
-            { questionId: 'p1', answer: 'Contact was made with Lisa\'s case manager and family, incident was documented, and debriefing was conducted' },
-            { questionId: 'p2', answer: 'Yes, the on-call supervisor was immediately notified and arrived on-site within 30 minutes' },
-            { questionId: 'p3', answer: 'Lisa received immediate psychiatric assessment and overnight monitoring before returning home the next day' }
-          ]
-        };
+        set((state) => ({
+          report: {
+            ...state.report,
+            metadata: testMetadata,
+          },
+        }));
+        break;
+
+      case 'narrative-input':
+        // Populate narrative test data with random scenario
+        const narrativeScenarios = [
+          {
+            beforeEvent: 'Lisa was sitting in the lounge room just watching a little bit of TV she was fairly calm and peaceful, And then a pizza delivery man came and bashed on the door really loudly',
+            duringEvent: 'Lisa started getting incredibly agitated and started screaming intruder intruder, and went into the kitchen and grabbed a knife and threatened to hurt. Whoever was at the door',
+            endEvent: 'the police were called and they came and were able to subdue Lisa get the knife away from her and then she was taken to the local psychiatric hospital',
+            postEvent: 'Lisa was is and kept overnight and returned back to the house the next day, she was calm',
+          },
+          {
+            beforeEvent: 'Lisa had been having a good morning, enjoying her breakfast and reading a magazine. The house was quiet and she seemed relaxed when the doorbell rang multiple times',
+            duringEvent: 'Lisa became extremely anxious and started pacing back and forth, muttering about strangers trying to break in. She began throwing cushions and knocked over a lamp',
+            endEvent: 'I was able to guide Lisa to her room where she gradually calmed down after the visitor left. She sat quietly for about 20 minutes',
+            postEvent: 'Lisa apologized for her reaction and helped clean up the living room. She spent the rest of the day gardening which always helps her feel better',
+          },
+          {
+            beforeEvent: 'Lisa was preparing lunch in the kitchen and humming to herself when there was a loud knock at the back door. She immediately froze and looked frightened',
+            duringEvent: 'Lisa dropped the plate she was holding and started hyperventilating. She crouched behind the kitchen counter and refused to move, saying someone was trying to hurt her',
+            endEvent: 'After checking that it was just the meter reader, I helped Lisa with some breathing exercises and reassured her that she was safe',
+            postEvent: 'Lisa remained shaky for the rest of the afternoon but was able to eat dinner and watch her favorite TV show before bed',
+          }
+        ];
+
+        // Get available indices excluding the last used one
+        const state = get();
+        const lastIndex = state.lastNarrativeScenarioIndex;
+        const availableIndices = [0, 1, 2].filter(index => index !== lastIndex);
+        
+        // Pick randomly from available indices
+        const randomChoice = Math.floor(Math.random() * availableIndices.length);
+        const scenarioIndex = availableIndices[randomChoice];
+        const testNarrative: IncidentNarrative = narrativeScenarios[scenarioIndex];
 
         set((currentState) => ({
           report: {
             ...currentState.report,
-            clarificationAnswers: testClarificationAnswers,
+            narrative: testNarrative,
           },
-          clarificationQuestions: mockQuestions,
-          testDataLevel: 'full',
+          lastNarrativeScenarioIndex: scenarioIndex,
         }));
-      } else {
-        // Live mode: Generate smart answers for existing N8N questions
-        import('../lib/services/smart-test-data').then(({ generateAllTestAnswers }) => {
-          const smartAnswers = generateAllTestAnswers(state.clarificationQuestions!, state.report.narrative);
-          
-          set((currentState) => ({
-            report: {
-              ...currentState.report,
-              clarificationAnswers: smartAnswers,
-            },
-            testDataLevel: 'full',
-          }));
-        });
-      }
-    } else {
-      // Level 3: Reset to empty state
-      set({ 
-        report: initialReport,
-        clarificationQuestions: null,
-        isLoadingQuestions: false,
-        testDataLevel: 'none',
-        consolidationStatus: initialConsolidationStatus,
-        consolidationErrors: {},
-      });
+        break;
+
+      case 'qa-clarification':
+        // Call N8N workflow to generate fake answers for current questions
+        get().populateQuestionAnswers();
+        break;
+
+      default:
+        console.warn(`Mock data not implemented for panel type: ${panelType}`);
+        break;
     }
+  },
+
+  populateQuestionAnswers: () => {
+    const state = get();
+    
+    // Determine which phase we're on based on available questions
+    let currentPhase: keyof ClarificationQuestions | null = null;
+    let phaseQuestions: ClarificationQuestion[] = [];
+    
+    if (state.clarificationQuestions) {
+      // Check which phase has questions and is likely the current one
+      for (const phase of ['beforeEvent', 'duringEvent', 'endEvent', 'postEvent'] as const) {
+        if (state.clarificationQuestions[phase].length > 0) {
+          currentPhase = phase;
+          phaseQuestions = state.clarificationQuestions[phase];
+          break; // Take the first phase with questions
+        }
+      }
+    }
+    
+    // Get the narrative for the current phase
+    const phaseNarrative = currentPhase ? state.report.narrative[currentPhase] : '';
+    
+    // Create detailed alert message with context
+    const questionsList = phaseQuestions.map((q, i) => `${i + 1}. ${q.question}`).join('\n');
+    
+    const alertMessage = `🚧 Mock Data for Q&A Panel - N8N Workflow Call
+    
+📋 Current Phase: ${currentPhase || 'Unknown'}
+    
+📖 Event Context for this phase:
+"${phaseNarrative || 'No narrative available'}"
+    
+❓ Questions to generate answers for:
+${questionsList || 'No questions available'}
+    
+🔄 This will call N8N workflow to generate realistic fake answers based on the above context.`;
+    
+    alert(alertMessage);
+    
+    // TODO: Implement N8N workflow call
+    // This will send:
+    // - currentPhase: which phase we're generating answers for
+    // - phaseNarrative: the narrative context for that phase
+    // - phaseQuestions: array of questions to answer
+    
+    console.log('N8N Workflow Data to Send:', {
+      phase: currentPhase,
+      narrative: phaseNarrative,
+      questions: phaseQuestions,
+      metadata: state.report.metadata
+    });
   },
 
   // ============================================================================
@@ -693,11 +709,11 @@ export const useIncidentStore = create<IncidentState>((set, get) => ({
     clarificationQuestions: null,
     lastNarrativeHash: null,
     isLoadingQuestions: false,
-    testDataLevel: 'none',
     consolidationStatus: initialConsolidationStatus,
     consolidationErrors: {},
     consolidationHashes: {},
     apiMode: getInitialApiMode(),
     loadingOverlay: { isOpen: false, message: '' },
+    lastNarrativeScenarioIndex: null,
   }),
 }));

@@ -4,11 +4,21 @@ import React from 'react';
 import { ApiModeToggle } from '@/components/ui/ApiModeToggle';
 import { useIncidentStore } from '@/store/useIncidentStore';
 
+// Panel type classification for context-aware mock data
+export type PanelType = 
+  | 'metadata-input'      // Form-based structured data input
+  | 'narrative-input'     // Multi-textarea narrative input  
+  | 'qa-clarification'    // Dynamic Q&A with optional answers
+  | 'review-display'      // Read-only data review/display
+  | 'ai-editor'          // AI-assisted content editing
+  | 'placeholder';       // Coming soon/placeholder content
+
 interface StepHeaderProps {
   stepNumber: number;
   title: string;
   subtitle: string;
   onViewContent?: () => void;
+  panelType?: PanelType;  // New prop for panel context
 }
 
 export const StepHeader: React.FC<StepHeaderProps> = ({
@@ -16,40 +26,52 @@ export const StepHeader: React.FC<StepHeaderProps> = ({
   title,
   subtitle,
   onViewContent,
+  panelType,
 }) => {
-  const { populateTestData, testDataLevel } = useIncidentStore();
+  const { populateTestData } = useIncidentStore();
 
   const handleTestData = () => {
-    populateTestData();
+    // Pass panel context to the store method
+    populateTestData(panelType);
   };
 
   const getTooltipText = () => {
-    const { apiMode, clarificationQuestions } = useIncidentStore.getState();
-    
-    switch (testDataLevel) {
-      case 'none': return 'Populate basic test data (8 fields)';
-      case 'basic': 
-        if (apiMode === 'live' && clarificationQuestions) {
-          return 'Generate smart answers for N8N questions';
-        }
-        return 'Add clarification answers (12 fields)';
-      case 'full': return 'Reset all data';
-      default: return 'Populate test data';
+    switch (panelType) {
+      case 'metadata-input':
+        return 'Populate metadata test data (reporter, participant, etc.)';
+      case 'narrative-input':
+        return 'Populate narrative test data (before/during/end/post events)';
+      case 'qa-clarification':
+        return 'Generate fake answers for current questions';
+      case 'review-display':
+      case 'ai-editor':
+      case 'placeholder':
+        return 'Mock data not available for this panel type';
+      default:
+        return 'Populate test data';
     }
+  };
+
+  const isMockDataAvailable = () => {
+    return panelType === 'metadata-input' || 
+           panelType === 'narrative-input' || 
+           panelType === 'qa-clarification';
   };
 
   return (
     <div className="step-header-improved">
       <ApiModeToggle />
       
-      <button
-        onClick={handleTestData}
-        className="debug-button z-10"
-        title={getTooltipText()}
-        style={{ right: '3.5rem' }}
-      >
-        <Database className="w-4 h-4" />
-      </button>
+      {isMockDataAvailable() && (
+        <button
+          onClick={handleTestData}
+          className="debug-button z-10"
+          title={getTooltipText()}
+          style={{ right: '3.5rem' }}
+        >
+          <Database className="w-4 h-4" />
+        </button>
+      )}
       
       {onViewContent && (
         <button

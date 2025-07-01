@@ -48,6 +48,7 @@ export const DuringEventClarificationStep: React.FC = () => {
         title="Step 4: During Event Clarifications"
         subtitle="Answer questions about what happened during the incident (optional)"
         onViewContent={() => console.log('View content clicked')}
+        panelType="qa-clarification"
       />
       <div className="px-8 py-8">
         <div className="max-w-4xl mx-auto">

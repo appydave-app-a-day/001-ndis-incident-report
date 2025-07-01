@@ -1,0 +1,11 @@
+{
+  "mock_answers": {
+    "output": "```json\n{\n  \"answers\": [\n    {\n      \"question_id\": \"before-1\",\n      \"question\": \"What was the participant doing before the incident?\",\n      \"answer\": \"Lisa was sitting comfortably on the couch in the lounge room, watching what appeared to be a daytime talk show. She seemed relaxed and content, occasionally commenting on what was happening on screen. She had her favorite blanket with her and was drinking a cup of tea.\"\n    },\n    {\n      \"question_id\": \"before-2\",\n      \"question\": \"What was the environment like before the incident?\",\n      \"answer\": \"The house was very quiet and peaceful. The TV volume was at a normal level, curtains were partially drawn creating a comfortable atmosphere. No other people were present, and there were no unusual sounds or activities happening in the neighborhood at that time.\"\n    },\n    {\n      \"question_id\": \"before-3\",\n      \"question\": \"Were there any warning signs before the incident occurred?\",\n      \"answer\": \"No, there were absolutely no warning signs. Lisa appeared completely calm and was engaged with her TV program. Her body language was relaxed, and she was speaking normally. The sudden loud knocking at the door was completely unexpected and seemed to catch both Lisa and myself off guard.\"\n    }\n  ]\n}\n```"
+  },
+  "metadata": {
+    "processed_at": "2025-07-01T15:30:22.180Z",
+    "status": "success",
+    "phase": "beforeEvent",
+    "questions_answered": 3
+  }
+}

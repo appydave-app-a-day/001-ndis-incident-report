@@ -42,6 +42,7 @@ export const MetadataInputStep: React.FC = () => {
         title="Step 1: Incident Metadata"
         subtitle="Enter the basic information about the incident"
         onViewContent={() => console.log('View content clicked')}
+        panelType="metadata-input"
       />
       <div className="px-8 py-8">
         <div className="max-w-4xl mx-auto">

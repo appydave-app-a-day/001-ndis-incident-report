@@ -75,6 +75,7 @@ export const NarrativeInputStep: React.FC = () => {
         title="Step 2: Incident Narrative"
         subtitle="Provide detailed descriptions for each phase of the incident"
         onViewContent={() => console.log('View content clicked')}
+        panelType="narrative-input"
       />
       <div className="px-8 py-8">
         <div className="max-w-6xl mx-auto">

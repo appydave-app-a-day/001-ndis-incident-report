@@ -1,25 +1,33 @@
 const phase = $json.phase || "Unknown Phase";
+const instruction = $json.instruction || "No instruction provided.";
 const answers = Array.isArray($json.answers) ? $json.answers : [];
 
-const narrativeFacts = answers.map((item, index) => {
-  const question = item.question || `[Missing Question ${index+1}]`;
-  const answer = item.answer || `[Missing Answer ${index+1}]`;
-  return `- Q: ${question}\n  A: ${answer}`;
-});
+// 1) Filter out any items missing question or answer
+// 2) Format only the valid Q&A pairs
+const narrativeFacts = answers
+  .filter(item =>
+    item.question && item.question.trim() !== "" &&
+    item.answer   && item.answer.trim()   !== ""
+  )
+  .map(item => `Q: ${item.question.trim()}\nA: ${item.answer.trim()}`);
 
 const prompt = `
 You are a report-writing assistant.
 
-Write a short, professional, and human-like narrative summarizing the following details from the "${phase}" phase of an incident.
+For the "${phase}" phase of an incident, you have the following answered clarification questions.
 
-Use the questions to understand context, but do not include them in your final response. Focus only on the information provided.
+For each one:
+- Keep the original question.
+- Respond with the answer on the next line.
+- Lightly clean up the grammar of the answer, but keep the original tone and phrasing.
+- Do not summarize or rewrite the response.
+- Do not include unanswered questions.
 
 Details:
-${narrativeFacts.join('\n')}
+${narrativeFacts.join('\n\n')}
 
-Respond in 2–3 sentences, like you're writing an incident report.
+Instruction:
+${instruction}
 `.trim();
 
 return [{ json: { prompt } }];
-
-
