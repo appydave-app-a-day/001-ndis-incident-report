@@ -18,12 +18,12 @@ interface EnhancedNarrativeDisplayProps {
   className?: string;
 }
 
-const PHASE_COLORS = {
-  beforeEvent: 'blue',
-  duringEvent: 'yellow', 
-  endEvent: 'orange',
-  postEvent: 'green',
-};
+// const PHASE_COLORS = {
+//   beforeEvent: 'blue',
+//   duringEvent: 'yellow', 
+//   endEvent: 'orange',
+//   postEvent: 'green',
+// };
 
 export const EnhancedNarrativeDisplay: React.FC<EnhancedNarrativeDisplayProps> = ({
   phase,
@@ -35,8 +35,6 @@ export const EnhancedNarrativeDisplay: React.FC<EnhancedNarrativeDisplayProps> =
   onRetry,
   className = '',
 }) => {
-  const phaseColor = PHASE_COLORS[phase];
-
   // Debug logging in development
   if (import.meta.env.DEV) {
     console.log(`EnhancedNarrativeDisplay - ${phase}:`, {

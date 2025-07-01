@@ -12,7 +12,7 @@ interface QAPairDisplayProps {
   index: number;
 }
 
-const QAPairDisplay: React.FC<QAPairDisplayProps> = ({ qaPair, index }) => {
+const QAPairDisplay: React.FC<QAPairDisplayProps> = ({ qaPair, index: _index }) => {
   return (
     <div className="qa-pair">
       <div className="qa-question">
