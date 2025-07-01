@@ -19,6 +19,7 @@ interface StepHeaderProps {
   subtitle: string;
   onViewContent?: () => void;
   panelType?: PanelType;  // New prop for panel context
+  phase?: 'beforeEvent' | 'duringEvent' | 'endEvent' | 'postEvent';  // For clarification panels
 }
 
 export const StepHeader: React.FC<StepHeaderProps> = ({
@@ -27,12 +28,18 @@ export const StepHeader: React.FC<StepHeaderProps> = ({
   subtitle,
   onViewContent,
   panelType,
+  phase,
 }) => {
-  const { populateTestData } = useIncidentStore();
+  const { populateTestData, populateQuestionAnswers } = useIncidentStore();
 
   const handleTestData = () => {
-    // Pass panel context to the store method
-    populateTestData(panelType);
+    if (panelType === 'qa-clarification' && phase) {
+      // For clarification panels, call the async method with the phase
+      populateQuestionAnswers(phase);
+    } else {
+      // Pass panel context to the store method
+      populateTestData(panelType);
+    }
   };
 
   const getTooltipText = () => {

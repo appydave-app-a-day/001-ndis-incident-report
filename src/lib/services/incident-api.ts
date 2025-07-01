@@ -6,6 +6,7 @@ import type {
   ClarificationAnswerWithQuestion,
   ApiResponse,
   GenerateIncidentAnalysisResponseFrontend,
+  GenerateMockAnswersResponse,
 } from './types/api-types';
 import type { IncidentNarrative, NarrativeExtras } from './types/incident-types';
 
@@ -151,6 +152,33 @@ export class IncidentAPI implements IIncidentAPI {
       // Fallback to mock if live fails
       if (this.mode === 'live') {
         return await this.mockAPI.generateIncidentAnalysis(consolidatedNarrative, metadata);
+      }
+      
+      throw error;
+    }
+  }
+
+  /**
+   * Generate mock answers for clarification questions
+   */
+  async generateMockAnswers(
+    phase: string,
+    phaseNarrative: string,
+    questions: Array<{ id: string; question: string }>,
+    metadata: { participantName: string; reporterName: string; location: string }
+  ): Promise<GenerateMockAnswersResponse> {
+    try {
+      if (this.mode === 'mock') {
+        return await this.mockAPI.generateMockAnswers(phase, phaseNarrative, questions, metadata);
+      } else {
+        return await this.liveAPI.generateMockAnswers(phase, phaseNarrative, questions, metadata);
+      }
+    } catch (error) {
+      console.warn('Live API failed, falling back to mock:', error);
+      
+      // Fallback to mock if live fails
+      if (this.mode === 'live') {
+        return await this.mockAPI.generateMockAnswers(phase, phaseNarrative, questions, metadata);
       }
       
       throw error;

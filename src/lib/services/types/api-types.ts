@@ -118,6 +118,37 @@ export interface IncidentNarrativeForAPI {
 }
 
 // ============================================================================
+// Generate Mock Answers API
+// ============================================================================
+
+/**
+ * Request to generate mock answers for clarification questions
+ * Endpoint: POST /webhook/generate-mock-answers
+ */
+export interface GenerateMockAnswersRequest {
+  participant_name: string;
+  reporter_name: string;
+  location: string;
+  phase: string;
+  phase_narrative: string;
+  questions: Array<{
+    id: string;
+    question: string;
+  }>;
+}
+
+/**
+ * Response from generate mock answers API
+ */
+export interface GenerateMockAnswersResponse {
+  answers: Array<{
+    question_id: string;
+    question: string;
+    answer: string;
+  }>;
+}
+
+// ============================================================================
 // API Configuration Types
 // ============================================================================
 
@@ -286,6 +317,16 @@ export interface IIncidentAPI {
       incidentDate: string;
     }
   ): Promise<GenerateIncidentAnalysisResponseFrontend>;
+
+  /**
+   * Generate mock answers for clarification questions
+   */
+  generateMockAnswers(
+    phase: string,
+    phaseNarrative: string,
+    questions: Array<{ id: string; question: string }>,
+    metadata: { participantName: string; reporterName: string; location: string }
+  ): Promise<GenerateMockAnswersResponse>;
 
   /**
    * Get current API mode

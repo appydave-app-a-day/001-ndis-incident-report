@@ -49,6 +49,8 @@ export const PostEventSupportClarificationStep: React.FC = () => {
         title="Step 6: Post-Event Support Clarifications"
         subtitle="Answer questions about the support and follow-up actions taken (optional)"
         onViewContent={() => console.log('View content clicked')}
+        panelType="qa-clarification"
+        phase="postEvent"
       />
       <div className="px-8 py-8">
         <div className="max-w-4xl mx-auto">

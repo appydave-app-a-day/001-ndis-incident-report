@@ -3,6 +3,7 @@ import type {
   ClarificationAnswerWithQuestion,
   GenerateClarificationQuestionsResponseFrontend,
   GenerateIncidentAnalysisResponseFrontend,
+  GenerateMockAnswersResponse,
   IIncidentAPI,
   IncidentClassification,
 } from '../types/api-types';
@@ -190,6 +191,81 @@ export class MockIncidentAPI implements IIncidentAPI {
 
   getMode(): 'mock' | 'live' {
     return 'mock';
+  }
+
+  async generateMockAnswers(
+    phase: string,
+    phaseNarrative: string,
+    questions: Array<{ id: string; question: string }>,
+    metadata: { participantName: string; reporterName: string; location: string }
+  ): Promise<GenerateMockAnswersResponse> {
+    // Simulate API delay
+    await this.delay(this.delays.narrativeEnhancement);
+
+    // Log request in development
+    if (import.meta.env.DEV) {
+      console.group(`🔄 Mock API: Generate Mock Answers (${phase})`);
+      console.log('Participant:', metadata.participantName);
+      console.log('Phase narrative:', phaseNarrative);
+      console.log('Questions count:', questions.length);
+      console.groupEnd();
+    }
+
+    // Generate contextual answers based on the narrative
+    const answers = questions.map(q => {
+      let answer = '';
+      
+      // Generate answers based on question content and narrative context
+      const questionLower = q.question.toLowerCase();
+      const narrativeLower = phaseNarrative.toLowerCase();
+      
+      if (questionLower.includes('what was') && questionLower.includes('doing')) {
+        if (narrativeLower.includes('watching tv')) {
+          answer = `${metadata.participantName} was sitting calmly in the lounge, watching TV, and appearing peaceful before the delivery person arrived.`;
+        } else if (narrativeLower.includes('eating') || narrativeLower.includes('breakfast')) {
+          answer = `${metadata.participantName} was enjoying their meal and seemed relaxed and content.`;
+        } else {
+          answer = `${metadata.participantName} was engaged in their usual activities and appeared to be in a calm state.`;
+        }
+      } else if (questionLower.includes('environment') || questionLower.includes('conditions')) {
+        if (narrativeLower.includes('quiet')) {
+          answer = `It was a quiet afternoon in the lounge area, with the TV softly playing and no other significant noises besides the delivery knock.`;
+        } else {
+          answer = `The environment was typical for that time of day at ${metadata.location}, with normal ambient sounds and activities.`;
+        }
+      } else if (questionLower.includes('warning signs') || questionLower.includes('notice')) {
+        if (narrativeLower.includes('calm') || narrativeLower.includes('peaceful')) {
+          answer = `There were no apparent warning signs. ${metadata.participantName} seemed calm and regulated before the incident.`;
+        } else {
+          answer = `${metadata.participantName} didn't show any unusual behaviors or signs of distress prior to the triggering event.`;
+        }
+      } else if (questionLower.includes('how long')) {
+        answer = `The incident lasted approximately 15-20 minutes from the initial trigger until ${metadata.participantName} began to calm down.`;
+      } else if (questionLower.includes('who else') || questionLower.includes('present')) {
+        answer = `${metadata.reporterName} was present as the support worker. No other participants or staff were in the immediate area.`;
+      } else if (questionLower.includes('intervention') || questionLower.includes('attempted')) {
+        answer = `${metadata.reporterName} attempted verbal de-escalation techniques and tried to create a calm environment by speaking softly and reassuringly.`;
+      } else if (questionLower.includes('resolved') || questionLower.includes('outcome')) {
+        if (narrativeLower.includes('police')) {
+          answer = `The situation was resolved when police arrived and helped de-escalate. ${metadata.participantName} was safely transported for further assessment.`;
+        } else {
+          answer = `${metadata.reporterName} was able to help ${metadata.participantName} calm down using breathing exercises and by removing the trigger.`;
+        }
+      } else if (questionLower.includes('follow-up') || questionLower.includes('support')) {
+        answer = `A debrief was conducted with the team, and ${metadata.participantName}'s support plan was reviewed to prevent similar incidents.`;
+      } else {
+        // Default contextual answer
+        answer = `Based on the incident, ${metadata.reporterName} noted that ${metadata.participantName} responded to the situation as described in the narrative.`;
+      }
+      
+      return {
+        question_id: q.id,
+        question: q.question,
+        answer
+      };
+    });
+
+    return { answers };
   }
 
   async healthCheck(): Promise<ApiResponse<{ status: string; mode: string }>> {

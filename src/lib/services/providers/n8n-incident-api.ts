@@ -13,6 +13,8 @@ import type {
   GenerateIncidentAnalysisRequest,
   GenerateIncidentAnalysisResponse,
   GenerateIncidentAnalysisResponseFrontend,
+  GenerateMockAnswersRequest,
+  GenerateMockAnswersResponse,
 } from '../types/api-types';
 import type { NarrativeExtras } from '../types/incident-types';
 
@@ -263,6 +265,35 @@ export class N8NIncidentAPI implements IIncidentAPI {
         confidence: classification.confidence,
       })),
     };
+  }
+
+  async generateMockAnswers(
+    phase: string,
+    phaseNarrative: string,
+    questions: Array<{ id: string; question: string }>,
+    metadata: { participantName: string; reporterName: string; location: string }
+  ): Promise<GenerateMockAnswersResponse> {
+    // Map to N8N API expected format
+    const requestData: GenerateMockAnswersRequest = {
+      participant_name: metadata.participantName,
+      reporter_name: metadata.reporterName,
+      location: metadata.location,
+      phase: phase,
+      phase_narrative: phaseNarrative,
+      questions: questions,
+    };
+
+    // Make the API request
+    const result = await this.makeRequest<GenerateMockAnswersRequest, GenerateMockAnswersResponse>(
+      `${this.config.domain}/webhook/generate-mock-answers`,
+      requestData
+    );
+
+    if (!result.success || !result.data) {
+      throw new Error(result.error || 'Failed to generate mock answers');
+    }
+
+    return result.data;
   }
 
   getMode(): 'mock' | 'live' {

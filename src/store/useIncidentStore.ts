@@ -1,4 +1,5 @@
 import { create } from 'zustand';
+
 import type { PanelType } from '@/components/wizard/StepHeader';
 
 export interface IncidentMetadata {
@@ -108,7 +109,7 @@ interface IncidentState {
   showLoadingOverlay: (message: string) => void;
   hideLoadingOverlay: () => void;
   populateTestData: (panelType?: PanelType) => void;
-  populateQuestionAnswers: () => void;
+  populateQuestionAnswers: (phase?: keyof ClarificationQuestions) => Promise<void>;
   reset: () => void;
   isMetadataComplete: () => boolean;
   isNarrativeComplete: () => boolean;
@@ -323,7 +324,7 @@ export const useIncidentStore = create<IncidentState>((set, get) => ({
     }
 
     switch (panelType) {
-      case 'metadata-input':
+      case 'metadata-input': {
         // Populate metadata test data
         const yesterday = new Date();
         yesterday.setDate(yesterday.getDate() - 1);
@@ -343,8 +344,9 @@ export const useIncidentStore = create<IncidentState>((set, get) => ({
           },
         }));
         break;
+      }
 
-      case 'narrative-input':
+      case 'narrative-input': {
         // Populate narrative test data with random scenario
         const narrativeScenarios = [
           {
@@ -385,9 +387,10 @@ export const useIncidentStore = create<IncidentState>((set, get) => ({
           lastNarrativeScenarioIndex: scenarioIndex,
         }));
         break;
+      }
 
       case 'qa-clarification':
-        // Call N8N workflow to generate fake answers for current questions
+        // Call API to generate fake answers for current questions
         get().populateQuestionAnswers();
         break;
 
@@ -397,15 +400,18 @@ export const useIncidentStore = create<IncidentState>((set, get) => ({
     }
   },
 
-  populateQuestionAnswers: () => {
+  populateQuestionAnswers: async (providedPhase?: keyof ClarificationQuestions) => {
     const state = get();
     
-    // Determine which phase we're on based on available questions
-    let currentPhase: keyof ClarificationQuestions | null = null;
+    // Determine which phase we're on
+    let currentPhase: keyof ClarificationQuestions | null = providedPhase || null;
     let phaseQuestions: ClarificationQuestion[] = [];
     
-    if (state.clarificationQuestions) {
-      // Check which phase has questions and is likely the current one
+    if (currentPhase && state.clarificationQuestions) {
+      // Use the provided phase
+      phaseQuestions = state.clarificationQuestions[currentPhase];
+    } else if (state.clarificationQuestions) {
+      // Auto-detect phase based on available questions
       for (const phase of ['beforeEvent', 'duringEvent', 'endEvent', 'postEvent'] as const) {
         if (state.clarificationQuestions[phase].length > 0) {
           currentPhase = phase;
@@ -415,38 +421,67 @@ export const useIncidentStore = create<IncidentState>((set, get) => ({
       }
     }
     
+    if (!currentPhase || phaseQuestions.length === 0) {
+      console.warn('No questions available to generate answers for');
+      return;
+    }
+    
     // Get the narrative for the current phase
-    const phaseNarrative = currentPhase ? state.report.narrative[currentPhase] : '';
+    const phaseNarrative = state.report.narrative[currentPhase];
     
-    // Create detailed alert message with context
-    const questionsList = phaseQuestions.map((q, i) => `${i + 1}. ${q.question}`).join('\n');
-    
-    const alertMessage = `🚧 Mock Data for Q&A Panel - N8N Workflow Call
-    
-📋 Current Phase: ${currentPhase || 'Unknown'}
-    
-📖 Event Context for this phase:
-"${phaseNarrative || 'No narrative available'}"
-    
-❓ Questions to generate answers for:
-${questionsList || 'No questions available'}
-    
-🔄 This will call N8N workflow to generate realistic fake answers based on the above context.`;
-    
-    alert(alertMessage);
-    
-    // TODO: Implement N8N workflow call
-    // This will send:
-    // - currentPhase: which phase we're generating answers for
-    // - phaseNarrative: the narrative context for that phase
-    // - phaseQuestions: array of questions to answer
-    
-    console.log('N8N Workflow Data to Send:', {
-      phase: currentPhase,
-      narrative: phaseNarrative,
-      questions: phaseQuestions,
-      metadata: state.report.metadata
+    // Show loading overlay
+    set({
+      ...createLoadingOverlayUpdate('Generating mock answers...', true)
     });
+    
+    try {
+      // Dynamically import to avoid circular dependencies
+      const { incidentAPI } = await import('../lib/services/incident-api');
+      
+      // Ensure API mode is set correctly
+      if (state.apiMode !== incidentAPI.getMode()) {
+        incidentAPI.setMode(state.apiMode);
+      }
+      
+      // Call the API to generate mock answers
+      const response = await incidentAPI.generateMockAnswers(
+        currentPhase,
+        phaseNarrative,
+        phaseQuestions.map(q => ({ id: q.id, question: q.question })),
+        {
+          participantName: state.report.metadata.participantName,
+          reporterName: state.report.metadata.reporterName,
+          location: state.report.metadata.location,
+        }
+      );
+      
+      // Update the answers in the store
+      const answers: ClarificationAnswer[] = response.answers.map((a) => ({
+        questionId: a.question_id,
+        answer: a.answer,
+      }));
+      
+      set((currentState) => ({
+        report: {
+          ...currentState.report,
+          clarificationAnswers: {
+            ...currentState.report.clarificationAnswers,
+            [currentPhase]: answers,
+          },
+        },
+        ...createLoadingOverlayUpdate('', false)
+      }));
+      
+      if (import.meta.env.DEV) {
+        console.log(`✅ Mock answers generated for ${currentPhase}:`, answers.length);
+      }
+    } catch (error) {
+      console.error('Failed to generate mock answers:', error);
+      alert('Failed to generate mock answers. Please try again.');
+      set({
+        ...createLoadingOverlayUpdate('', false)
+      });
+    }
   },
 
   // ============================================================================

@@ -49,6 +49,8 @@ export const EndOfEventClarificationStep: React.FC = () => {
         title="Step 5: End of Event Clarifications"
         subtitle="Answer questions about how the incident concluded (optional)"
         onViewContent={() => console.log('View content clicked')}
+        panelType="qa-clarification"
+        phase="endEvent"
       />
       <div className="px-8 py-8">
         <div className="max-w-4xl mx-auto">
