@@ -82,7 +82,7 @@ export const NarrativeInputStep: React.FC = () => {
           <Card>
             <CardContent className="p-0">
               <form>
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <div className="narrative-grid">
                   <div className="form-field">
                     <Label htmlFor="beforeEvent" className="custom-label">
                       Before the Event
