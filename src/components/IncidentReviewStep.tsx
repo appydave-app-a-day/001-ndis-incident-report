@@ -103,13 +103,13 @@ export const IncidentReviewStep: React.FC = () => {
           </div>
 
           {/* Completion Actions */}
-          <div className="completion-actions bg-gray-50 border border-gray-200 rounded-lg p-6 mt-8">
+          <div className="completion-actions">
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between space-y-4 sm:space-y-0">
               <div>
-                <h3 className="text-lg font-semibold text-gray-900 mb-1">
+                <h3 className="completion-title">
                   Ready to Complete
                 </h3>
-                <p className="text-sm text-gray-600">
+                <p className="completion-description">
                   Your incident report is ready for submission. Enhanced narratives will be included where available.
                 </p>
               </div>
@@ -117,7 +117,7 @@ export const IncidentReviewStep: React.FC = () => {
               <Button
                 onClick={handleCompleteReport}
                 size="lg"
-                className="bg-blue-600 hover:bg-blue-700 text-white font-medium px-8 py-3"
+                className="completion-button"
               >
                 <FileText className="h-5 w-5 mr-2" />
                 Complete Report
@@ -126,8 +126,8 @@ export const IncidentReviewStep: React.FC = () => {
           </div>
 
           {/* Additional Information */}
-          <div className="mt-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
-            <p className="text-sm text-blue-800">
+          <div className="completion-note">
+            <p className="completion-note-text">
               <strong>Note:</strong> Your original narratives are preserved alongside the enhanced versions. 
               Enhanced narratives provide professional context while maintaining the authenticity of your initial observations.
             </p>

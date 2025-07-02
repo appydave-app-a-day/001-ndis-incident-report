@@ -32,7 +32,8 @@ export default function IncidentCapture() {
     isNarrativeComplete, 
     loadingOverlay,
     fetchClarificationQuestionsIfNeeded,
-    consolidatePhaseNarrative
+    consolidatePhaseNarrative,
+    hideLoadingOverlay
   } = useIncidentStore();
 
   const steps: WizardStep[] = [
@@ -92,6 +93,8 @@ export default function IncidentCapture() {
       <LoadingOverlay
         isOpen={loadingOverlay.isOpen}
         message={loadingOverlay.message}
+        isError={loadingOverlay.isError}
+        onAutoClose={hideLoadingOverlay}
       />
     </div>
   );

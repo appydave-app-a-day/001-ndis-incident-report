@@ -401,6 +401,25 @@
     animation: spin 1s linear infinite;
   }
 
+  .consolidation-error-icon {
+    width: 3rem;
+    height: 3rem;
+    color: hsl(var(--destructive));
+  }
+
+  .consolidation-loading-content.error-state {
+    border-color: hsl(var(--destructive) / 0.3);
+    background-color: hsl(var(--destructive) / 0.05);
+  }
+
+  .consolidation-error-text {
+    font-size: 0.875rem;
+    color: hsl(var(--muted-foreground));
+    margin-top: 0.75rem;
+    margin-bottom: 0;
+    font-style: italic;
+  }
+
   .consolidation-loading-title {
     font-size: 1.5rem;
     font-weight: 600;
@@ -670,6 +689,51 @@
     .narrative-grid {
       grid-template-columns: repeat(2, 1fr);
     }
+  }
+
+  /* Final Report Page Styling */
+  .completion-actions {
+    background-color: hsl(var(--muted) / 0.3);
+    border: 1px solid hsl(var(--border));
+    border-radius: 8px;
+    padding: 1.5rem;
+    margin-top: 2rem;
+  }
+
+  .completion-title {
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: hsl(var(--foreground));
+    margin-bottom: 0.25rem;
+  }
+
+  .completion-description {
+    font-size: 0.875rem;
+    color: hsl(var(--muted-foreground));
+  }
+
+  .completion-button {
+    background-color: hsl(var(--primary));
+    color: hsl(var(--primary-foreground));
+    font-weight: 500;
+    padding: 0.75rem 2rem;
+  }
+
+  .completion-button:hover {
+    background-color: hsl(var(--primary) / 0.9);
+  }
+
+  .completion-note {
+    margin-top: 1.5rem;
+    padding: 1rem;
+    background-color: hsl(var(--primary) / 0.1);
+    border: 1px solid hsl(var(--primary) / 0.2);
+    border-radius: 8px;
+  }
+
+  .completion-note-text {
+    font-size: 0.875rem;
+    color: hsl(var(--primary));
   }
 
 }

@@ -81,6 +81,7 @@ type ApiMode = 'mock' | 'live';
 interface LoadingOverlayState {
   isOpen: boolean;
   message: string;
+  isError?: boolean;
 }
 
 interface IncidentState {
@@ -107,6 +108,7 @@ interface IncidentState {
   toggleApiMode: () => void;
   setApiMode: (mode: ApiMode) => void;
   showLoadingOverlay: (message: string) => void;
+  showErrorOverlay: (message: string) => void;
   hideLoadingOverlay: () => void;
   populateTestData: (panelType?: PanelType) => void;
   populateQuestionAnswers: (phase?: keyof ClarificationQuestions) => Promise<void>;
@@ -245,7 +247,7 @@ export const useIncidentStore = create<IncidentState>((set, get) => ({
   consolidationErrors: {},
   consolidationHashes: {},
   apiMode: getInitialApiMode(),
-  loadingOverlay: { isOpen: false, message: '' },
+  loadingOverlay: { isOpen: false, message: '', isError: false },
   lastNarrativeScenarioIndex: null,
   
   updateMetadata: (metadata) =>
@@ -477,9 +479,13 @@ export const useIncidentStore = create<IncidentState>((set, get) => ({
       }
     } catch (error) {
       console.error('Failed to generate mock answers:', error);
-      alert('Failed to generate mock answers. Please try again.');
+      const errorMessage = error instanceof Error ? error.message : 'Failed to generate mock answers. Please try again.';
       set({
-        ...createLoadingOverlayUpdate('', false)
+        loadingOverlay: {
+          isOpen: true,
+          message: errorMessage,
+          isError: true
+        }
       });
     }
   },
@@ -672,9 +678,14 @@ export const useIncidentStore = create<IncidentState>((set, get) => ({
       });
     } catch (error) {
       console.error('Failed to fetch clarification questions:', error);
+      const errorMessage = error instanceof Error ? error.message : 'Failed to fetch clarification questions. Please try again.';
       set({ 
         isLoadingQuestions: false,
-        ...createLoadingOverlayUpdate('', false)
+        loadingOverlay: {
+          isOpen: true,
+          message: errorMessage,
+          isError: true
+        }
       });
     }
   },
@@ -730,13 +741,23 @@ export const useIncidentStore = create<IncidentState>((set, get) => ({
     set({ 
       loadingOverlay: { 
         isOpen: true, 
-        message
+        message,
+        isError: false
+      }
+    }),
+
+  showErrorOverlay: (message: string) =>
+    set({ 
+      loadingOverlay: { 
+        isOpen: true, 
+        message,
+        isError: true
       }
     }),
 
   hideLoadingOverlay: () =>
     set({ 
-      loadingOverlay: { isOpen: false, message: '' }
+      loadingOverlay: { isOpen: false, message: '', isError: false }
     }),
     
   reset: () => set({ 
@@ -748,7 +769,7 @@ export const useIncidentStore = create<IncidentState>((set, get) => ({
     consolidationErrors: {},
     consolidationHashes: {},
     apiMode: getInitialApiMode(),
-    loadingOverlay: { isOpen: false, message: '' },
+    loadingOverlay: { isOpen: false, message: '', isError: false },
     lastNarrativeScenarioIndex: null,
   }),
 }));

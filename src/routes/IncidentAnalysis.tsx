@@ -169,6 +169,8 @@ export default function IncidentAnalysis() {
       <LoadingOverlay
         isOpen={incidentStore.loadingOverlay.isOpen}
         message={incidentStore.loadingOverlay.message}
+        isError={incidentStore.loadingOverlay.isError}
+        onAutoClose={incidentStore.hideLoadingOverlay}
       />
     </div>
   );
