@@ -88,12 +88,12 @@ export const AppLayout: React.FC = () => {
   };
 
   return (
-    <div className="flex h-screen bg-gray-50 dark:bg-gray-900">
+    <div className="flex h-screen bg-secondary dark:bg-background">
       {/* Fixed Sidebar */}
-      <div className="sidebar-container bg-white border-r border-gray-200 flex flex-col">
+      <div className="sidebar-container bg-card border-r border-border flex flex-col">
         {/* Logo/Header */}
-        <div className="p-6 border-b border-gray-200">
-          <h1 className="text-xl font-semibold text-gray-800">
+        <div className="p-6 border-b border-border">
+          <h1 className="text-xl font-semibold text-foreground">
             NDIS Assistant
           </h1>
         </div>
@@ -123,7 +123,7 @@ export const AppLayout: React.FC = () => {
         </nav>
 
         {/* Settings Button */}
-        <div className="px-4 py-4 border-t border-gray-200">
+        <div className="px-4 py-4 border-t border-border">
           <button
             onClick={() => setIsSettingsOpen(true)}
             className="nav-button nav-button-inactive w-full text-left"
@@ -136,9 +136,9 @@ export const AppLayout: React.FC = () => {
       
       <div className="flex-1 flex flex-col">
         {/* Top Bar */}
-        <header className="bg-white dark:bg-gray-800 shadow-sm border-b border-gray-200 dark:border-gray-700 px-6 py-6">
+        <header className="bg-card shadow-sm border-b border-border px-6 py-6">
           <div className="flex items-center justify-between">
-            <h2 className="text-2xl font-semibold text-gray-800 dark:text-white">
+            <h2 className="text-2xl font-semibold text-foreground">
               {sectionTitles[currentSection]}
             </h2>
             <div className="flex items-center space-x-4">
@@ -156,15 +156,15 @@ export const AppLayout: React.FC = () => {
         </header>
         
         {/* Main Content */}
-        <main className="flex-1 overflow-y-auto bg-gray-50 dark:bg-gray-900">
+        <main className="flex-1 overflow-y-auto bg-secondary dark:bg-background">
           {isHome ? (
             <div className="h-full p-6">
               <div className="max-w-4xl mx-auto">
                 <div className="text-center mb-12">
-                  <h1 className="text-4xl font-bold text-gray-900 dark:text-white mb-4">
+                  <h1 className="text-4xl font-bold text-foreground mb-4">
                     Welcome to NDIS Incident Documentation Assistant
                   </h1>
-                  <p className="text-xl text-gray-600 dark:text-gray-300">
+                  <p className="text-xl text-muted-foreground">
                     Select a workflow from the sidebar to begin
                   </p>
                 </div>
@@ -175,17 +175,17 @@ export const AppLayout: React.FC = () => {
                       <NavLink
                         key={item.section}
                         to={item.href}
-                        className="block p-8 bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 hover:shadow-xl hover:shadow-gray-200/60 dark:hover:shadow-gray-900/20 transition-all duration-200 hover:-translate-y-1"
+                        className="block p-8 bg-card rounded-xl border border-border hover:shadow-xl hover:shadow-border/60 transition-all duration-200 hover:-translate-y-1"
                       >
                         <div className="flex items-start gap-6">
-                          <div className="p-4 bg-blue-50 dark:bg-blue-900/20 rounded-xl">
-                            <Icon className="h-8 w-8 text-blue-600 dark:text-blue-400" />
+                          <div className="p-4 bg-accent/20 rounded-xl">
+                            <Icon className="h-8 w-8 text-primary" />
                           </div>
                           <div>
-                            <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-3">
+                            <h3 className="text-xl font-semibold text-foreground mb-3">
                               {item.label}
                             </h3>
-                            <p className="text-gray-600 dark:text-gray-300 leading-relaxed">
+                            <p className="text-muted-foreground leading-relaxed">
                               {item.section === 'capture' ? 'Document and capture incident details with our comprehensive workflow system' : 'Analyze incident patterns and trends to improve safety outcomes'}
                             </p>
                           </div>

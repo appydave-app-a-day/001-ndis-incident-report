@@ -35,7 +35,7 @@ export const PhaseConsolidationStatus: React.FC<PhaseConsolidationStatusProps> =
 
       case 'loading':
         return (
-          <div className="flex items-center space-x-2 text-blue-600">
+          <div className="flex items-center space-x-2 text-primary">
             <Loader2 className="h-4 w-4 animate-spin" />
             <span className="text-sm font-medium">Enhancing {phaseLabel}...</span>
           </div>

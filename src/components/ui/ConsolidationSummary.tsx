@@ -33,24 +33,24 @@ export const ConsolidationSummary: React.FC<ConsolidationSummaryProps> = ({
     if (completedCount === totalPhases) {
       return {
         type: 'success' as const,
-        icon: <Sparkles className="h-5 w-5 text-green-600" />,
+        icon: <Sparkles className="h-5 w-5 text-success" />,
         title: 'All Narratives Enhanced',
         message: `All ${totalPhases} phases have been successfully enhanced with professional AI assistance.`,
-        bgColor: 'bg-green-50',
-        borderColor: 'border-green-200',
-        textColor: 'text-green-800',
+        bgColor: 'bg-success/10',
+        borderColor: 'border-success/20',
+        textColor: 'text-success',
       };
     }
 
     if (loadingCount > 0) {
       return {
         type: 'loading' as const,
-        icon: <Clock className="h-5 w-5 text-blue-600 animate-pulse" />,
+        icon: <Clock className="h-5 w-5 text-primary animate-pulse" />,
         title: 'Enhancement in Progress',
         message: `${loadingCount} phase${loadingCount > 1 ? 's' : ''} currently being enhanced. ${completedCount} of ${totalPhases} complete.`,
-        bgColor: 'bg-blue-50',
-        borderColor: 'border-blue-200',
-        textColor: 'text-blue-800',
+        bgColor: 'bg-accent/10',
+        borderColor: 'border-accent/20',
+        textColor: 'text-primary',
       };
     }
 
@@ -110,7 +110,7 @@ export const ConsolidationSummary: React.FC<ConsolidationSummaryProps> = ({
                 </div>
               )}
               {loadingCount > 0 && (
-                <div className="flex items-center space-x-2 text-blue-600">
+                <div className="flex items-center space-x-2 text-primary">
                   <Clock className="h-4 w-4 animate-pulse" />
                   <span>{loadingCount} Processing</span>
                 </div>

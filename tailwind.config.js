@@ -45,6 +45,16 @@ export default {
           DEFAULT: 'hsl(var(--card))',
           foreground: 'hsl(var(--card-foreground))',
         },
+        'support-signal': {
+          'teal-light': '#3CD7C4',
+          'teal-mid': '#2CC4B7', 
+          'teal-deep': '#1798A2',
+          'navy': '#0C2D55',
+          'bg-grey': '#F4F7FA',
+          'cta-blue': '#287BCB',
+          'success-green': '#27AE60',
+          'alert-amber': '#F2C94C'
+        },
       },
       borderRadius: {
         'xs': '6px',   // Small elements, tags

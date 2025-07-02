@@ -66,7 +66,7 @@ export const ContributingConditionsStep: React.FC = () => {
             <Card>
               <CardContent className="p-6">
                 <div className="flex items-center justify-center space-x-3 py-8">
-                  <Loader2 className="h-6 w-6 animate-spin text-blue-600" />
+                  <Loader2 className="h-6 w-6 animate-spin text-primary" />
                   <div className="text-center">
                     <div className="font-medium text-gray-900">
                       Analyzing Contributing Conditions
@@ -139,7 +139,7 @@ export const ContributingConditionsStep: React.FC = () => {
           )}
 
           {/* Instructions */}
-          <Alert className="border-blue-200 bg-blue-50 text-blue-800">
+          <Alert className="border-accent/20 bg-accent/10 text-primary">
             <div className="font-medium">Editing Guidelines</div>
             <AlertDescription className="mt-2">
               <ul className="list-disc list-inside space-y-1 text-sm">

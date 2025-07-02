@@ -68,7 +68,7 @@ export const ReviewNarrativeStep: React.FC = () => {
 
               {/* Instructions */}
               {hasNarrativeContent && (
-                <Alert className="border-blue-200 bg-blue-50 text-blue-800">
+                <Alert className="border-accent/20 bg-accent/10 text-primary">
                   <div className="font-medium">Ready for Analysis</div>
                   <AlertDescription className="mt-2">
                     Click "Next" to begin the AI-assisted analysis process. This will analyze the narrative and prepare contributing conditions and incident classifications.

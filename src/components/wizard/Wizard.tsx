@@ -26,12 +26,12 @@ export const Wizard: React.FC<WizardProps> = ({ steps, onComplete }) => {
   }, [steps.length, reset]);
 
   if (steps.length === 0) {
-    return <div className="p-4 text-center text-gray-500">No steps provided</div>;
+    return <div className="p-4 text-center text-muted-foreground">No steps provided</div>;
   }
 
   const currentStep = steps[currentStepIndex];
   if (!currentStep) {
-    return <div className="p-4 text-center text-red-500">Invalid step index</div>;
+    return <div className="p-4 text-center text-destructive">Invalid step index</div>;
   }
 
   const StepComponent = currentStep.component;
@@ -67,12 +67,12 @@ export const Wizard: React.FC<WizardProps> = ({ steps, onComplete }) => {
   };
 
   return (
-    <div className="w-full bg-white rounded-xl overflow-hidden flex flex-col">
+    <div className="w-full bg-card rounded-xl overflow-hidden flex flex-col">
       <ProgressIndicator steps={steps} />
       <div className="wizard-content">
         <StepComponent />
       </div>
-      <div className="border-t border-gray-200 bg-gray-50 px-8 py-6 flex justify-between items-center">
+      <div className="border-t border-border bg-muted px-8 py-6 flex justify-between items-center">
         <Button
           variant="ghost"
           onClick={handleBack}

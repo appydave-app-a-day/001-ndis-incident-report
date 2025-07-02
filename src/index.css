@@ -4,48 +4,58 @@
 
 @layer base {
   :root {
+    /* Support Signal Brand Colors */
     --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
+    --foreground: 211 83% 20%; /* Navy #0C2D55 */
     --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
+    --card-foreground: 211 83% 20%; /* Navy #0C2D55 */
     --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
-    --primary: 221.2 83.2% 53.3%;
-    --primary-foreground: 210 40% 98%;
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
+    --popover-foreground: 211 83% 20%; /* Navy #0C2D55 */
+    --primary: 174 53% 47%; /* Teal Mid #2CC4B7 */
+    --primary-foreground: 0 0% 100%;
+    --secondary: 214 42% 96%; /* Background Grey #F4F7FA */
+    --secondary-foreground: 211 83% 20%; /* Navy #0C2D55 */
+    --muted: 214 42% 96%; /* Background Grey #F4F7FA */
+    --muted-foreground: 211 40% 45%; /* Muted Navy */
+    --accent: 176 67% 56%; /* Teal Light #3CD7C4 */
+    --accent-foreground: 211 83% 20%; /* Navy #0C2D55 */
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 210 40% 98%;
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 221.2 83.2% 53.3%;
+    --border: 214 42% 90%; /* Lighter grey border */
+    --input: 214 42% 90%; /* Lighter grey input */
+    --ring: 174 53% 47%; /* Teal Mid #2CC4B7 */
+    --cta-blue: 207 65% 47%; /* CTA Blue #287BCB */
+    --teal-deep: 187 68% 35%; /* Teal Deep #1798A2 */
+    --success: 145 63% 42%; /* Success Green #27AE60 */
+    --warning: 48 89% 60%; /* Alert Amber #F2C94C */
     --radius: 0.5rem;
   }
 
   .dark {
-    --background: 222.2 84% 4.9%;
-    --foreground: 210 40% 98%;
-    --card: 222.2 84% 4.9%;
-    --card-foreground: 210 40% 98%;
-    --popover: 222.2 84% 4.9%;
-    --popover-foreground: 210 40% 98%;
-    --primary: 217.2 91.2% 59.8%;
-    --primary-foreground: 222.2 47.4% 11.2%;
-    --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
-    --accent: 217.2 32.6% 17.5%;
-    --accent-foreground: 210 40% 98%;
-    --destructive: 0 62.8% 30.6%;
+    /* Dark theme using Support Signal Navy */
+    --background: 211 83% 15%; /* Dark Navy */
+    --foreground: 176 67% 85%; /* Light Teal */
+    --card: 211 83% 18%; /* Slightly lighter Navy */
+    --card-foreground: 176 67% 85%; /* Light Teal */
+    --popover: 211 83% 18%; /* Slightly lighter Navy */
+    --popover-foreground: 176 67% 85%; /* Light Teal */
+    --primary: 176 67% 56%; /* Teal Light #3CD7C4 */
+    --primary-foreground: 211 83% 15%; /* Dark Navy */
+    --secondary: 211 83% 25%; /* Medium Navy */
+    --secondary-foreground: 176 67% 85%; /* Light Teal */
+    --muted: 211 83% 25%; /* Medium Navy */
+    --muted-foreground: 176 40% 70%; /* Muted Light Teal */
+    --accent: 174 53% 47%; /* Teal Mid #2CC4B7 */
+    --accent-foreground: 0 0% 100%; /* White */
+    --destructive: 0 62.8% 50%;
     --destructive-foreground: 210 40% 98%;
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 224.3 76.3% 48%;
+    --border: 211 83% 25%; /* Medium Navy border */
+    --input: 211 83% 25%; /* Medium Navy input */
+    --ring: 176 67% 56%; /* Teal Light */
+    --cta-blue: 207 65% 55%; /* Lighter CTA Blue for dark mode */
+    --teal-deep: 187 68% 45%; /* Lighter Teal Deep for dark mode */
+    --success: 145 63% 50%; /* Lighter Success Green */
+    --warning: 48 89% 65%; /* Lighter Alert Amber */
   }
 }
 
@@ -192,16 +202,16 @@
   }
   
   .nav-button-active {
-    background-color: #dbeafe; /* blue-100 */
-    color: #1d4ed8; /* blue-700 */
+    background-color: hsl(var(--accent) / 0.15); /* Teal Light background */
+    color: hsl(var(--primary)); /* Teal Mid */
   }
   
   .nav-button-inactive {
-    color: #374151; /* gray-700 */
+    color: hsl(var(--foreground)); /* Navy */
   }
   
   .nav-button-inactive:hover {
-    background-color: #f3f4f6; /* gray-100 */
+    background-color: hsl(var(--muted)); /* Background Grey */
   }
   
   .nav-button-icon {
@@ -239,31 +249,31 @@
   }
   
   .custom-button-primary {
-    background-color: #2563eb; /* blue-600 */
+    background-color: hsl(var(--cta-blue)); /* CTA Blue */
     color: white;
   }
   
   .custom-button-primary:hover:not(:disabled) {
-    background-color: #1d4ed8; /* blue-700 */
+    background-color: hsl(var(--cta-blue) / 0.9); /* Slightly darker CTA Blue */
   }
   
   .custom-button-secondary {
     background-color: transparent;
-    color: #6b7280; /* gray-500 */
+    color: hsl(var(--muted-foreground));
     border: 1px solid hsl(var(--border));
   }
   
   .custom-button-secondary:hover:not(:disabled) {
-    background-color: #f9fafb; /* gray-50 */
+    background-color: hsl(var(--muted));
   }
   
   .custom-button-ghost {
     background-color: transparent;
-    color: #6b7280; /* gray-500 */
+    color: hsl(var(--muted-foreground));
   }
   
   .custom-button-ghost:hover:not(:disabled) {
-    background-color: #f3f4f6; /* gray-100 */
+    background-color: hsl(var(--muted));
   }
 
   /* Debug button styling */
@@ -295,23 +305,23 @@
     display: inline-block;
     padding: 0.25rem 0.5rem;
     font-size: 0.75rem;
-    background-color: #f3f4f6; /* gray-100 */
-    color: #6b7280; /* gray-500 */
+    background-color: hsl(var(--muted));
+    color: hsl(var(--muted-foreground));
     border-radius: 0.25rem;
-    border: 1px solid #e5e7eb; /* gray-200 */
+    border: 1px solid hsl(var(--border));
     cursor: pointer;
     transition: background-color 0.2s ease;
     font-family: monospace;
   }
   
   .custom-kbd:hover {
-    background-color: #e5e7eb; /* gray-200 */
+    background-color: hsl(var(--border));
   }
 
   /* Quick search text styling */
   .quick-search-text {
     font-size: 0.875rem;
-    color: #6b7280; /* gray-500 */
+    color: hsl(var(--muted-foreground));
   }
 
   /* Custom input styling to ensure visibility */
@@ -339,26 +349,26 @@
     color: hsl(var(--muted-foreground));
   }
 
-  /* Navigation active state with proper blue background */
+  /* Navigation active state with proper teal background */
   .nav-active {
-    background-color: #dbeafe; /* blue-100 */
-    color: #1d4ed8; /* blue-700 */
+    background-color: hsl(var(--accent) / 0.15); /* Teal Light background */
+    color: hsl(var(--primary)); /* Teal Mid */
   }
   
   .nav-inactive {
-    color: #374151; /* gray-700 */
+    color: hsl(var(--foreground)); /* Navy */
   }
   
   .nav-inactive:hover {
-    background-color: #f9fafb; /* gray-50 */
+    background-color: hsl(var(--muted)); /* Background Grey */
   }
   
   .nav-icon-active {
-    color: #2563eb; /* blue-600 */
+    color: hsl(var(--primary)); /* Teal Mid */
   }
   
   .nav-icon-inactive {
-    color: #6b7280; /* gray-500 */
+    color: hsl(var(--muted-foreground)); /* Muted Navy */
   }
 
   /* Consolidation Loading Overlay */
@@ -397,7 +407,7 @@
   .consolidation-spinner {
     width: 3rem;
     height: 3rem;
-    color: #2563eb; /* blue-600 */
+    color: hsl(var(--primary)); /* Teal Mid */
     animation: spin 1s linear infinite;
   }
 
@@ -658,11 +668,11 @@
   }
 
   .phase-heading-status.enhanced {
-    color: hsl(142 76% 36%); /* green-600 equivalent */
+    color: hsl(var(--success)); /* Success Green */
   }
 
   .phase-heading-status.loading {
-    color: hsl(221 83% 53%); /* blue-600 equivalent */
+    color: hsl(var(--primary)); /* Teal Mid */
   }
 
   .phase-heading-status.error {

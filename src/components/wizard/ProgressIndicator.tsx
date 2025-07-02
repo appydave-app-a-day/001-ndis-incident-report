@@ -11,9 +11,9 @@ export const ProgressIndicator: React.FC<ProgressIndicatorProps> = ({ steps }) =
   const { currentStepIndex } = useWizardStore();
 
   return (
-    <div className="w-full h-2 bg-gray-200 relative">
+    <div className="w-full h-2 bg-border relative">
       <div
-        className="h-full bg-gradient-to-r from-blue-600 to-blue-500 transition-all duration-300 ease-out"
+        className="h-full bg-gradient-to-r from-primary to-accent transition-all duration-300 ease-out"
         style={{
           width: steps.length > 1 ? `${(currentStepIndex / (steps.length - 1)) * 100}%` : '0%',
         }}

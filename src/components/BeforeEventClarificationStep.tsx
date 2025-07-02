@@ -82,7 +82,7 @@ export const BeforeEventClarificationStep: React.FC = () => {
               {!isLoadingQuestions && hasQuestions && (
                 <div className="p-8">
                   <div className="mb-6">
-                    <p className="text-sm text-gray-600 mb-4">
+                    <p className="text-sm text-muted-foreground mb-4">
                       These questions are based on your "Before the Event" narrative. Answering them is optional but can help provide additional context for your report.
                     </p>
                   </div>
@@ -94,7 +94,7 @@ export const BeforeEventClarificationStep: React.FC = () => {
                           Question {index + 1}
                         </Label>
                         <div className="mb-2">
-                          <p className="text-sm text-gray-700 leading-relaxed">
+                          <p className="text-sm text-foreground leading-relaxed">
                             {question.question}
                           </p>
                         </div>
@@ -111,8 +111,8 @@ export const BeforeEventClarificationStep: React.FC = () => {
                   </div>
 
                   {hasQuestions && (
-                    <div className="mt-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
-                      <p className="text-sm text-blue-800">
+                    <div className="mt-6 p-4 bg-accent/10 border border-accent/20 rounded-lg">
+                      <p className="text-sm text-primary">
                         <strong>Note:</strong> All answers are optional. You can skip any questions and proceed to the next step at any time.
                       </p>
                     </div>

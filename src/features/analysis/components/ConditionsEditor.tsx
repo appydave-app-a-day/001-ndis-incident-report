@@ -115,7 +115,7 @@ export const ConditionsEditor: React.FC<ConditionsEditorProps> = ({
         </Label>
         <div className="flex items-center space-x-4 text-sm text-gray-500">
           {isSaving && (
-            <span className="text-blue-600">Saving...</span>
+            <span className="text-primary">Saving...</span>
           )}
           {lastSaved && !isSaving && (
             <span>{formatLastSaved()}</span>
@@ -133,7 +133,7 @@ export const ConditionsEditor: React.FC<ConditionsEditorProps> = ({
           onKeyDown={handleKeyDown}
           placeholder={placeholder}
           disabled={disabled}
-          className="min-h-[300px] resize-y focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+          className="min-h-[300px] resize-y focus:ring-2 focus:ring-primary focus:border-primary"
           aria-describedby="conditions-editor-help"
         />
       </div>

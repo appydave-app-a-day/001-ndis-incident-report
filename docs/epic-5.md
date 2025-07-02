@@ -72,6 +72,8 @@
     - Remove explicit AI references, replace with neutral terms (AI-powered→automated)
     - Update index.html, AppLayout.tsx, Home.tsx, and all user-facing text
     - Fix Epic 4 finish button to navigate to beginning of analysis workflow (Epic 5)
+    - This graphics is so on the dashboard: /Users/davidcruwys/dev/clients/supportsignal/supportsignal.com.au/assets/infographic.jpeg
+    - This logo is so on the sidebar: /Users/davidcruwys/dev/clients/supportsignal/supportsignal.com.au/assets/logo.jpeg
   - **Estimated Effort:** Medium complexity, 3-4 hours
   - **Dependencies:** Logo assets required
     - Locate the location public/logo.jpeg
