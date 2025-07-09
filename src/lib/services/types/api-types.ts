@@ -18,6 +18,7 @@ export interface ApiResponse<T> {
   success: boolean;
   data?: T;
   error?: string;
+  errorType?: 'cors' | 'auth' | 'timeout' | 'forbidden' | 'not_found' | 'server_error' | 'network';
   status?: number;
 }
 

@@ -63,10 +63,21 @@ export const PHASE_CUSTOM_INSTRUCTIONS: PhaseCustomInstructions = {
 // Request Headers
 // ============================================================================
 
-export const getRequestHeaders = () => ({
-  'Content-Type': 'application/json',
-  'Accept': 'application/json',
-});
+export const getRequestHeaders = () => {
+  const headers: Record<string, string> = {
+    'Content-Type': 'application/json',
+    'Accept': 'application/json',
+  };
+
+  // Add authentication header if API key is provided
+  const apiKey = import.meta.env.VITE_N8N_API_KEY;
+  if (apiKey) {
+    headers['Authorization'] = `Bearer ${apiKey}`;
+    // Alternative: headers['X-API-Key'] = apiKey;
+  }
+
+  return headers;
+};
 
 // ============================================================================
 // Timeout Configuration

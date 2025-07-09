@@ -32,25 +32,25 @@
   }
 
   .dark {
-    /* Dark theme using Support Signal Navy */
-    --background: 211 83% 15%; /* Dark Navy */
-    --foreground: 176 67% 85%; /* Light Teal */
-    --card: 211 83% 18%; /* Slightly lighter Navy */
-    --card-foreground: 176 67% 85%; /* Light Teal */
-    --popover: 211 83% 18%; /* Slightly lighter Navy */
-    --popover-foreground: 176 67% 85%; /* Light Teal */
+    /* Softer dark theme with balanced grays */
+    --background: 220 13% 18%; /* Soft dark gray */
+    --foreground: 210 20% 88%; /* Slightly brighter text */
+    --card: 220 13% 23%; /* Slightly lighter gray cards */
+    --card-foreground: 210 20% 88%; /* Slightly brighter text */
+    --popover: 220 13% 23%; /* Slightly lighter gray */
+    --popover-foreground: 210 20% 88%; /* Slightly brighter text */
     --primary: 176 67% 56%; /* Teal Light #3CD7C4 */
-    --primary-foreground: 211 83% 15%; /* Dark Navy */
-    --secondary: 211 83% 25%; /* Medium Navy */
-    --secondary-foreground: 176 67% 85%; /* Light Teal */
-    --muted: 211 83% 25%; /* Medium Navy */
-    --muted-foreground: 176 40% 70%; /* Muted Light Teal */
+    --primary-foreground: 220 13% 18%; /* Dark gray */
+    --secondary: 220 13% 30%; /* Slightly lighter medium gray */
+    --secondary-foreground: 210 20% 88%; /* Slightly brighter text */
+    --muted: 220 13% 30%; /* Slightly lighter medium gray */
+    --muted-foreground: 215 20% 68%; /* Slightly brighter muted text */
     --accent: 174 53% 47%; /* Teal Mid #2CC4B7 */
     --accent-foreground: 0 0% 100%; /* White */
     --destructive: 0 62.8% 50%;
     --destructive-foreground: 210 40% 98%;
-    --border: 211 83% 25%; /* Medium Navy border */
-    --input: 211 83% 25%; /* Medium Navy input */
+    --border: 220 13% 35%; /* Slightly lighter border */
+    --input: 220 13% 27%; /* Slightly lighter input background */
     --ring: 176 67% 56%; /* Teal Light */
     --cta-blue: 207 65% 55%; /* Lighter CTA Blue for dark mode */
     --teal-deep: 187 68% 45%; /* Lighter Teal Deep for dark mode */
@@ -322,6 +322,21 @@
   .quick-search-text {
     font-size: 0.875rem;
     color: hsl(var(--muted-foreground));
+  }
+
+  /* Hide default Radix Dialog close button */
+  button[data-radix-dialog-close] {
+    display: none !important;
+  }
+  
+  /* Hide hardcoded close button from DialogContent component */
+  [data-radix-dialog-content] button.absolute.right-4.top-4 {
+    display: none !important;
+  }
+  
+  /* Alternative selector for DialogContent close button */
+  [data-radix-dialog-content] > button:last-child {
+    display: none !important;
   }
 
   /* Custom input styling to ensure visibility */

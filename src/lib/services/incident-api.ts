@@ -1,3 +1,5 @@
+import { showApiErrorToast, showApiFallbackToast } from '@/lib/utils/toast-notifications';
+
 import { MockIncidentAPI } from './providers/mock-incident-api';
 import { N8NIncidentAPI } from './providers/n8n-incident-api';
 import type {
@@ -54,8 +56,13 @@ export class IncidentAPI implements IIncidentAPI {
     } catch (error) {
       console.warn('Live API failed, falling back to mock:', error);
       
-      // Fallback to mock if live fails
+      // Show toast notification for API failure
       if (this.mode === 'live') {
+        const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+        showApiErrorToast('generate-clarification-questions', errorMessage);
+        showApiFallbackToast('API connection failed');
+        
+        // Fallback to mock
         return await this.mockAPI.getClarificationQuestions(narrative, metadata);
       }
       
@@ -80,8 +87,13 @@ export class IncidentAPI implements IIncidentAPI {
     } catch (error) {
       console.warn('Live API failed, falling back to mock:', error);
       
-      // Fallback to mock if live fails  
+      // Show toast notification for API failure
       if (this.mode === 'live') {
+        const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+        showApiErrorToast('enhance-narrative-content', errorMessage);
+        showApiFallbackToast('Narrative enhancement failed');
+        
+        // Fallback to mock
         return await this.mockAPI.enhanceNarrative(phase, originalNarrative, clarificationAnswers);
       }
       
@@ -119,8 +131,13 @@ export class IncidentAPI implements IIncidentAPI {
     } catch (error) {
       console.warn('Live API failed, falling back to mock:', error);
       
-      // Fallback to mock if live fails
+      // Show toast notification for API failure
       if (this.mode === 'live') {
+        const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+        showApiErrorToast('analyze-contributing-conditions', errorMessage);
+        showApiFallbackToast('Contributing conditions analysis failed');
+        
+        // Fallback to mock
         return await this.mockAPI.analyzeContributingConditions(narrativeSections, metadata);
       }
       

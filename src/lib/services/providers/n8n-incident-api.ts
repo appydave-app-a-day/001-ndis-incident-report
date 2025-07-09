@@ -1,4 +1,4 @@
-import { getN8NApiConfig, getApiUrls, PHASE_CUSTOM_INSTRUCTIONS, API_TIMEOUT } from '../../config/api-config';
+import { getN8NApiConfig, getApiUrls, PHASE_CUSTOM_INSTRUCTIONS, API_TIMEOUT, getRequestHeaders } from '../../config/api-config';
 import type {
   IIncidentAPI,
   ApiResponse,
@@ -331,10 +331,7 @@ export class N8NIncidentAPI implements IIncidentAPI {
     try {
       const response = await fetch(url, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json',
-        },
+        headers: getRequestHeaders(),
         body: JSON.stringify(data),
         signal: AbortSignal.timeout(this.timeout),
       });
@@ -351,20 +348,50 @@ export class N8NIncidentAPI implements IIncidentAPI {
         status: response.status,
       };
     } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+      let errorMessage = 'Unknown error';
+      let errorType: 'cors' | 'auth' | 'timeout' | 'forbidden' | 'not_found' | 'server_error' | 'network' = 'network';
       
-      // Log error in development
+      if (error instanceof Error) {
+        errorMessage = error.message;
+        
+        // Identify specific error types
+        if (error.message.includes('Failed to fetch')) {
+          errorType = 'cors';
+          errorMessage = 'CORS policy is blocking the request. Please contact your administrator to configure the server.';
+        } else if (error.message.includes('401')) {
+          errorType = 'auth';
+          errorMessage = 'Authentication failed. Please check your API key configuration.';
+        } else if (error.message.includes('timeout')) {
+          errorType = 'timeout';
+          errorMessage = 'Request timed out. The server may be overloaded or unreachable.';
+        } else if (error.message.includes('403')) {
+          errorType = 'forbidden';
+          errorMessage = 'Access denied. Please verify your permissions.';
+        } else if (error.message.includes('404')) {
+          errorType = 'not_found';
+          errorMessage = 'API endpoint not found. Please verify the server configuration.';
+        } else if (error.message.includes('500')) {
+          errorType = 'server_error';
+          errorMessage = 'Server error occurred. Please try again later.';
+        }
+      }
+      
+      // Log error in development with more context
       if (import.meta.env.DEV) {
         console.error('🚨 N8N API Error:', {
           endpoint: url,
           error: errorMessage,
+          errorType,
+          originalError: error,
           timestamp: new Date().toISOString(),
+          hasApiKey: !!import.meta.env.VITE_N8N_API_KEY,
         });
       }
 
       return {
         success: false,
         error: errorMessage,
+        errorType,
         status: error instanceof Response ? error.status : undefined,
       };
     }
